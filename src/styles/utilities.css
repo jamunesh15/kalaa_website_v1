@@ -1,0 +1,62 @@
+/**
+ * Utilities that read a token no Tailwind namespace covers.
+ *
+ * They exist for one reason: a number typed into a component is a decision made
+ * in the wrong place. `border` would be consistent right up until somebody
+ * types `border-2` in one file and nothing notices.
+ */
+
+/** The hairline width. One value, decided in `tokens.css`. */
+@utility border-token {
+  border-width: var(--border-w);
+}
+
+/** The same width, on one edge, for dividers between rows and sections. */
+@utility border-b-token {
+  border-bottom-width: var(--border-w);
+}
+
+@utility border-t-token {
+  border-top-width: var(--border-w);
+}
+
+/** The shared transition, so every hover on the site has the same feel. */
+@utility transition-token {
+  transition-duration: var(--dur-base);
+  transition-timing-function: var(--ease-brand);
+}
+
+/**
+ * The lift. Rise slightly, and the shadow deepens to match.
+ *
+ * Declared here rather than on the button because it belongs to the elevation
+ * system, not to one component: any surface that can be pressed or opened uses
+ * the same gesture. Three components inventing three hovers is the templated
+ * look arriving through the back door.
+ */
+@utility liftable {
+  transition-property: transform, box-shadow, background-color, color;
+  transition-duration: var(--dur-base);
+  transition-timing-function: var(--ease-brand);
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lift);
+  }
+
+  &:active {
+    transform: translateY(0);
+    box-shadow: var(--shadow-soft);
+  }
+}
+
+/**
+ * The sage margin around the white sheet.
+ *
+ * Zero on a phone, where giving up horizontal space to a decorative margin is
+ * not a trade worth making. `--frame` widens at the same breakpoint the layout
+ * does, so the frame appears exactly when there is room for it.
+ */
+@utility frame-inset {
+  padding: var(--frame);
+}

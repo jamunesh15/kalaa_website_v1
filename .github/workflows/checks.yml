@@ -1,0 +1,59 @@
+name: Checks
+
+# Portable. This file is identical in every website repository that follows the
+# standard in .claude/skills/web-standard/.
+#
+# A rule that only exists in a document is a suggestion. This is the part that
+# refuses: the same four commands a developer runs locally, run again on every
+# push and pull request, so a branch that breaks the standard cannot be merged
+# without somebody seeing it go red.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    # The browser suite builds the site and drives three engines. The default
+    # six hours would let a hung run sit there all day.
+    timeout-minutes: 20
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Structure
+        run: npm run check:structure
+
+      - name: Build
+        run: npm run build
+
+      # Pinned to the installed version so the download matches the package and
+      # a browser update cannot change what a green run means.
+      - name: Install browser engines
+        run: npx playwright install --with-deps chromium firefox webkit
+
+      - name: Browser checks
+        run: npm test
+
+      # Only useful when something failed, and that is exactly when it is worth
+      # having: the report carries the trace and the screenshot for each failure.
+      - name: Upload report
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 7

@@ -12,6 +12,13 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+
+    // Playwright output. These are generated artifacts, and the HTML report
+    // bundles a minified copy of CodeMirror, which produces thousands of
+    // warnings about code nobody here wrote or can fix.
+    "playwright-report/**",
+    "test-results/**",
+    "blob-report/**",
   ]),
 ]);
 

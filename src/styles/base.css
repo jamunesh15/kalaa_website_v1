@@ -1,0 +1,40 @@
+/**
+ * Base layer. The few rules that apply to the document itself.
+ */
+
+/**
+ * Anchor targets have to clear the masthead, which is sticky.
+ *
+ * `scroll-padding-top` on the scroll container rather than `scroll-margin-top`
+ * on each target: one declaration instead of one per section, and it also
+ * covers scrolling caused by keyboard focus and by find-in-page.
+ */
+html {
+  scroll-padding-top: 6rem;
+}
+
+/**
+ * The sage is on the document rather than on a wrapper, so it also paints the
+ * overscroll area. Without that, bouncing the page on a trackpad shows white
+ * above a page whose whole idea is that it sits on a coloured field.
+ */
+body {
+  background: var(--page);
+  color: var(--ink-body);
+}
+
+/**
+ * Any pure-CSS animation added later needs its own guard in this block.
+ * Framework-driven motion honours the preference on its own; a keyframe
+ * animation written by hand does not.
+ */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

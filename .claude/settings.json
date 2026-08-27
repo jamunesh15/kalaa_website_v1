@@ -1,0 +1,29 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(node --check *)",
+      "Bash(npm run lint)",
+      "Bash(npm run build)",
+      "Bash(npm run check:structure)",
+      "Bash(npm test)",
+      "Bash(npx playwright test *)",
+      "Bash(git fetch origin main *)",
+      "Bash(git worktree list)",
+      "Bash(git worktree prune)",
+      "Bash(git check-ignore *)",
+      "Bash(git ls-tree *)",
+      "Bash(git ls-files *)",
+      "Bash(sed -n *)",
+      "Bash(tail *)",
+      "Bash(head *)",
+      "Bash(wc *)",
+      "Bash(diff *)",
+      "Bash(cp *)",
+      "Bash(gh pr list *)",
+      "Bash(gh pr view *)",
+      "Bash(gh pr diff *)",
+      "Bash(gh repo view *)",
+      "Bash(gh auth status)"
+    ]
+  }
+}

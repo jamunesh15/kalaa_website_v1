@@ -1,0 +1,20 @@
+# Kalaa
+
+> Creative social media marketing agency. Kalaa creates social strategies,
+> content, and campaigns that turn attention into real business growth.
+
+## Pages
+
+- [Home](https://kalaa.io/): What Kalaa does, and who it is for.
+- [Contact](https://kalaa.io/contact): How to reach Kalaa. Email, WhatsApp and
+  the office address in Surat, Gujarat.
+- [Privacy policy](https://kalaa.io/privacy-policy): What personal data Kalaa
+  collects, how it is used, how long it is kept, and your rights over it.
+
+## Notes
+
+- Contact: hey@kalaa.io for anything else, privacy@kalaa.io for anything about
+  personal data.
+- Keep this file in step with `src/routes.ts`. A page added there without a line
+  here is invisible to the answer engines that read this file rather than
+  crawling the site.

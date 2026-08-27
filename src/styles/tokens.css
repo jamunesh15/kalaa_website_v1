@@ -1,0 +1,156 @@
+/**
+ * The tokens. Every value the design system decides, declared once.
+ *
+ * The structure is Hive Studio: a white sheet, big black display type, a strong
+ * field behind the artwork, 3D characters carrying the personality, soft edges
+ * and soft shadows. Two things are Kalaa's rather than the reference's, and
+ * both come from the same constraint.
+ *
+ * The sage frame the sheet sits on is the first, and it is what makes a page
+ * recognisable in a screenshot.
+ *
+ * The second is that the loud colour is LIGHT. The reference shouts in a mid
+ * violet, which works because that violet is its brand. Kalaa's logo is black
+ * and white, and a dark saturated colour beside a black-and-white mark competes
+ * with it. So the field is a light butter yellow, the buttons are the logo's own
+ * black, and there is no third colour asking to be justified.
+ *
+ * An earlier version of this file was built around Etereo instead: cream
+ * ground, thick ink outlines, hard offset shadows. That was one reference
+ * generalised across a set that does not share it, and none of it survives.
+ */
+:root {
+  /* --------------------------------------------------------------------
+   * Colour
+   * ------------------------------------------------------------------ */
+
+  /**
+   * The frame. Everything sits on this and it is visible only as a margin.
+   *
+   * A muted sage, and deliberately nobody else's colour: every agency site in
+   * this space is purple, blue or black. It reads as made by people, which is
+   * the brief. It only works as the quiet field, though. Sage carrying a whole
+   * page reads as a spa; sage framing a white sheet with violet on it reads as
+   * a studio.
+   */
+  --page: #7fa99b;
+
+  /** The sheet the site is actually printed on. */
+  --sheet: #ffffff;
+  --surface: #ffffff;
+
+  --ink: #14131a;
+  --ink-body: #33313d;
+  --ink-muted: #56545f;
+
+  /** Hairline dividers. There are no heavy outlines in this system. */
+  --line: #e6e4ee;
+
+  /**
+   * The loud colour, and it is light on purpose.
+   *
+   * Kalaa's logo is black and white. A dark saturated brand colour next to a
+   * black-and-white mark competes with it: the eye reads two heavy things and
+   * cannot tell which one is the brand. A light colour cannot compete, so the
+   * mark stays the mark and the colour does the shouting.
+   *
+   * This is the field behind the hero artwork, the marker behind a headline
+   * word, and the closing band. Ink sits on it at 13.3:1.
+   *
+   * It is deliberately NOT the button colour. See `--action` below.
+   */
+  --accent: #ffd84d;
+  --on-accent: #14131a;
+
+  /**
+   * The button colour, which is the logo's own black.
+   *
+   * The reference puts its brand colour on its buttons because its brand colour
+   * is a mid violet. With a black-and-white logo the equivalent move is black:
+   * a button that matches the mark reads as the company's, and there is no
+   * third colour to justify.
+   */
+  --action: #14131a;
+  --action-hover: #2f2d38;
+  --on-action: #ffffff;
+
+  /**
+   * Card tints, all drawn from the two colours the site already has: the sage
+   * of the frame and the butter of the accent, plus one neutral.
+   *
+   * Interchangeable by design: the fill is rhythm, not meaning. Nothing on the
+   * site should encode information in which colour a card happens to be.
+   */
+  --tint-butter: #fff2c2;
+  --tint-peach: #ffe2d0;
+  --tint-sage: #dcebe5;
+  --tint-cloud: #f1f0f4;
+
+  /**
+   * CONTRAST RULES THAT ARE NOT SUGGESTIONS
+   *
+   * On the sheet: ink 18.5:1, body 12.8:1, muted 7.4:1.
+   * On the butter accent: ink 13.3:1, body 9.2:1, muted 5.4:1. All fine.
+   * White on the action black is 18.5:1.
+   * On the sage frame: ink 7.1:1, body 4.9:1, and muted is 2.9:1, which fails.
+   * Never put `--ink-muted` on `--page`. That is the one combination in this
+   * palette that looks fine and is not readable, and the contrast suite in
+   * `npm test` fails the build over it.
+   *
+   * One thing to know rather than to fix: butter against the white sheet is
+   * 1.38:1. That is a hue difference, not a luminance one, which is fine for a
+   * large field and useless for a hairline. Never outline anything in butter.
+   */
+
+  /* --------------------------------------------------------------------
+   * Corner
+   *
+   * ONE value. Not a scale.
+   *
+   * 1.25rem has to serve both ends at once: on a 48px button it reads as very
+   * nearly a pill, which is what the reference uses, and on a large card or
+   * band it reads as a soft panel. That is how the reference's two radii become
+   * one here.
+   *
+   * The reference does use two. This does not, because a single corner
+   * everywhere is a rule this project set before the reference arrived.
+   * ------------------------------------------------------------------ */
+  --radius: 1.25rem;
+
+  /* --------------------------------------------------------------------
+   * Border and elevation
+   *
+   * A hairline for dividers, and two soft shadows. Cards separate from the
+   * sheet by shadow, not by outline: an outlined card on a white sheet is a
+   * different design language to the one the reference speaks.
+   * ------------------------------------------------------------------ */
+  --border-w: 1px;
+  --shadow-soft: 0 8px 24px -10px rgb(20 19 26 / 0.16);
+  --shadow-lift: 0 18px 44px -16px rgb(20 19 26 / 0.24);
+
+  /* --------------------------------------------------------------------
+   * The frame width
+   *
+   * How much sage shows around the sheet. Zero on a phone, where giving up
+   * horizontal space to a decorative margin is not a trade worth making.
+   * ------------------------------------------------------------------ */
+  --frame: 0rem;
+
+  /* --------------------------------------------------------------------
+   * Motion
+   *
+   * One curve, three durations. A hover on a button and a hover on a card feel
+   * the same because they are the same numbers, and that sameness is most of
+   * what makes motion read as designed rather than as a pile of effects.
+   * ------------------------------------------------------------------ */
+  --dur-fast: 120ms;
+  --dur-base: 200ms;
+  --dur-slow: 420ms;
+  --ease-brand: cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+@media (min-width: 48rem) {
+  :root {
+    --frame: 1.25rem;
+  }
+}

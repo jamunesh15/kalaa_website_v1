@@ -1,0 +1,92 @@
+/**
+ * The tokens, exposed to Tailwind.
+ *
+ * `@theme inline` is what turns a custom property into a utility class, so
+ * `--color-tint-mint` becomes `bg-tint-mint` and `--text-display-xl` becomes
+ * `text-display-xl`. Keeping it apart from `tokens.css` means the decisions and
+ * the plumbing that publishes them are not tangled in one file.
+ *
+ * Every entry here reads a token. None of them declares a value.
+ */
+@theme inline {
+  --color-page: var(--page);
+  --color-sheet: var(--sheet);
+  --color-surface: var(--surface);
+
+  --color-ink: var(--ink);
+  --color-ink-body: var(--ink-body);
+  --color-ink-muted: var(--ink-muted);
+
+  --color-line: var(--line);
+
+  --color-accent: var(--accent);
+  --color-on-accent: var(--on-accent);
+
+  --color-action: var(--action);
+  --color-action-hover: var(--action-hover);
+  --color-on-action: var(--on-action);
+
+  --color-tint-butter: var(--tint-butter);
+  --color-tint-peach: var(--tint-peach);
+  --color-tint-sage: var(--tint-sage);
+  --color-tint-cloud: var(--tint-cloud);
+
+  --radius-token: var(--radius);
+
+  --shadow-soft: var(--shadow-soft);
+  --shadow-lift: var(--shadow-lift);
+
+  --ease-brand: var(--ease-brand);
+
+  /**
+   * Chillax for display, Switzer for text. Both self-hosted; see
+   * `src/fonts/README.md`.
+   *
+   * The fallback stack matters more than it looks. `display: swap` means a
+   * visitor reads the fallback for the first moment of the page, so a stack
+   * that jumps from a rounded face to a default serif is a visible lurch.
+   */
+  --font-display: var(--font-chillax), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-switzer), ui-sans-serif, system-ui, sans-serif;
+
+  /**
+   * The type scale. Fluid between a phone and a desktop, so there is no step
+   * where a heading is suddenly too big for the screen it is on.
+   *
+   * Display sizes carry their own tight line height and negative tracking. A
+   * heavy face at 5rem with body line height looks like a mistake, and leaving
+   * that to each section is how six sections end up with six answers.
+   *
+   * `wordmark` is not a heading and is not read. It is the texture behind the
+   * hero artwork, set enormous and low in contrast, and it needs a step of its
+   * own because nothing else on the site is anywhere near this size.
+   */
+  --text-wordmark: clamp(3.5rem, 13vw, 9.5rem);
+  --text-wordmark--line-height: 1;
+  --text-wordmark--letter-spacing: -0.04em;
+
+  --text-display-xl: clamp(2.75rem, 6.5vw, 5rem);
+  --text-display-xl--line-height: 0.98;
+  --text-display-xl--letter-spacing: -0.03em;
+
+  --text-display-l: clamp(2.125rem, 4.5vw, 3.25rem);
+  --text-display-l--line-height: 1.05;
+  --text-display-l--letter-spacing: -0.02em;
+
+  --text-display-m: clamp(1.5rem, 2.6vw, 1.875rem);
+  --text-display-m--line-height: 1.15;
+  --text-display-m--letter-spacing: -0.015em;
+
+  --text-lead: 1.1875rem;
+  --text-lead--line-height: 1.6;
+
+  --text-body: 1.0625rem;
+  --text-body--line-height: 1.65;
+
+  --text-small: 0.9375rem;
+  --text-small--line-height: 1.55;
+
+  --text-label: 0.8125rem;
+  --text-label--line-height: 1.2;
+  --text-label--letter-spacing: 0.08em;
+}
