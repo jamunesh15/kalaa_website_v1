@@ -101,6 +101,23 @@ for (const route of ROUTES) {
         const box = img.getBoundingClientRect();
         if (box.width === 0 && box.height === 0) continue;
 
+        /*
+         * Too small to be the LCP element, so the eager/lazy question does not
+         * apply to it. Largest Contentful Paint picks the biggest content box on
+         * the first screen; it never picks a 32px logo, and this rule was
+         * reporting the footer's brand mark on `/contact` purely because that
+         * page is short enough that its footer is on the first screen. Making
+         * that mark eager would then fail the other half of this same rule on
+         * the home page, where the identical component sits below the fold, so
+         * neither answer was available and the rule itself was the thing that
+         * was wrong.
+         *
+         * One percent of the viewport, measured: the footer mark is about 0.3%
+         * and a work card is about 9%, so the images this rule exists for are
+         * all still judged.
+         */
+        if (box.width * box.height < window.innerWidth * window.innerHeight * 0.01) continue;
+
         const src = (img.currentSrc || img.src || "(no src)").split("/").pop();
         const aboveFold = box.top < window.innerHeight;
         const lazy = img.getAttribute("loading") === "lazy";

@@ -47,7 +47,7 @@ export function Cards() {
       <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
         {FILLS.map((entry) => (
           <Card key={entry.fill} fill={entry.fill}>
-            <h3 className="font-display text-display-m font-semibold text-ink">{entry.heading}</h3>
+            <h3 className="font-display text-display-m font-bold text-ink">{entry.heading}</h3>
             <p className="mt-3 text-body text-ink-body">{entry.body}</p>
           </Card>
         ))}

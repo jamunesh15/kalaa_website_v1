@@ -28,3 +28,20 @@ deleted when Chillax was chosen, files and all. An unused font in a repository
 is a decision waiting to be relitigated.
 
 English only, so every file is the Latin cut and no Indic subset is needed.
+
+## The glyph bounding boxes were repaired, 2026-09-01
+
+Firefox's font sanitiser reported `glyf: Glyph bbox was incorrect; adjusting`
+for 29 glyphs in every Satoshi face and 7 or 8 in every Switzer face. Firefox
+corrects them itself and the type renders correctly, so nothing looked wrong,
+and it emitted one console warning per glyph per face on every page load. That
+is what `npm test`'s clean-console check was failing on, and it is the kind of
+noise that trains people to ignore the console.
+
+The files as downloaded from Fontshare carry `xMin`/`yMin`/`xMax`/`yMax` values
+on those glyphs that do not match their actual outlines. Recalculated with
+fontTools (`glyf[name].recalcBounds(glyf)` for every glyph, then `head` updated
+to the new extremes) and saved back as woff2. The outlines are untouched: only
+the numbers describing them changed, so the type is identical.
+
+Re-download a face and the warning comes back. Re-run the repair.

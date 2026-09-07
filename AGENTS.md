@@ -50,7 +50,7 @@ Everything below lives in `src/styles/tokens.css`.
 | `--accent` | `#ffd84d` | The field behind things. **Never a button.** |
 | `--action` | `#14131a` | Buttons. The logo's own black. |
 | `--action-hover` | `#2f2d38` | Buttons, hovered. |
-| `--tint-butter` / `--tint-peach` / `--tint-sage` / `--tint-cloud` | | Card fills. Rhythm, never meaning. |
+| `--tint-butter` / `--tint-peach` / `--tint-sage` / `--tint-cloud` / `--tint-violet` | | Card fills. Rhythm, never meaning. |
 | `--radius` | `1.25rem` | The corner. One value, everywhere. |
 | `--border-w` | `1px` | The hairline. One width, everywhere. |
 | `--shadow-soft` / `--shadow-lift` | | Elevation, resting and hovered. |
@@ -126,12 +126,26 @@ than an oversight.
   drifting apart.
 - Route registry: `src/routes.ts`. Three routes today, `/`, `/contact` and
   `/privacy-policy`.
-- `/contact` carries the same information as the live kalaa.io/contact and no
-  more: three channels and one line of invitation. There is no form, there or
-  here, because there is no backend in this repository to receive one and a form
-  that posts nowhere is worse than none. Everything pointing at "Contact" goes
-  to this page; the landing page keeps its closing section, whose button now
-  hands over to it.
+- The channels themselves are in `src/content/contact.ts`, taken from the live
+  kalaa.io rather than composed: `hey@kalaa.io`, `+91 9586909597`, the WhatsApp
+  deep link with Kalaa's own pre-filled message, and the Uttran studio address
+  with the map pinned by coordinates. The three profiles the client gave on
+  2026-09-06 are there too: Instagram, X and WhatsApp. There is no LinkedIn,
+  Facebook or YouTube URL, so there is no button for one. `sameAs` in the
+  JSON-LD is built from that same list rather than typed again.
+- `/contact` carries the three channels, the studio address and the services as
+  an index, and no more. **There is no form**, because there is no backend in
+  this repository to receive one and a form that posts nowhere shows a success
+  message that is a lie told to a customer at the moment they decided to trust
+  one. If a hosted endpoint is added later it is one component and one env var,
+  and it goes above the channels rather than instead of them. Everything
+  pointing at "Contact" goes to this page; the landing page keeps its closing
+  section, whose button hands over to it.
+- The Organization node carries `email`, `telephone` and a `PostalAddress`, all
+  read from `src/content/contact.ts` so a crawler and a visitor are told the
+  same thing. It is still `Organization` rather than `LocalBusiness`: the
+  upgrade is worth real money in local search for a business with a door, and it
+  invites `openingHours` and `priceRange`, neither of which has been agreed.
 - `public/llms.txt` lists the pages for answer engines. Keep it in step with the
   route registry.
 
@@ -145,12 +159,54 @@ than an oversight.
   button otherwise, because a thing that navigates and a thing that acts are
   different elements to everything except the eye. Two variants, primary and
   secondary. The lift and drop come from the `pressable` utility, not from here.
-- `Card`, the outlined panel. Four fills. **The fill is rhythm, not meaning**:
+- `MotionProvider`, one `MotionConfig` around the whole application, set to
+  `reducedMotion="user"`. It exists because four sections were each answering
+  the reduced-motion question themselves with
+  `initial={reducedMotion ? false : animated}`, which reads as careful and is a
+  hydration bug: `useReducedMotion` returns null during server rendering, so the
+  server always wrote the arriving state and a browser with the preference set
+  wanted the settled one. React rebuilt the entire page on the client, and the
+  cost landed on exactly the people the branch was written for. Nothing rendered
+  may depend on that preference. Branch the transition, never the markup.
+- `ArrowButton`, the site's black button with the action drawn as a right arrow
+  in a white badge, which swipes across the badge on hover. For a row of cards, where
+  three solid black bars would be the heaviest thing on the band and would arrive
+  before the prices. The pill is `--action` like every other
+  button on the site and the badge inverts to `--surface`, so the arrow is black
+  on white inside a black control. A pale pill was tried in sage, butter and
+  white and each read as a colour that did not belong to its card. The movement is `arrow-swipe` in
+  `utilities.css`, which has its own reduced-motion guard.
+- `Card`, the outlined panel. Six quiet tints. **The fill is rhythm, not meaning**:
   nothing may encode information in which colour a card happens to be.
+- `Glyph`, every small mark the site draws: the channel set (mail, phone,
+  WhatsApp), the map pin, the three social marks, and the frame they share. They
+  were local to the footer until the contact page needed the same three
+  channels, and two copies of an envelope is how a set of icons stops being a
+  set. Brand marks are solid and the rest are outlines at one stroke width,
+  because an outlined X is a close button and an outlined WhatsApp is a speech
+  bubble.
+- `SlideIn`, a block that arrives from the left or the right. Same hook, spring
+  and instant reset as the artwork arrivals, for a section built from two halves
+  that should meet in the middle rather than fade up together.
+- `HandAccent`, a phrase inside a heading set in Kalam. One definition rather
+  than a span copied into eleven headings, and it carries the size bump that
+  matches Kalam's x-height to Satoshi's. One accent per heading, on the payoff
+  phrase, never on a price or a plan name a reader has to read as literal.
 - `Pill`, the small uppercase label above a heading. Never in square brackets.
 - `Section`, the page's horizontal rhythm. One max width and one gutter for the
   whole site, so a heading in one block lines up with a heading three blocks
   down. Sections setting their own width is how that quietly stops being true.
+- `SectionHeading`, the h2 and its sentence, for every band below the hero. One
+  size, one weight, one alignment. It exists because the page had six answers to
+  the same question: measured on the running site, Services was 64px/700 centred,
+  the client band 40px/700 centred, Capabilities 40px/900 left and Process
+  40px/700 left. Every h2 is now `display-l` at 700 and the h1 stays the only
+  thing on the site set heavier or larger. **Alignment is the one thing left to
+  the caller**, and it follows the composition under the heading: `align="center"`
+  over the service grid, the client rows and the capability deck, which are
+  symmetric and run the full rail; the default `start` over the process rows and
+  the closing ask, which are left-anchored. A left heading over a symmetric block
+  leaves a wide empty half beside it. `tone="on-accent"` for the closing band.
 - `AssetSlot`, a dashed frame holding the exact space a real picture will take,
   at the real aspect ratio, labelled with what belongs in it. It exists because
   the illustration and 3D assets this design is built around do not exist yet,
@@ -163,6 +219,14 @@ than an oversight.
 
 ### `src/components/layout/`, the page skeleton
 
+- `BrandMark`, Kalaa's logo, defined once so the masthead, the footer, the
+  browser tab and the touch icon cannot show different artwork. The client's
+  file is `public/brand/kalaa_logo.avif` and every derivative is generated from
+  it: `public/brand/kalaa-logo.webp` (the lockup this component renders),
+  `public/brand/kalaa-mark.webp` (the badge alone), `src/app/favicon.ico` and
+  `src/app/apple-icon.png`. **Lossless WebP**, because the source is already
+  lossy AVIF and a second lossy pass rings along the hard black edges at exactly
+  the size a masthead draws. Replacing the logo is one file plus a regenerate.
 - `PageFrame`, the white sheet the site is printed on. The document is sage;
   this is the sheet sitting on it, and the sage shows through as a margin on all
   four sides. **Never give it `overflow-hidden`**, however tempting for clipping
@@ -172,12 +236,29 @@ than an oversight.
   Sticks to `--frame` rather than to zero, so it rests inside the sage margin
   instead of scrolling the frame away at the top.
 - `SiteFooter`, the site footer, mounted **outside** `<main>` so it is exposed
-  as the contentinfo landmark.
+  as the contentinfo landmark. Built to the client's own drawing: four columns
+  under tape headings, a colophon, a torn band of frame sage across the bottom
+  and four objects lying across the tear. The channels and the studio address
+  read from `src/content/contact.ts` and the service names from `services.ts`,
+  so nothing in it is a second copy of something a page already states. There
+  is no social row until a real profile URL exists, and the tape headings are
+  the client overruling this file's default against a small uppercase label.
+- `FooterArtifacts`, the four objects around the footer, arriving from the edge
+  each one hangs off. Same device and same spring as the about board, driven by
+  `useReplayOnScrollDown`. Placement is in `src/content/footerArtifacts.ts` as
+  percentages of the footer, anchored to its **bottom** rather than its top,
+  because the footer roughly doubles in height when the columns stack.
+- `NavLink`, one link in the masthead and the phone menu. It exists for Home:
+  `/` has no hash, so pressing it while already on the landing page navigates to
+  the page you are on and the reader does not move. It scrolls to the top
+  instead when the pathname is already `/`, and reads the reduced-motion
+  preference in the handler rather than in the markup.
 - `MobileNav`, the disclosure menu below `md:`. Escape closes it and choosing a
   link closes it. The panel is unmounted when closed so its links are not in the
   tab order behind it.
 
-All three are structure only for now. The redesign dresses them in step 2.
+The skeleton components are structure only for now. The redesign dresses them
+in step 2.
 
 Add every new shared component to this list. `npm run check:structure` fails a
 component that nothing documents, because nothing would lead the next person to
@@ -186,8 +267,79 @@ it.
 ### `src/sections/`, one file per section
 
 A section of a page is not a reusable component and does not belong beside the
-primitives. `src/sections/home/` holds `Hero`, `Services`, `Process`, `Work` and
-`ClosingCta`, and `src/app/page.tsx` holds nothing but the order they appear in.
+primitives. `src/sections/home/` holds `Hero`, `About`, `Services`, `ClientLogos`,
+`Capabilities`, `Process`, `Pricing`, `Work`, `Sectors` and `ClosingCta`, and
+`src/app/page.tsx` holds nothing but the order they appear in.
+
+`HeroTypedLine` is the one piece of the hero copy that moves. The device is from
+bgmediaagency.in and it is taken as that site actually has it: measured on the
+running page, its h1 does not animate at all and the movement is on the line
+below, a fixed lead followed by a phrase that types, holds, deletes and is
+replaced. Animating the headline was the obvious reading, and it would also have
+handed this page's LCP element to JavaScript.
+
+The rules it follows, each from a failure this repository has already paid for:
+the server renders the first phrase in full and the loop starts in an effect, so
+nothing in the markup depends on the motion preference; the visible line is
+`aria-hidden` with the whole sentence beside it in `sr-only`, because a screen
+reader following the animated node announces the clause one letter at a time
+forever; and the box is reserved by the longest phrase drawn hidden underneath,
+because "Meta ads" growing into "social media management" wraps to two lines on
+a phone and would move the paragraph below it every four seconds. Measured at
+375px and 1440px: the paragraph's top never moves.
+
+`About` is the client's own board, and the artwork is the section rather than an
+illustration beside it. `AboutArtifacts` draws it as ten separate objects
+arriving from the edge nearest where each lands, which is the surya.website
+device the hero already uses, shown a second time because the two answer
+different questions: the hero says "we make these", the board says "this is what
+a month looks like". Coordinates live in `aboutArtifacts.ts` as percentages of a
+fixed-ratio box.
+
+The board has a ground of its own, `--board`, the palette's only warm neutral.
+Without it each artifact sat on `--surface` carrying its own cream inside its
+alpha, so ten pieces of cream paper floated on white and the whole thing read as
+scattered. The pieces did not move; the ground did the work. `a1`, `a2`, `a7`
+and `a11` are keyed rather than left opaque, because unkeyed they drew white
+rectangles across that cream.
+
+Four more things there are load bearing. **No `artifact-shadow`**, because this set
+was supplied with shadows already baked into the alpha and the filter that lifts
+the hero's cutouts would give each piece a second shadow at a second angle.
+**One trigger on the box**, through `useReplayOnScrollDown`, since ten pieces in
+one container cross the threshold in the same frame and ten watchers produce a
+burst rather than a sequence. The spring is slower and heavier than the hero's,
+because the hero plays on load where a long arrival is a wait, and this plays to
+a reader who has already scrolled to it and is watching a board being laid out.
+**`sizes` is computed per piece and that is not a nicety**: one shared value had
+every artifact claiming 260px, so the optimiser served the plan sheet a 256px
+variant for a 652px slot and its headings turned to mush. **A separate phone arrangement**, five of the ten
+at roughly twice the width, because at 375px the box is 307px and the plan sheet
+came out with four-pixel headings; an inline style cannot hold a media query, so
+both sets are passed as custom properties and `about-piece` in `utilities.css`
+chooses. And **`a7` and `a12` are converted but not placed**: they are the
+"+145% enquiries" card and a phone showing 48.2K and 125K, and no one has
+verified those figures.
+
+The copy beside it is four words with one line each, because prose cannot win an
+argument with a picture of the work. Its band is white rather than the pale sage
+the reference uses, since the hero directly above is already sage, and its
+heading carries no butter marker: that device is the hero's and is spent once.
+`AboutKalaa` and `AboutKalaaFlow` were deleted with it.
+
+`src/sections/contact/` holds the contact page the same way: `ContactHero`,
+`ContactChannels`, `ContactStudio` and `ContactBrief`, with `src/app/contact/page.tsx`
+holding their order and the metadata.
+
+Two things there are decisions rather than layout. **The channel cards are
+pulled up over the bottom of the opening band**, which is the one structural
+device this site takes from CoreInsight, and this is the page it was made for:
+on a contact page the actions are the content, so they belong on the first
+screen. **The studio block is an address, not an embedded map**, because the
+only coordinates anyone has belong to the previous office and a pin invented for
+the new address would be a false statement drawn on a map. The link searches the
+address instead. Put the embed back when somebody sends the real latitude and
+longitude.
 
 v1 put seventeen sections in `page.tsx` and it ran to 1,323 lines. The rule now
 is that a page file is a running order. If you are writing markup in one, the
@@ -199,6 +351,19 @@ section wants its own file.
 shape as if a CMS were already returning them, and `index.ts` holds the
 accessors. **Nothing outside `src/content/` imports those arrays directly**: a
 page calls `getServices()`.
+
+`footerArtifacts.ts` holds where the four footer objects land and where each
+one travels in from, and `footerMedia.ts` is generated by `npm run artifacts`
+from `assets/footer/`. The sources are the client's PNGs, two of which arrived
+with the transparency chequerboard painted in as real pixels; the keying, the
+one seeded hole inside the camera strap and the content-hashed filenames are
+all in `scripts/artifacts.mjs`.
+
+`contact.ts` is the one place the email, the phone number, the WhatsApp deep
+link and the studio address are written. The footer and the contact page both
+render them, and before this they each held their own copy, which is a number
+corrected in one place and left wrong in the other with nothing on either page
+to show it.
 
 The CMS is not chosen yet. That indirection is what makes choosing one later a
 change to `index.ts` instead of a rewrite of every page.

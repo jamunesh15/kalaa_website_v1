@@ -11,6 +11,41 @@
  */
 html {
   scroll-padding-top: 6rem;
+
+  /**
+   * Anchor jumps travel instead of teleporting, asked for 2026-09-07.
+   *
+   * **This is not the smooth scrolling the project rules out, and the
+   * difference is worth being precise about.** What is banned is a library that
+   * takes the scroll position away from the browser and re-animates every wheel
+   * event: `lenis` was removed for exactly that, and it costs real input
+   * latency to do something nobody asked for. This affects only scrolls the
+   * page itself causes, which on this site means clicking a nav link. The
+   * wheel, the trackpad, the scrollbar and the keyboard all stay native and
+   * instant.
+   *
+   * The reduced-motion block below already puts it back to `auto`, so a reader
+   * who asks for less motion still lands on the section immediately.
+   */
+  scroll-behavior: smooth;
+
+  /**
+   * No rubber band at either end.
+   *
+   * Edge and Chrome on Windows bounce the page past its ends on a precision
+   * touchpad, and this page cannot afford it: the frame cap over the masthead
+   * is `position: fixed` (see `layout.tsx`), so during the bounce the cap
+   * stays put while the sheet slides out from under it, and a band of field
+   * opens between the two. The client read that as the page scrolling past
+   * itself, which is what it is. The field colour on `body` below
+   * kept the bounce from flashing white; this stops it moving at all.
+   *
+   * Both axes. It shipped as `y` only on the reasoning that a page with no
+   * sideways scroll has no sideways bounce, and the client swiped left on
+   * the touchpad and watched the sheet slide out from under the cap anyway:
+   * Edge rubber-bands an axis that cannot scroll at all.
+   */
+  overscroll-behavior: none;
 }
 
 /**

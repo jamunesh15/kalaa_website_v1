@@ -35,13 +35,40 @@
    */
   --page: #7fa99b;
 
-  /** The sheet the site is actually printed on. */
-  --sheet: #ffffff;
+  /**
+   * The sheet the site is printed on, and it is NOT pure white.
+   *
+   * A very slightly sage-tinted off-white. Pure white next to the sage frame
+   * reads as a hole punched in the page rather than as paper, and a section
+   * with no band of its own looked like a gap the design had forgotten. This is
+   * light enough to carry ink at 17.9:1 and warm enough that nothing on the
+   * page is ever a bare white rectangle.
+   *
+   * `--surface` stays pure white, so a card still lifts off the sheet without
+   * needing a heavier shadow to do it.
+   */
+  --sheet: #f4f7f5;
   --surface: #ffffff;
 
   --ink: #14131a;
   --ink-body: #33313d;
   --ink-muted: #56545f;
+
+  /*
+   * Sage, dark enough to be type.
+   *
+   * `--page` is the frame sage at #7fa99b and it is a background: on the pale
+   * bands it measures 2.5:1, which fails at every size. `--tint-sage` is paler
+   * still. Neither may ever be used as a text colour, and both were tried here
+   * before this token existed: the impact heading's accent phrase set in the
+   * tint was invisible on its own band, and a text-shadow was briefly added to
+   * compensate, which is a bug wearing a fix.
+   *
+   * Same hue, taken down until it clears. 5.34:1 on the butter band, so it
+   * passes at any size rather than only as large text, and it stays legible if
+   * it is ever moved onto a paler field.
+   */
+  --ink-sage: #4e6f62;
 
   /** Hairline dividers. There are no heavy outlines in this system. */
   --line: #e6e4ee;
@@ -75,8 +102,7 @@
   --on-action: #ffffff;
 
   /**
-   * Card tints, all drawn from the two colours the site already has: the sage
-   * of the frame and the butter of the accent, plus one neutral.
+   * Card tints, drawn from the site's soft palette.
    *
    * Interchangeable by design: the fill is rhythm, not meaning. Nothing on the
    * site should encode information in which colour a card happens to be.
@@ -85,6 +111,53 @@
   --tint-peach: #ffe2d0;
   --tint-sage: #dcebe5;
   --tint-cloud: #f1f0f4;
+
+  /*
+   * A pale grey-green, given by the client as an exact value for the impact
+   * band rather than picked from this palette.
+   *
+   * It is not `--tint-cloud`, which was tried there first and is the closest
+   * thing the set already had. Cloud is 241,240,244 and leans cool, this is
+   * 239,241,236 and leans green: they are within eight points on one channel,
+   * so side by side they read as the same colour, but on their own the cool one
+   * greys the sage in the artwork and this one agrees with it.
+   *
+   * Nor is it `--sheet`, which is 244,247,245 and is the paper the whole
+   * application is drawn on. A band the same colour as the sheet is not a band.
+   */
+  --tint-mist: #eff1ec;
+  --tint-violet: #eee8ff;
+
+  /**
+   * The fifth hue, and the reason it exists rather than reusing one.
+   *
+   * The process row runs five cards and it had butter, violet, sage, peach and
+   * then cloud. Cloud is a pale grey with violet in it, so the last card read as
+   * a washed-out copy of the second and the run finished on what looked like a
+   * mistake. Blue is the one gap in a palette that already covers yellow,
+   * lilac, green and orange, so five cards now carry five colours a reader can
+   * actually tell apart. Same lightness band as the others, so nothing in the
+   * row shouts.
+   */
+  --tint-sky: #e3edfa;
+
+  /**
+   * The about board's own ground, and the only warm neutral in the palette.
+   *
+   * It is not a seventh tint and it is not available to sections. **Two places
+   * use it and both are named here**: the about board, and the footer's ground.
+   * The footer earns it because the masthead is `--sheet` and the footer was
+   * too: scrolled to the end, the bar and the page under it were one colour and
+   * the join read as a rendering fault. Cream is also what the client's own
+   * drawing of the footer sits on. It exists
+   * because the twelve about artifacts were photographed on cream paper and
+   * carry that cream inside their own alpha: laid on `--surface` they read as
+   * twelve cutouts floating on white rather than as objects on one board, which
+   * is exactly how the first build of that section was described. Sampled from
+   * the artwork itself rather than picked, so the board and the objects on it
+   * are the same paper.
+   */
+  --board: #f3f0e9;
 
   /**
    * CONTRAST RULES THAT ARE NOT SUGGESTIONS
@@ -107,15 +180,16 @@
    *
    * ONE value. Not a scale.
    *
-   * 1.25rem has to serve both ends at once: on a 48px button it reads as very
-   * nearly a pill, which is what the reference uses, and on a large card or
-   * band it reads as a soft panel. That is how the reference's two radii become
-   * one here.
+   * 0.625rem, down from 1.25rem in two steps. At the larger value the sheet, the frame, the
+   * cards and the buttons were all reading as pill-soft, and stacked inside one
+   * another they made the page look inflated. Twelve pixels still softens a
+   * button and a card without either of them losing its edge.
    *
-   * The reference does use two. This does not, because a single corner
-   * everywhere is a rule this project set before the reference arrived.
+   * One value serves everything. The references use two, a pill for controls
+   * and something gentler for panels; a single corner everywhere is a rule this
+   * project set before any reference arrived.
    * ------------------------------------------------------------------ */
-  --radius: 1.25rem;
+  --radius: 0.625rem;
 
   /* --------------------------------------------------------------------
    * Border and elevation
@@ -126,6 +200,17 @@
    * ------------------------------------------------------------------ */
   --border-w: 1px;
   --shadow-soft: 0 8px 24px -10px rgb(20 19 26 / 0.16);
+
+  /**
+   * The lift under a hovered link's plate.
+   *
+   * `--shadow-soft` is drawn for a card: a 24px blur pulled 10px back, which
+   * under a 32px-tall plate spreads so far and so faintly that the client could
+   * not see it at all in the footer. This is the same idea at the scale of the
+   * thing casting it, close and slightly stronger, so a plate the size of a
+   * word reads as lifted rather than as tinted.
+   */
+  --shadow-hover: 0 3px 8px -2px rgb(20 19 26 / 0.18);
   --shadow-lift: 0 18px 44px -16px rgb(20 19 26 / 0.24);
 
   /* --------------------------------------------------------------------
@@ -135,6 +220,87 @@
    * horizontal space to a decorative margin is not a trade worth making.
    * ------------------------------------------------------------------ */
   --frame: 0rem;
+
+  /**
+   * The inner ring.
+   *
+   * One band of frame colour around the whole application.
+   *
+   * A four-layer version was built and reverted once: page sage, a thin WHITE
+   * rim, the sage ring, then the app. On screen it read as three rounded boxes
+   * stacked inside each other. The client asked for the doubled frame back and
+   * it works this time, and the difference is worth writing down rather than
+   * rediscovering: the failed version used white, which is the sheet's own
+   * colour, so the rim read as a gap between two boxes. `--frame-inner` is a
+   * pale sage-grey, darker than the sheet and far lighter than the frame, so it
+   * reads as a second line drawn around the sheet rather than as space between
+   * two objects.
+   *
+   * It has to clear THREE colours, not one, and the first value picked only
+   * cleared the sheet. `#dfe7e3` sat a shade off `--tint-sage`, which is the
+   * hero's field, so down the whole first screen the line and the band behind
+   * it were the same colour and the frame simply was not there. The value has
+   * to be darker than the sheet, darker than the palest tint any section can
+   * paint itself, and lighter than the frame. `#bfccc7` clears all three.
+   *
+   * The masthead lives INSIDE all of it. The bar is part of the application, so
+   * the frame goes around it, not between it and the content. An earlier build
+   * put the ring under the masthead and it read as the bar sitting outside its
+   * own border.
+   */
+  --ring: 0.5rem;
+
+  /**
+   * The second line of the frame, and its colour.
+   *
+   * Thin on purpose. At anything approaching the ring's own width it stops
+   * reading as a rule around the sheet and starts reading as another rounded
+   * box, which is exactly how the first attempt at a doubled frame failed.
+   */
+  --frame-line: 0.375rem;
+  --frame-inner: #bfccc7;
+  /**
+   * The sheet's widest. `PageFrame` caps and centres itself on it, and the
+   * fixed cap over the masthead has to know it too, so the two share one
+   * value: the cap used to run from the window edge while the sheet stopped
+   * at this width, and on a 1920px screen the cap stuck out 70px past the
+   * sheet on each side, an L-shaped ledge above the masthead that the client
+   * read as the page having scrolled past its own frame.
+   */
+  --sheet-max: 110rem;
+
+  /**
+   * The masthead's height, declared rather than left to its contents.
+   *
+   * The hero fills whatever the first screen has left after the frame and the
+   * bar, and that sum has to be exact. Measuring the bar in JavaScript to feed
+   * a CSS calculation is a layout that reflows after hydration; guessing at it
+   * is a hero that is a few pixels too tall or too short on every screen. So the
+   * bar takes its height from here and the calculation reads the same token,
+   * and the two cannot drift apart.
+   */
+  --masthead: 4rem;
+
+  /* --------------------------------------------------------------------
+   * The card stack
+   *
+   * Where the pinned card stack comes to rest.
+   *
+   * The stack is one sticky stage, not one sticky row per card. That is what
+   * lets the final card land into the same pile as the first three instead of
+   * arriving as a separate block below them.
+   * ------------------------------------------------------------------ */
+  --stack-top: clamp(12rem, 30svh, 17rem);
+
+  /**
+   * How far each process card sits above the one to its left.
+   *
+   * A step rather than five positions, so the curve drawn over the cards and
+   * the cards themselves read the same number. Five steps at this value is the
+   * whole vertical budget the section spends on looking like a path, which is
+   * what keeps all five on one screen.
+   */
+  --process-rise: 1.35rem;
 
   /* --------------------------------------------------------------------
    * Motion
@@ -147,10 +313,27 @@
   --dur-base: 200ms;
   --dur-slow: 420ms;
   --ease-brand: cubic-bezier(0.2, 0.8, 0.2, 1);
+
+  /**
+   * The curve for travel, as opposed to for a state change.
+   *
+   * `--ease-brand` is heavily front-loaded, which is right for a 200ms hover:
+   * the element appears to respond instantly and settle. Over a longer distance
+   * it is wrong, and wrong in a way that is easy to misdiagnose as "too fast".
+   * Measured on the arrow swipe at 420ms, the brand curve had it 68% of the way
+   * across in the first 80ms and then creeping, so lengthening the duration
+   * bought almost nothing. This spends the distance evenly, so the thing is
+   * actually seen crossing the gap. The service cards reached the same curve
+   * independently and carry it as a local array; this is its home.
+   */
+  --ease-travel: cubic-bezier(0.45, 0, 0.2, 1);
 }
 
 @media (min-width: 48rem) {
   :root {
-    --frame: 1.25rem;
+    --frame: 0.5rem;
+    --ring: 0.75rem;
+    --frame-line: 0.5rem;
+    --masthead: 4.5rem;
   }
 }

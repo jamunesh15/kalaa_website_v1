@@ -1,3 +1,4 @@
+import { Kalam } from "next/font/google";
 import localFont from "next/font/local";
 
 /**
@@ -15,24 +16,29 @@ import localFont from "next/font/local";
  */
 
 /**
- * The display face. Rounded, warm, and the reason the page reads as friendly
- * before anyone has read a word of it.
+ * The display face.
  *
- * Chosen from three candidates set on the same sentence. Clash Display was
- * louder and safer, Panchang was odder; both are deleted rather than kept
- * around, because an unused font in a repository is a decision waiting to be
- * relitigated.
+ * Satoshi, used at 900. A clean geometric grotesque with no novelty in it: the
+ * headline gets its presence from weight and size rather than from quirks in
+ * the letterforms.
  *
- * 700 is the top of the family. Headings that need more weight than this have
- * to get it from size, not from a heavier cut that does not exist.
+ * Third face in this slot, and the two it replaced are worth recording so
+ * neither comes back by accident. **Chillax** was rounded to the point of
+ * reading as a children's brand at display size. **Clash Display** fixed that
+ * and brought its own problem: enough character in the a, the g and the y that
+ * it drew attention to itself rather than to the words.
+ *
+ * Six faces were set on the same headline, at the same size, on the real field
+ * and looked at side by side before this one. Satoshi was the runner up on that
+ * comparison and is now the choice.
  */
-export const chillax = localFont({
+export const displayFace = localFont({
   src: [
-    { path: "./chillax-500.woff2", weight: "500", style: "normal" },
-    { path: "./chillax-600.woff2", weight: "600", style: "normal" },
-    { path: "./chillax-700.woff2", weight: "700", style: "normal" },
+    { path: "./satoshi-500.woff2", weight: "500", style: "normal" },
+    { path: "./satoshi-700.woff2", weight: "700", style: "normal" },
+    { path: "./satoshi-900.woff2", weight: "900", style: "normal" },
   ],
-  variable: "--font-chillax",
+  variable: "--font-display-face",
   display: "swap",
 });
 
@@ -51,5 +57,38 @@ export const switzer = localFont({
     { path: "./switzer-700.woff2", weight: "700", style: "normal" },
   ],
   variable: "--font-switzer",
+  display: "swap",
+});
+
+/**
+ * The hand, for the two lines in the impact section that are handwritten.
+ *
+ * **This is the third face and it took an explicit instruction to add.** Two
+ * was the rule and the reason is still right: a third face is a third thing to
+ * download and one more chance for the page to look assembled from parts. It is
+ * here because the impact section's reference draws two lines as handwriting,
+ * the artwork in that section is handwritten, and the alternative on screen was
+ * an accent phrase set in the display face pretending to be an accent.
+ *
+ * Kalam, by Indian Type Foundry, which is who drew Satoshi and Switzer as well,
+ * so the three come from one hand even though this one is a different kind of
+ * face. Identified from the reference rather than guessed at.
+ *
+ * **`next/font/google` here, `next/font/local` above, and the difference is
+ * smaller than it looks.** The note beside the display face rules the Google
+ * loader out, and that objection is about its catalogue rather than about the
+ * loader: it is where Inter and the other template faces live. The loader
+ * itself downloads the file at build time and serves it from this origin, so
+ * there is still no request to a third party when somebody opens the page, and
+ * still no layout shift. Fontshare does not carry Kalam or it would be local
+ * like the others.
+ *
+ * Two weights, not four. It sets two short lines and nothing else, and every
+ * weight is another file on the wire.
+ */
+export const hand = Kalam({
+  subsets: ["latin"],
+  weight: ["400", "700"],
+  variable: "--font-hand-face",
   display: "swap",
 });

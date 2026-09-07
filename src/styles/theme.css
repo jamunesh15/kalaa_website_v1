@@ -16,8 +16,10 @@
   --color-ink: var(--ink);
   --color-ink-body: var(--ink-body);
   --color-ink-muted: var(--ink-muted);
+  --color-ink-sage: var(--ink-sage);
 
   --color-line: var(--line);
+  --color-frame-inner: var(--frame-inner);
 
   --color-accent: var(--accent);
   --color-on-accent: var(--on-accent);
@@ -30,24 +32,36 @@
   --color-tint-peach: var(--tint-peach);
   --color-tint-sage: var(--tint-sage);
   --color-tint-cloud: var(--tint-cloud);
+  --color-tint-mist: var(--tint-mist);
+  --color-tint-violet: var(--tint-violet);
+  --color-tint-sky: var(--tint-sky);
+
+  --color-board: var(--board);
 
   --radius-token: var(--radius);
 
   --shadow-soft: var(--shadow-soft);
+  --shadow-hover: var(--shadow-hover);
   --shadow-lift: var(--shadow-lift);
 
   --ease-brand: var(--ease-brand);
 
   /**
-   * Chillax for display, Switzer for text. Both self-hosted; see
+   * Clash Display for display, Switzer for text. Both self-hosted; see
    * `src/fonts/README.md`.
    *
    * The fallback stack matters more than it looks. `display: swap` means a
    * visitor reads the fallback for the first moment of the page, so a stack
    * that jumps from a rounded face to a default serif is a visible lurch.
    */
-  --font-display: var(--font-chillax), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-display-face), ui-sans-serif, system-ui, sans-serif;
   --font-sans: var(--font-switzer), ui-sans-serif, system-ui, sans-serif;
+  /*
+    The hand. `cursive` last rather than a grotesque, because if Kalam fails to
+    load the two lines it sets should still read as handwriting rather than
+    silently becoming body text in the wrong place.
+  */
+  --font-hand: var(--font-hand-face), "Segoe Print", "Bradley Hand", cursive;
 
   /**
    * The type scale. Fluid between a phone and a desktop, so there is no step
@@ -65,17 +79,31 @@
   --text-wordmark--line-height: 1;
   --text-wordmark--letter-spacing: -0.04em;
 
-  --text-display-xl: clamp(2.75rem, 6.5vw, 5rem);
-  --text-display-xl--line-height: 0.98;
-  --text-display-xl--letter-spacing: -0.03em;
+  /*
+   * Stepped back up once the hero was given the whole first screen. The step
+   * DOWN below is still the important part of this note, because it is the fix
+   * for a documented mistake
+   * rather than a taste adjustment. CLAUDE.md records "made the type dominate
+   * and the artwork subordinate" as mistake two from the previous attempt, and
+   * the first build of this hero repeated it exactly: a headline at 80px beside
+   * artwork that had nothing to say. In the references the heading is compact
+   * and the pictures carry the page.
+   *
+   * Line heights loosened at the same time. A tighter face needs more air, and
+   * a highlighted word needs the lines further apart than its own marker box is
+   * tall or the highlight paints over the descenders above it.
+   */
+  --text-display-xl: clamp(2.25rem, 4.6vw, 4rem);
+  --text-display-xl--line-height: 1.26;
+  --text-display-xl--letter-spacing: -0.02em;
 
-  --text-display-l: clamp(2.125rem, 4.5vw, 3.25rem);
-  --text-display-l--line-height: 1.05;
-  --text-display-l--letter-spacing: -0.02em;
+  --text-display-l: clamp(1.75rem, 3.2vw, 2.5rem);
+  --text-display-l--line-height: 1.15;
+  --text-display-l--letter-spacing: -0.018em;
 
-  --text-display-m: clamp(1.5rem, 2.6vw, 1.875rem);
-  --text-display-m--line-height: 1.15;
-  --text-display-m--letter-spacing: -0.015em;
+  --text-display-m: clamp(1.25rem, 1.9vw, 1.5rem);
+  --text-display-m--line-height: 1.25;
+  --text-display-m--letter-spacing: -0.012em;
 
   --text-lead: 1.1875rem;
   --text-lead--line-height: 1.6;

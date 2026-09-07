@@ -8,10 +8,12 @@
     "start": "next start",
     "lint": "eslint",
     "check:structure": "node scripts/check-structure.mjs",
+    "media": "node scripts/media.mjs",
     "shot": "node scripts/shot.mjs",
     "test": "playwright test",
     "test:ui": "playwright test --ui",
-    "test:report": "playwright show-report"
+    "test:report": "playwright show-report",
+    "artifacts": "node scripts/artifacts.mjs"
   },
   "dependencies": {
     "motion": "^13.1.1",

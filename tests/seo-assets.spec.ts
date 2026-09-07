@@ -247,13 +247,30 @@ for (const path of PAGES) {
       Array.from(document.querySelectorAll("img")).map((img) => ({
         src: img.currentSrc || img.src,
         loaded: img.complete && img.naturalWidth > 0,
+        // A lazy image below the fold has not been ASKED to load yet, so an
+        // unloaded one is the feature working rather than a broken file.
+        deferred:
+          img.getAttribute("loading") === "lazy" &&
+          img.getBoundingClientRect().top >= window.innerHeight,
         hasWidth: img.hasAttribute("width") || getComputedStyle(img).aspectRatio !== "auto",
         hasHeight: img.hasAttribute("height") || getComputedStyle(img).aspectRatio !== "auto",
         alt: img.getAttribute("alt"),
       })),
     );
 
-    const broken = images.filter((img) => !img.loaded).map((img) => img.src);
+    /*
+     * "Did the browser fetch it" and "does the file exist" are different
+     * questions, and this test used to ask only the first. That was fine while
+     * every page had a handful of images near the top, and wrong the moment one
+     * had a section of thirty lazy ones: each correctly deferred image was
+     * reported as broken, so the test failed hardest on the page doing the most
+     * right.
+     *
+     * Deferred images are excluded here and still covered, and covered better,
+     * by the HTTP check at the end of this test, which asks the server for every
+     * `src` on the page whether the browser fetched it or not.
+     */
+    const broken = images.filter((img) => !img.loaded && !img.deferred).map((img) => img.src);
     expect(broken, `images that failed to load:\n${broken.join("\n")}`).toEqual([]);
 
     // Without dimensions or an aspect ratio the layout jumps as each image

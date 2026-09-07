@@ -32,6 +32,15 @@ const browser = await chromium.launch({ channel: "chromium" });
 const page = await browser.newPage({ viewport: { width: Number(w), height: Number(h) } });
 await page.goto(url, { waitUntil: "networkidle" });
 await page.evaluate(() => document.fonts.ready);
+
+/**
+ * Let entrance animations finish.
+ *
+ * Without this the picture is of a hero mid-flight: cards half faded, chips not
+ * yet arrived. That reads as a design problem and is actually a timing one, and
+ * it wasted a review cycle once already.
+ */
+await page.waitForTimeout(1600);
 await page.screenshot({ path: out, fullPage: full === "full" });
 await browser.close();
 console.log("saved", out);

@@ -48,3 +48,42 @@ next-env.d.ts
 
 # screenshots taken with scripts/shot.mjs
 /*.png
+
+# Reel source videos. The web-ready output in public/work/reels/ is committed;
+# the editors' multi-megabyte originals are not, because a git history never
+# shrinks. See assets/reels/README.md.
+assets/reels/*
+!assets/reels/README.md
+
+# Landing artifact sources. `npm run artifacts` writes the web-ready WebP into
+# public/landing/, and that output is committed; the multi-megabyte PNGs the
+# client supplied are not, for the same reason the reel sources are not.
+assets/landing/*
+!assets/landing/README.md
+
+# Capability card photograph sources. `npm run artifacts` writes the web-ready
+# WebP into public/process/, and that output is committed.
+assets/process/*
+
+# Footer artifact sources. `npm run artifacts` writes the web-ready WebP into
+# public/footer/, and that output is committed; the client's multi-megabyte
+# PNGs are not, for the same reason the reel and landing sources are not.
+assets/footer/*
+!assets/footer/README.md
+
+# Contact page artifact sources, same arrangement as the footer's.
+assets/contact/*
+!assets/contact/README.md
+
+# About, impact and post sources, same arrangement as the reels and landing
+# sets: `npm run artifacts` / `npm run media` write the web-ready output into
+# public/, and that output is committed. The multi-megabyte originals are not.
+assets/about/*
+!assets/about/README.md
+assets/impact/*
+!assets/impact/README.md
+assets/posts/*
+!assets/posts/README.md
+
+# Working screenshots and keying experiments from design sessions. Never shipped.
+/.agents/

@@ -1,39 +1,57 @@
 import type { ProcessStep } from "@/content/types";
 
 /**
- * A month with Kalaa, in the order it happens.
+ * A month of social media work, in the order it happens.
  *
  * Numbered because the order is real, not because a numbered list looks
  * organised. If two of these could swap places, they should be one step.
+ *
+ * Written in the work rather than in the abstract. "We put money behind it"
+ * described a budget moving; "We run ads for leads" describes the thing a
+ * client is buying. Every line names something an agency does to a social
+ * account: shoot days, captions, retargeting, saves and shares. The version
+ * before this one would have suited any agency of any kind, which is another
+ * way of saying it described none.
+ *
+ * Nothing here states a timescale, a result, a reach figure or a cost, because
+ * none of those are verified for Kalaa and a process section is where an
+ * invented one reads most like a commitment. `outcome` is what the step hands
+ * to the next step, never what it earns.
  */
 export const PROCESS_STEPS: readonly ProcessStep[] = [
   {
     number: "01",
-    title: "We learn the business",
-    summary:
-      "What you sell, who buys it, what they ask before they buy, and what a good month looks like to you.",
+    tag: "Discovery",
+    title: "We learn your business",
+    deliverables: ["Your offer and your buyers", "What your competitors post", "Questions buyers ask"],
+    outcome: "This becomes the content plan.",
   },
   {
     number: "02",
+    tag: "Content plan",
     title: "We plan the month",
-    summary:
-      "A calendar you can see before anything is made, so nothing goes out that you have not read.",
+    deliverables: ["Monthly content calendar", "Reel and post ideas", "Approval before anything goes out"],
+    outcome: "Nothing publishes unread.",
   },
   {
     number: "03",
-    title: "We make the work",
-    summary: "Shooting, designing, writing and editing. You approve, we publish.",
+    tag: "Production",
+    title: "We shoot, design and write",
+    deliverables: ["Reels and shoot days", "Posts and stories", "Captions and hashtags"],
+    outcome: "Approved work goes live.",
   },
   {
     number: "04",
-    title: "We put money behind it",
-    summary:
-      "The posts worth boosting get boosted, and the ads go to the people most likely to reply.",
+    tag: "Ads",
+    title: "We run ads for leads",
+    deliverables: ["Meta and Google campaigns", "Creative testing", "Retargeting warm viewers"],
+    outcome: "Spend follows what performs.",
   },
   {
     number: "05",
-    title: "We tell you what happened",
-    summary:
-      "What was published, what it cost, and how many people got in touch. Then we plan the next month around it.",
+    tag: "Report",
+    title: "We report what happened",
+    deliverables: ["Reach, saves and shares", "Ad spend and enquiries", "What to repeat next month"],
+    outcome: "Next month is planned on it.",
   },
 ];

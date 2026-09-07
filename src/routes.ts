@@ -31,16 +31,16 @@ export type Route = {
 export const ROUTES: Route[] = [
   {
     path: "/",
-    // Redesign first slice: Hero and Intro rebuilt to the Kalaa content brief.
-    lastModified: "2026-08-18",
+    // Questions section added, Work moved above Process, hero headline rewritten.
+    lastModified: "2026-09-02",
     changeFrequency: "weekly",
     priority: 1,
   },
   {
     path: "/contact",
-    // Built from the live kalaa.io/contact: the same three channels and the
-    // same invitation, relaid out.
-    lastModified: "2026-08-19",
+    // Rebuilt in the new design: the three channels as cards over the opening
+    // band, the corrected studio address, and the services as an index.
+    lastModified: "2026-09-06",
     changeFrequency: "monthly",
     priority: 0.8,
   },

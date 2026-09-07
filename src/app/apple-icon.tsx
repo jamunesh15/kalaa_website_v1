@@ -1,28 +1,33 @@
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
 import { ImageResponse } from "next/og";
-import { kStrokesAt } from "@/brand";
 
 /**
  * The icon iOS uses for a home screen shortcut.
  *
  * Without it, adding the site to a home screen produces a screenshot of the
  * page instead of an icon. Served from `/apple-icon`, and a test pins that
- * path: moving it costs the icon everywhere it has already been cached.
+ * path: an icon URL is an address that has already been cached by the time
+ * anyone notices it moved.
  *
- * The K is drawn from the shared strokes in `src/brand.ts` rather than set as
- * text. Satori has no access to Fraunces, which next/font downloads as woff2,
- * so setting a letter here would render it in a fallback sans and show a
- * different letterform to the masthead and the favicon.
+ * **The real mark, not a drawing of it.** This route used to build a K out of
+ * line segments from a `src/brand.ts` module, in crimson on cream, because the
+ * project had no logo file and Satori cannot read the woff2 that `next/font`
+ * downloads. Both halves of that are now wrong: there is a real logo, and those
+ * were the previous design's colours. Satori reads PNG, so `scripts/brand.mjs`
+ * cuts the badge out of the client's file and leaves one here for it.
  *
- * The colours are literals because Satori cannot resolve CSS custom
- * properties. That exemption is recorded in `ALLOWED` in
- * `scripts/check-structure.mjs`; keep them in step with `globals.css` by hand.
+ * Read at module scope. Every page on this site is prerendered, so this runs at
+ * build time with the repository on disk.
  */
+const MARK = `data:image/png;base64,${readFileSync(
+  join(process.cwd(), "public/brand/kalaa-mark.png"),
+).toString("base64")}`;
+
 export const size = { width: 180, height: 180 };
 export const contentType = "image/png";
 
 export default function AppleIcon() {
-  const strokes = kStrokesAt(180);
-
   return new ImageResponse(
     (
       <div
@@ -30,23 +35,32 @@ export default function AppleIcon() {
           width: "100%",
           height: "100%",
           display: "flex",
-          background: "#e5124f",
+          alignItems: "center",
+          justifyContent: "center",
+          /*
+            Flattened onto the badge's own black rather than left transparent.
+            iOS composites a touch icon on a ground of its own and then applies
+            its own rounded mask, so a transparent one lands as a black square
+            with the badge floating inside it, rounded twice. Filling the canvas
+            with the badge's black lets the system mask do the rounding, which
+            is what every other icon on the home screen does.
+
+            The logo's own black, sampled from the file, and **not** `--action`.
+            Those are two different blacks: the badge is pure #000000 and the
+            site's ink is #14131a, and the four-value difference is invisible in
+            isolation and perfectly visible as a seam where they meet, which is
+            what the first attempt at this shipped. Nothing here should track the
+            palette. It has to track the artwork.
+
+            A literal because Satori renders without a browser and cannot read a
+            CSS custom property. Recorded in `ALLOWED` in
+            `scripts/check-structure.mjs`.
+          */
+          background: "#000000",
         }}
       >
-        <svg width={180} height={180} viewBox="0 0 180 180" fill="none">
-          {strokes.map((stroke) => (
-            <line
-              key={`${stroke.x1}-${stroke.y1}-${stroke.x2}-${stroke.y2}`}
-              x1={stroke.x1}
-              y1={stroke.y1}
-              x2={stroke.x2}
-              y2={stroke.y2}
-              stroke="#ffffff"
-              strokeWidth={stroke.width}
-              strokeLinecap="round"
-            />
-          ))}
-        </svg>
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src={MARK} alt="" width={150} height={150} />
       </div>
     ),
     size,
