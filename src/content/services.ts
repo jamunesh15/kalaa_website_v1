@@ -1,12 +1,6 @@
 import type { Service } from "@/content/types";
 
-/**
- * What Kalaa sells, in the order a business meets it.
- *
- * Every line describes work that is actually done. Nothing here claims a
- * timescale, a result or a number, because none of those have been verified and
- * a service page is where invented ones do the most damage.
- */
+/* What Kalaa sells, in the order a business meets it. */
 export const SERVICES: readonly Service[] = [
   {
     slug: "social-media-management",

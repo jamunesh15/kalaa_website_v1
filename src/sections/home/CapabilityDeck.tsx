@@ -15,24 +15,7 @@ export function CapabilityDeck({
   const ref = useRef<HTMLDivElement>(null);
   const prefersReduced = useReducedMotion();
 
-  /*
-   * The switch waits for mount, and that is a hydration fix rather than a
-   * nicety. This component returns two different element trees, a plain list
-   * for reduced motion and a pinned stack for everyone else, and it chose
-   * between them during render. `useReducedMotion` cannot know the preference
-   * on the server, so the server always sent the stack and a browser with the
-   * preference set wanted the list: React found a `ul` where it had been given
-   * a `div` and threw the page away and rebuilt it on the client.
-   *
-   * A tag disagreeing is the one version of this that no amount of MotionConfig
-   * can fix, because the difference is in the markup rather than in the
-   * animation. So the first client render matches the server by construction,
-   * and the swap happens immediately after, once the preference is knowable.
-   * `useSyncExternalStore` rather than a state flag set in an effect: it is the
-   * one hook that is allowed to return a different value on the server than on
-   * the client, and it says so in its signature, with the server snapshot as
-   * its own argument.
-   */
+  /* The switch waits for mount, and that is a hydration fix rather than a nicety. */
   const mounted = useSyncExternalStore(
     () => () => {},
     () => true,
@@ -45,22 +28,7 @@ export function CapabilityDeck({
     offset: ["start center", "end 80%"],
   });
 
-  /*
-   * The plain list is always rendered. What changes is where it is VISIBLE.
-   *
-   * The pinned stack was the only thing the server ever sent, at every width,
-   * because the swap to the list could not happen until the client knew the
-   * motion preference. On a phone that meant the first thing delivered was five
-   * cards lying on top of one another: the responsive suite reported four pairs
-   * of overlapping text at 375px, and it was right. The client rebuilt it a beat
-   * later, which hid the problem from anyone watching rather than fixing it.
-   *
-   * Width is a question CSS can answer during server rendering and the motion
-   * preference is not, so they are answered separately. Below `xl` the list is
-   * what shows, from the first byte, with no JavaScript involved. Above it, the
-   * stack shows until the preference is known and then the list takes over at
-   * every width.
-   */
+  /* The plain list is always rendered. */
   return (
     <>
       <ul className={`mt-12 grid gap-5 lg:mt-16 ${reduced ? "" : "xl:hidden"}`}>

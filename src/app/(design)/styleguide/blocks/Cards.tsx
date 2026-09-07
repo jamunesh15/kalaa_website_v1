@@ -2,14 +2,7 @@ import { Block } from "../Block";
 import { Card } from "@/components/ui/Card";
 import type { CardFill } from "@/components/ui/Card";
 
-/**
- * The card, in every fill.
- *
- * Shown together so the point is unmissable: the fills are interchangeable.
- * Nothing on the site may encode information in which colour a card happens to
- * be. A reader cannot learn a code they were never shown, and a colour-blind
- * reader could not read it even if they had been.
- */
+/* The card, in every fill. */
 const FILLS: { fill: CardFill; heading: string; body: string }[] = [
   {
     fill: "surface",

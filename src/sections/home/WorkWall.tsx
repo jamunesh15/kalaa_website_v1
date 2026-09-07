@@ -4,29 +4,9 @@ import { useEffect, useRef, useState } from "react";
 import type { WorkPiece } from "@/content/types";
 import { isScrolling, subscribeScrolling, useScrolling } from "@/motion/useScrolling";
 
-/**
- * One mosaic of real work, mixed rather than filed by format.
- *
- * Kalaa makes reels and posts for the same accounts, so two separate lanes
- * described the agency's own filing system instead of its work. Mixed, the
- * section reads the way a feed does.
- *
- * The two formats behave differently on purpose. A reel is already moving, so
- * its tile holds still and lets the footage be the motion. A post is a still
- * image, and it stays one: the tiles hold their position so the artwork can be
- * looked at, and the reels end up being the only motion in the section, which is
- * what makes them read as the moving pieces rather than as more of the same.
- *
- * The shape of the arrangement lives in `work-mosaic` in `utilities.css`, as
- * grid areas. Nothing in this file positions anything.
- */
+/* One mosaic of real work, mixed rather than filed by format. */
 
-/**
- * The tiles, and which format each one holds.
- *
- * Named areas rather than spans, so the arrangement is legible in one place
- * instead of scattered through the markup as `col-span-2 row-span-3`.
- */
+/* The tiles, and which format each one holds. */
 const TILES = [
   { area: "r1", kind: "reel" },
   { area: "r2", kind: "reel" },
@@ -98,20 +78,7 @@ export function WorkWall({
   );
 }
 
-/**
- * Admits one reel mount every 90ms.
- *
- * Five reels coming into range on the same settle used to mount in one React
- * commit, which is five media players built inside one frame: measured at 58,
- * 83 and 58ms across three frames on the production build, and visible as the
- * reels already playing skipping while their neighbours were built. One at a
- * time, 90ms apart, the same work is spread over half a second and no single
- * frame carries more than one player. The reels also start one after another,
- * which reads as the wall waking up rather than as a stall.
- *
- * Module level, because the queue has to be shared by every reel on the page;
- * one queue per component would be nine queues admitting at once.
- */
+/* Admits one reel mount every 90ms. */
 const mountQueue: Array<() => void> = [];
 let pumping = false;
 
@@ -131,22 +98,7 @@ function pump() {
   setTimeout(pump, 90);
 }
 
-/**
- * A reel is a poster image until it is nearly on screen, and only then a video.
- *
- * The obvious build is a `<video preload="none" poster>` that plays on
- * intersection. It costs nothing in Chromium and it breaks the page in WebKit: a
- * video element enters the resource selection algorithm whatever its `preload`
- * says, and WebKit holds the document's load event open until it settles.
- * Measured on the built page, six of them left `document.readyState` stuck at
- * `interactive` forever, so `load` never fired and every WebKit test on this
- * route timed out at sixty seconds while Chromium finished the page in 102ms.
- *
- * So there is no video element on the page until one is wanted. The poster is a
- * real lazy image, which is what the mosaic is made of at rest, and the video
- * replaces it on intersection a screen early. A visitor who never scrolls this
- * far pays for nothing.
- */
+/* A reel is a poster image until it is nearly on screen, and only then a video. */
 function Reel({
   area,
   item,
@@ -160,45 +112,7 @@ function Reel({
   const [mounted, setMounted] = useState(false);
   const scrolling = useScrolling();
 
-  /*
-    **The video element is created only while the page is still, one reel at
-    a time, and never removed.**
-
-    Pausing the reels was the first fix for this band and it was not enough:
-    the client still felt it lag. Measured on the production build with real
-    wheel events, with every image and video request blocked so the tiles were
-    empty boxes, this band still dropped five to seven frames per pass that the
-    services band never dropped. The one thing every variant kept was the
-    poster-to-video swap firing from the intersection observer in the middle
-    of a scroll: creating a media element is a media player, a style and
-    layout pass and a burst of garbage, and the trace showed exactly that,
-    43ms of main-thread work landing inside single 16.7ms windows with a
-    major GC in the worst of them.
-
-    So the observer only records whether the tile is in range, and `settle`
-    acts on that when the page is not moving: once from the observer, and
-    once more each time `useScrolling` reports the page has stopped, 140ms
-    after the last scroll event. A reader who scrolls straight through the
-    wall sees posters and pays nothing.
-
-    **Then the client stopped mid-wall, scrolled on, and saw the reels stall.**
-    Measured with a rest halfway through the pass: the rest itself cost three
-    frames of 58, 83 and 58ms, which was five media players being created in
-    one React commit, and the far end of the pass cost another burst when
-    seven were torn down together. Both landed while the page was still, so
-    they were never scroll judder; they were the reels that had just started
-    playing skipping frames while their neighbours were built or destroyed.
-    Hence the other two rules. Mounts go through `enqueueMount`, which admits
-    one every 90ms, so the reels come to life one after another rather than
-    all at once. And nothing is ever unmounted: a reel that leaves the range
-    is paused and kept, so scrolling back to it costs nothing and leaving
-    it costs nothing. Nine paused elements is the ceiling, and a paused
-    element out of view holds no decoder.
-
-    Event callbacks and refs rather than `active` state mirrored through an
-    effect: the project's lint rule refuses a `setState` in an effect body,
-    and it is right to, since the mirror would run a render behind the event.
-  */
+  /* The video element is created only while the page is still, one reel at a time, and never removed. */
   useEffect(() => {
     const node = frame.current;
     if (!node) return;
@@ -229,12 +143,7 @@ function Reel({
         settle();
       },
       {
-        /*
-          **A quarter of a screen early, not a whole one.** At `100%` every
-          reel within a full viewport above or below counts as in range, which
-          on a desktop is most of the wall at once. A quarter keeps the number
-          in play close to what is actually on screen.
-        */
+        /* A quarter of a screen early, not a whole one. */
         rootMargin: "25% 0px",
       },
     );
@@ -247,22 +156,7 @@ function Reel({
     };
   }, []);
 
-  /*
-    **The reels stop while the page is moving.** Measured through this band,
-    six autoplaying videos take the frame budget from 8.3ms to 16.7ms and every
-    other section on the site stays at 8.3; paused, this band measures the same
-    as the rest of the page. Re-measured on the production build after the
-    mount fix, with seven reels playing through a pass: fifteen to twenty-four
-    long frames against three to nine paused. So they still stop, and start
-    again the moment the page settles, which is also when anybody could
-    actually watch one. Out of range they stay paused, see `settle`.
-
-    `play()` returns a promise that rejects if a pause interrupts it, which
-    happens on any flick that starts again before this settles. It is not a
-    failure and there is nothing to recover, so it is swallowed rather than
-    logged: an unhandled rejection here would fill the console on every scroll
-    and `smoke.spec.ts` fails a route whose console is not clean.
-  */
+  /* The reels stop while the page is moving. */
   useEffect(() => {
     const video = media.current;
     if (!video) return;
@@ -308,20 +202,7 @@ function Reel({
   );
 }
 
-/**
- * One tile, one post, held still.
- *
- * It has been three things. A cross-fade first, which read as a flash rather
- * than a change, because an opacity swap has no direction and at the moment it
- * happens nothing on screen says what you just missed. Then a strip travelling
- * continuously, which was legible but put eighteen moving things around six
- * videos, and the reels are the part worth watching.
- *
- * Still is what the work needs. A mosaic that holds its position lets the
- * artwork be looked at, and it makes the six reels the only motion in the
- * section, which is what makes them read as the moving pieces rather than as
- * more of the same.
- */
+/* One tile, one post, held still. */
 function PostSlot({ area, item }: { area: string; item: WorkPiece }) {
   if (item.kind !== "post") return null;
 

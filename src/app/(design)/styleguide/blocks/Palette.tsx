@@ -1,14 +1,7 @@
 import { Block } from "../Block";
 import { TokenValue } from "../TokenValue";
 
-/**
- * The palette, and the job each colour holds.
- *
- * A colour without a job is how a palette turns into a paint set. Every entry
- * says where it is allowed to appear, and the four tints say explicitly that
- * they mean nothing, because that is the rule most likely to be broken by
- * somebody trying to be helpful.
- */
+/* The palette, and the job each colour holds. */
 const SWATCHES = [
   { token: "--page", swatch: "bg-page", role: "The sage frame. Ink or body text only, never muted." },
   { token: "--sheet", swatch: "bg-sheet", role: "The white sheet the site is printed on." },

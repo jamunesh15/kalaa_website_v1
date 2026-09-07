@@ -4,16 +4,7 @@ import { HandAccent } from "@/components/ui/HandAccent";
 import { getServices } from "@/content";
 import { ServiceShowcase } from "@/sections/home/ServiceShowcase";
 
-/**
- * The service showcase: cards arriving from both sides around real work in the
- * middle. It keeps Kalaa's own light palette rather than taking the reference's
- * dark theme.
- *
- * The heading is here rather than inside the showcase, and that is on purpose.
- * It is the same `SectionHeading` every other band uses, it is server-rendered
- * with the rest of the page, and it starts on the same gutter as the hero. The
- * showcase below it is the only part that needs to be a client component.
- */
+/* The service showcase: cards arriving from both sides around real work in the middle. */
 export function Services() {
   const services = getServices();
 

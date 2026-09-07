@@ -2,16 +2,7 @@ import { Block } from "../Block";
 import { Button } from "@/components/ui/Button";
 import { Pill } from "@/components/ui/Pill";
 
-/**
- * The pressable surfaces, and the gesture they share.
- *
- * Hover one and it rises two pixels while its shadow deepens to match. That is
- * one idea, defined once in the `liftable` utility, and every other pressable
- * thing on the site reuses it rather than inventing a hover of its own.
- *
- * Tab to them as well as hovering. The focus ring is added rather than
- * replacing the browser default, so there is no half of it to lose later.
- */
+/* The pressable surfaces, and the gesture they share. */
 export function Controls() {
   return (
     <Block

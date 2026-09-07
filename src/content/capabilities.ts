@@ -1,13 +1,6 @@
 import type { Capability } from "@/content/types";
 
-/**
- * The presence story before the services list.
- *
- * This section should not repeat the services grid that follows it. It explains
- * why a business needs a strong social presence before the page names the work
- * Kalaa sells. No numbers, no fake proof, and no service menu pretending to be
- * strategy.
- */
+/* The presence story before the services list. */
 export const CAPABILITIES: readonly Capability[] = [
   {
     slug: "be-seen-often",

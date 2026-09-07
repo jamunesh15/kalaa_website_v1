@@ -1,15 +1,6 @@
 @import "tailwindcss";
 
-/**
- * The stylesheet entry point, and deliberately nothing more.
- *
- * The design system lives in `src/styles/`, one concern per file, so finding
- * where a colour or a corner is decided does not mean scrolling past three
- * hundred lines of unrelated rules.
- *
- * Order matters: Tailwind first, then the tokens, then the theme that publishes
- * them as utilities, then the utilities that read them, then the base layer.
- */
+/* The stylesheet entry point, and deliberately nothing more. */
 @import "../styles/tokens.css";
 @import "../styles/theme.css";
 @import "../styles/utilities.css";

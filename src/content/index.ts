@@ -21,18 +21,7 @@ import type {
   WorkPiece,
 } from "@/content/types";
 
-/**
- * The only way a page gets content.
- *
- * Nothing outside this file imports `services.ts` or `process.ts` directly.
- * They are typed arrays today and they will be a CMS query one day, and the
- * point of going through here is that the day it changes, this file changes and
- * nothing else does.
- *
- * The functions are synchronous now and will return promises later. Callers are
- * server components, so awaiting a value that is not yet a promise costs
- * nothing and saves rewriting every caller when it becomes one.
- */
+/* The only way a page gets content. */
 
 export function getServices(): readonly Service[] {
   return SERVICES;
@@ -87,14 +76,7 @@ export function getAboutPillars(): readonly AboutPillar[] {
   return ABOUT_PILLARS;
 }
 
-/**
- * The ways in: email, phone and WhatsApp, from `contact.ts`.
- *
- * The footer and the contact page both render these, and they rendered two
- * hardcoded lists of them in the build before this one. A number corrected in
- * one place and not the other is a footer quietly sending callers to the wrong
- * studio, which nothing on the page would show.
- */
+/* The ways in: email, phone and WhatsApp, from `contact.ts`. */
 export function getChannels(): readonly ContactChannel[] {
   return CHANNELS;
 }

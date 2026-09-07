@@ -19,18 +19,7 @@ export const metadata: Metadata = {
   }),
 };
 
-/**
- * The privacy policy.
- *
- * The date comes from the route registry rather than being typed into the copy,
- * so the line a reader sees and the `lastmod` the sitemap publishes cannot drift
- * apart. A test cross-checks the two, because a page claiming one date while the
- * sitemap claims another is a contradiction anyone can catch and nothing warns
- * about.
- *
- * The sections below are the structure, not legal advice. Have the wording
- * reviewed before this goes live.
- */
+/* The privacy policy. */
 export default function PrivacyPolicy() {
   const lastUpdated = routeFor(path).lastModified;
 

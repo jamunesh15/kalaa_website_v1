@@ -1,10 +1,4 @@
-/**
- * Utilities that read a token no Tailwind namespace covers.
- *
- * They exist for one reason: a number typed into a component is a decision made
- * in the wrong place. `border` would be consistent right up until somebody
- * types `border-2` in one file and nothing notices.
- */
+/* Utilities that read a token no Tailwind namespace covers. */
 
 /** The hairline width. One value, decided in `tokens.css`. */
 @utility border-token {
@@ -31,31 +25,9 @@
   transition-timing-function: var(--ease-brand);
 }
 
-/**
- * The phone menu control: three bars that fold into a cross.
- *
- * Drawn in CSS rather than swapped between two icons, so the change is a
- * movement the eye can follow. The outer bars travel to the middle line and
- * turn 45 degrees each way; the middle one collapses to nothing. 6px is the
- * distance from an outer bar's centre to the middle bar's centre: a 2px bar
- * and a 4px gap. Re-derive it if either changes.
- *
- * Same clock as every state change on the site, `--dur-base` on `--ease-brand`,
- * so the bars and the panel they open finish together.
- */
+/* The phone menu control: three bars that fold into a cross. */
 @utility hamburger {
-  /*
-    An SVG at 24px, one CSS pixel per unit, not three `div`s. The divs
-    shipped first and the client saw the middle bar darker than the other
-    two: the outer bars landed on half pixels and were smeared over three
-    rows while the middle one sat on whole pixels. Three `line`s at y=6, 12
-    and 18 with a 2-unit stroke, drawn at 24 CSS pixels, each cover exactly
-    two rows, and all three go through the same rasteriser.
-
-    `transform-box: fill-box` makes each line turn about its own centre.
-    Lengths in a transform on an SVG element are user units, so the 6px
-    travel is the 6-unit gap between lines.
-  */
+  /* An SVG at 24px, one CSS pixel per unit, not three `div`s. */
   width: 24px;
   height: 24px;
 
@@ -81,14 +53,7 @@
   }
 }
 
-/**
- * The lift. Rise slightly, and the shadow deepens to match.
- *
- * Declared here rather than on the button because it belongs to the elevation
- * system, not to one component: any surface that can be pressed or opened uses
- * the same gesture. Three components inventing three hovers is the templated
- * look arriving through the back door.
- */
+/* The lift. */
 @utility liftable {
   transition-property: transform, box-shadow, background-color, color;
   transition-duration: var(--dur-base);
@@ -105,23 +70,12 @@
   }
 }
 
-/**
- * The sage margin around the white sheet.
- *
- * Zero on a phone, where giving up horizontal space to a decorative margin is
- * not a trade worth making. `--frame` widens at the same breakpoint the layout
- * does, so the frame appears exactly when there is room for it.
- */
+/* The sage margin around the white sheet. */
 @utility frame-inset {
   padding: var(--frame);
 }
 
-/**
- * The pale band between the sheet and the content it holds.
- *
- * Paired with `rounded-token` on the child, this is what makes the page read as
- * nested surfaces rather than as one white area with things drawn on it.
- */
+/* The pale band between the sheet and the content it holds. */
 /** The band of frame colour between the page edge and the app, masthead included. */
 @utility ring-inset-token {
   padding: var(--ring);
@@ -137,31 +91,7 @@
   top: calc(var(--frame) + var(--ring) + var(--frame-line));
 }
 
-/**
- * The frame above the masthead, rebuilt in place while the page scrolls.
- *
- * Three things have to be true at once, and the first two attempts each got one
- * and lost another.
- *
- * 1. Nothing may travel up through the frame. The page margin is body padding,
- *    so it exists at the top of the document and nowhere else: once the page has
- *    moved, viewport row zero is showing the middle of the sheet.
- * 2. The corner has to stay round, and this is the one that is easy to get
- *    wrong. The rounded corner visible at rest belongs to the SHEET, not to the
- *    frame. Scroll, and it leaves with the sheet; what sits behind the bar from
- *    then on is a square-edged rectangle. Drawing a rounded sage corner over
- *    that does nothing, because the sage behind it is already square and the
- *    same colour, so the frame reads as having flattened.
- * 3. It has to look identical at rest, or the page flinches on first scroll.
- *
- * So the cap redraws both layers rather than covering one: a sage band carrying
- * the frame's corner, and inside it the sheet's own rounded top, held for
- * exactly one radius before the real sheet takes over underneath, square and
- * seamless.
- *
- * The page margin is a separate band and square, because it meets the viewport
- * corner and has nothing to round against.
- */
+/* The frame above the masthead, rebuilt in place while the page scrolls. */
 @utility frame-strip-outer {
   inset-inline: 0;
   top: 0;
@@ -169,12 +99,7 @@
 }
 
 @utility frame-cap {
-  /*
-    Never wider than the sheet. `PageFrame` is `max-w-[var(--sheet-max)]` and
-    centred, so past that width the sheet's edge is not the frame, it is the
-    centring margin. A percentage on a fixed element measures the viewport
-    without its scrollbar, the same width `mx-auto` centres against.
-  */
+  /* Never wider than the sheet. */
   inset-inline: max(var(--frame), calc((100% - var(--sheet-max)) / 2));
   top: var(--frame);
   height: calc(var(--ring) + var(--frame-line) + var(--radius));
@@ -182,13 +107,7 @@
   z-index: 60;
 }
 
-/*
- * The cap redraws every layer the frame has, and it has to: each one is a
- * different colour meeting the next at a rounded corner, and a layer left out
- * of the cap is a layer that flattens the moment the page moves. Each is
- * absolute inside the one before, so the insets are widths rather than running
- * totals and adding a fourth layer would not mean re-deriving the other three.
- */
+/* The cap redraws every layer the frame has, and it has to: each one is a different colour meeting the next at a rounded. */
 @utility frame-cap-line {
   inset-inline: var(--ring);
   top: var(--ring);
@@ -200,17 +119,7 @@
   top: var(--frame-line);
   bottom: 0;
 }
-/**
- * The sector band.
- *
- * The list is rendered twice and the track slides exactly half its width, so the
- * second copy arrives where the first began and the loop has no seam. Duplicate
- * copies are `aria-hidden` in the markup; a screen reader reads the list once.
- *
- * A list that keeps arriving is the point rather than the decoration: the
- * section says Kalaa works with any business that needs marketing, and motion
- * that never runs out says it better than a paragraph.
- */
+/* The sector band. */
 @keyframes marquee-track {
   from {
     transform: translateX(0);
@@ -292,32 +201,14 @@
   transition-duration: var(--dur-base);
   transition-timing-function: var(--ease-brand);
 
-  /*
-   * The card lifts. It used to lift and warm its outline to an accent mix at
-   * the same time, and the outline is gone: an outlined card on a tinted field
-   * is a second edge drawn around one already given by the fill, and the accent
-   * mix read as an orange border appearing under the cursor for no reason a
-   * visitor could name. Elevation carries the hover on its own, which is what
-   * this project's own rule about favouring elevation over borders says.
-   */
+  /* The card lifts. */
   &:hover {
     transform: translateY(-0.25rem);
     box-shadow: var(--shadow-lift);
   }
 }
 
-/**
- * The client logo rows.
- *
- * Three copies of the list per row and a slide of exactly one copy, so the
- * second arrives where the first began. `-33.3333%` of a three-copy track is
- * one copy to within a hundredth of a pixel; the alternative, a pixel width
- * hard-coded here, is a seam the day somebody changes the card size.
- *
- * The three rows run at three different durations. Equal ones look correct in
- * isolation and read as one block sliding when they are stacked, because the
- * eye picks up that every row crosses the screen together.
- */
+/* The client logo rows. */
 @keyframes logo-row-track-left {
   from {
     transform: translate3d(0, 0, 0);
@@ -346,11 +237,7 @@
   will-change: transform;
 }
 
-/*
- * The middle row is the one that has to differ. It is the row a reader looks
- * at, and it is between two tracks going the other way, so matching either of
- * them is what makes the whole block read as one moving object.
- */
+/* The middle row is the one that has to differ. */
 .logo-row-mask > :nth-child(2) {
   animation-duration: 40s;
 }
@@ -359,26 +246,13 @@
   animation-duration: 30s;
 }
 
-/**
- * Both ends of every row fade out.
- *
- * Without this a card appears and vanishes at a hard vertical line, which reads
- * as a clipping fault rather than as a row that carries on past the gutter.
- *
- * The fade is wider than a card is, and that is the number that matters: at 6%
- * a card was still two thirds opaque when the clip cut it, so the fade softened
- * the edge without hiding it. 12% of the rail is about 150px against a 208px
- * card, which leaves it faint enough by the cut that there is nothing to see.
- */
+/* Both ends of every row fade out. */
 @utility logo-row-mask {
   -webkit-mask-image: linear-gradient(to right, transparent, black 12%, black 88%, transparent);
   mask-image: linear-gradient(to right, transparent, black 12%, black 88%, transparent);
 }
 
-/**
- * Hand-written keyframes do not honour the preference on their own, unlike the
- * framework-driven motion elsewhere on this site. This one holds still.
- */
+/* Hand-written keyframes do not honour the preference on their own, unlike the framework-driven motion elsewhere on this. */
 @media (prefers-reduced-motion: reduce) {
   .marquee,
   .logo-row-left,
@@ -396,18 +270,7 @@
   isolation: isolate;
 }
 
-/**
- * Five steps, one row, bottom aligned.
- *
- * It was `repeat(6, 1fr)` with every card spanning two columns, so five cards
- * could only ever come out as three and then two, and the section ran to two
- * screens with the left half of the second one empty. Five columns is the whole
- * fix: a sequence that wraps is not read as a sequence.
- *
- * `align-items: end` and a growing `min-height` put every card on one baseline
- * and make each taller than the one to its left, so the row's top edge climbs.
- * The padding above is the band the curve and its node labels live in.
- */
+/* Five steps, one row, bottom aligned. */
 @utility process-flow-grid {
   display: grid;
   grid-template-columns: repeat(5, minmax(0, 1fr));
@@ -415,74 +278,16 @@
   align-items: end;
   padding: calc(var(--process-rise) * 2.7) 0 0;
 
-  /*
-   * `> li`, and the child combinator is not tidiness. Written as `& li` an
-   * earlier version of this rule also matched every bullet inside every card,
-   * and custom properties inherit, so each bullet took its card's own step
-   * value as a margin: an 86px gap between three list items and a card 580px
-   * tall next to one at 326. Nothing about it looked like a selector problem.
-   */
+  /* `> li`, and the child combinator is not tidiness. */
   & > li {
     position: relative;
   }
 }
 
-/**
- * The node: the step's number and stage, on the line, with a stem to its card.
- *
- * This is what stops the curve reading as a roof laid across the cards. Three
- * things were tried above it and each failed the same way. A dot on the line
- * over each card is the shape every generated diagram arrives in and says
- * nothing the card has not already said. A tick is the same idea wearing a
- * different hat. Running the line flush along the card tops connects it and
- * makes it a roof, because a line parallel to five top edges is read as an edge
- * of the block rather than as a path through it.
- *
- * So the line gets its own band, and each card reaches up into it: a dark label
- * carrying real content sits centred on the curve, and a stem drops from it to
- * the card. The label is opaque, so the curve runs behind it and comes out the
- * other side, which is the threading the reference actually does.
- *
- * `translateY(-50%)` is safe here where it was not on the old markers: the
- * entrance animation is on the `li`, so nothing overwrites this element's own
- * transform.
- */
-/**
- * The growing height belongs to the row, and only to the row.
- *
- * Declared here rather than inside `process-flow-card` because it is what makes
- * the top edges climb, and a stacked card has no curve to climb toward. Left on
- * the card unconditionally it forced every phone card to 344px for about 300px
- * of copy and added three hundred pixels of white space to the section.
- *
- * `var(--step-lift, 0)` keeps the fallback anyway: `--step-lift` is set per card
- * by the row, and without a fallback the calc would be invalid and the whole
- * declaration silently dropped rather than falling back to the base.
- */
+/* The node: the step's number and stage, on the line, with a stem to its card. */
+/* The growing height belongs to the row, and only to the row. */
 @media (min-width: 80rem) {
-  /*
-   * The climb is where a card SITS, not how tall it is.
-   *
-   * The lift used to be added to each card's `min-height`, so the card on the
-   * right stood 86px taller than the one on the left while holding copy two
-   * lines shorter. That difference has to surface somewhere inside the card and
-   * there is no good place for it: above the panel it was a bare band of colour,
-   * inside the panel it was 180px of white between the last deliverable and the
-   * closing line. Both were reported as a bug, and both times moving it only
-   * changed which hole you saw.
-   *
-   * The row is bottom aligned, so a margin under a card raises its top edge by
-   * exactly the amount the old `min-height` did, and the curve is drawn against
-   * that same step.
-   *
-   * ONE height for all five, not a height per card. Sizing each card to its own
-   * copy left the last two visibly stunted, because they hold the shortest copy
-   * and sit highest, so they finished well above the rest of the row. A single
-   * height near the longest card's natural size keeps the five reading as one
-   * set, and the most any card is stretched past its content is about 40px,
-   * which lands above the closing line where that line already sits behind its
-   * own rule.
-   */
+  /* The climb is where a card SITS, not how tall it is. */
   .process-flow-card {
     min-height: 21.5rem;
   }
@@ -512,11 +317,7 @@
   white-space: nowrap;
   box-shadow: var(--shadow-soft);
 
-  /*
-   * The stem, from the foot of the label to the top of the card. The percentage
-   * resolves against the label's own height, so the drop stays correct if the
-   * label ever grows a line.
-   */
+  /* The stem, from the foot of the label to the top of the card. */
   &::after {
     position: absolute;
     top: 100%;
@@ -538,38 +339,12 @@
   font-size: 0.75rem;
 }
 
-/**
- * The card, sized so the row's top edge is the curve.
- *
- * `--step-lift` is how much taller this card is than the shortest, in rises. It
- * is set on the element and read here, by the curve in `ProcessPath`, and
- * nowhere else, so the line and the corner it touches cannot drift apart.
- *
- * The base has to clear the tallest card's own content. If content pushes a
- * card past its `min-height`, that card's top rises off the line and the whole
- * device breaks, so this number is measured against the real copy rather than
- * chosen.
- */
+/* The card, sized so the row's top edge is the curve. */
 @utility process-flow-card {
   position: relative;
   display: grid;
 
-  /*
-   * The panel takes the card's spare height. The rows inside it do not.
-   *
-   * Those are two separate decisions and getting them the same way round is the
-   * whole fix. The rows used to carry `flex: 1`, so a taller card spread its
-   * lines further apart, and the two cards on the right ended up with visibly
-   * wider line spacing than the three on the left: one set, laid out five
-   * slightly different ways. Giving the panel its natural height instead fixed
-   * the spacing and moved the slack to the top of the card, where it showed as a
-   * bare band of colour above the panel, which is worse.
-   *
-   * So the panel stretches and its rows sit at their natural height at the top
-   * of it. The slack lands above the outcome line, which is pinned to the foot
-   * of the panel behind its own rule, so it reads as the summary sitting at the
-   * bottom of a table rather than as a gap.
-   */
+  /* The panel takes the card's spare height. */
   grid-template-rows: auto 1fr;
   gap: 1rem;
   overflow: hidden;
@@ -581,37 +356,14 @@
   /* Overridden by the fill classes below; the fold reads it. */
   --card-tint: var(--tint-cloud);
 
-  /*
-   * The fold is one flat colour: this card's own tint, a step darker. It was a
-   * gradient with a drop shadow under it and a lit crease drawn across it,
-   * which is three effects doing the job of one and made the corner read as a
-   * shadow stuck on the card rather than as the back of the card's own paper.
-   * Same hue, darker value, nothing else.
-   */
+  /* The fold is one flat colour: this card's own tint, a step darker. */
   &::before {
     position: absolute;
     top: -1px;
     right: -1px;
     width: 3rem;
     aspect-ratio: 1;
-    /*
-     * The card's own hue at full strength: the butter card's fold is the site's
-     * accent yellow, the peach card's is a real peach, and so on.
-     *
-     * Two earlier versions both failed the same way, by treating "darker" as the
-     * whole job. Mixing the tint toward ink pulls the chroma out along with the
-     * lightness, and so does dropping lightness alone in oklch, because a tint is
-     * pale precisely BECAUSE its chroma is low. Either way the corner came back
-     * as a grey-brown triangle stuck to a coloured card.
-     *
-     * Raising chroma while lowering lightness is what makes it read as the same
-     * paper folded over. Checked against the palette rather than guessed:
-     * `--tint-butter` through this expression lands on oklch(0.88 0.165 94.6),
-     * and `--accent`, the yellow the client pointed at, is oklch(0.885 0.155 93).
-     *
-     * The `color-mix` above is the fallback for engines without relative colour
-     * syntax.
-     */
+    /* The card's own hue at full strength: the butter card's fold is the site's accent yellow, the peach card's is a real. */
     background: color-mix(in srgb, var(--card-tint) 86%, var(--ink));
     background: oklch(from var(--card-tint) calc(l - 0.08) calc(c * 2.6) h);
     clip-path: polygon(100% 0, 0 0, 100% 100%);
@@ -619,19 +371,7 @@
   }
 }
 
-/**
- * The tints at full strength, which is how every other section on the site uses
- * them.
- *
- * These were each mixed down into white, butter at 38% and the rest between 46
- * and 52%, and the result was a set of colours that exist nowhere else on the
- * page. Held next to the butter card in Services or the butter artifact in the
- * hero, this section's butter read as a washed-out cream, and the section as a
- * whole looked as though it had been designed separately and pasted in.
- *
- * A tint is already the pale end of the palette. Diluting it again does not
- * make a section quieter, it makes it a different section.
- */
+/* The tints at full strength, which is how every other section on the site uses them. */
 @utility process-flow-card-butter {
   --card-tint: var(--tint-butter);
 
@@ -677,12 +417,7 @@
   line-height: 1;
 }
 
-/**
- * The panel takes whatever height the card has spare, and the outcome line is
- * pinned to its foot. Every card ends on the same baseline, so those five lines
- * land on one row across the section rather than wherever their own bullets
- * happened to stop.
- */
+/* The panel takes whatever height the card has spare, and the outcome line is pinned to its foot. */
 @utility process-detail {
   position: relative;
   display: flex;
@@ -694,38 +429,11 @@
   box-shadow: inset 0 0 0 var(--border-w) color-mix(in srgb, var(--line) 82%, transparent);
 }
 
-/**
- * One deliverable, as a row rather than a bullet.
- *
- * The green dot in front of each line was decoration doing no work: three items
- * in a titled panel are already a list, and a coloured disc in front of each one
- * only says "list" a second time. It is also the marker every generated layout
- * reaches for. A hairline between rows separates them better, because these
- * items wrap to two lines and a reader needs to see where one ends.
- *
- * The rows are their natural height and no longer share out the panel's spare
- * space. They used to, via `flex: 1`, which filled the taller cards on the right
- * but did it by spacing their lines further apart than the cards on the left,
- * so the five cards read as five different tables. The card handles its own
- * spare height now: see `align-content` on `process-flow-card`.
- */
+/* One deliverable, as a row rather than a bullet. */
 @utility process-detail-line {
   display: flex;
 
-  /*
-   * One height for every row, wrapped or not.
-   *
-   * This is what makes the five panels identical. "Questions buyers ask" is one
-   * line and "What your competitors post" is two, so without it a card holding
-   * one wrapped row is 18px taller inside than a card holding none. The cards
-   * are all one height, so that 18px comes back as a different amount of space
-   * above the closing line in each card, and five cards meant to read as one set
-   * end up with five different internal rhythms. Measured before this: 55px of
-   * gap in the first card against 75px in the third.
-   *
-   * Tall enough for two lines of the row's own type at its own line height, plus
-   * its padding, so nothing is clipped and a one-line row simply centres in it.
-   */
+  /* One height for every row, wrapped or not. */
   min-height: 3.25rem;
   align-items: center;
   border-top: var(--border-w) solid color-mix(in srgb, var(--line) 88%, transparent);
@@ -746,40 +454,12 @@
   height: var(--masthead);
 }
 
-/**
- * The hero fills the first screen.
- *
- * `100svh` rather than `100vh`: on a phone `vh` is measured against the
- * viewport with the browser chrome retracted, so a full-height hero is taller
- * than the screen on arrival and the section below it is pushed out of reach of
- * the first scroll. `svh` is the small viewport, which is what a visitor
- * actually sees when the page loads.
- *
- * `min-height`, never `height`. On a narrow screen the artwork stacks under the
- * copy and the section has to be free to grow past the screen rather than
- * clipping its own contents.
- */
+/* The hero fills the first screen. */
 @utility hero-screen {
   min-height: calc(100svh - var(--frame) - var(--ring) - var(--masthead));
 }
 
-/**
- * A card that stacks under the one before it as the page scrolls.
- *
- * Native `position: sticky`, and that distinction matters. It is not scroll
- * hijacking: the page scrolls at exactly the speed the reader asks for, nothing
- * intercepts the wheel, and no library owns the scroll position. The cards just
- * stop at a fixed offset and let the next one arrive over them.
- *
- * The offset steps down per card, which is what turns four stuck cards into a
- * deck rather than four cards in the same place. The step is set on the element
- * as `--stack-index`.
- *
- * Under reduced motion the stacking is switched off entirely and the cards read
- * as a plain vertical list. Pinning is not an animation, so nothing else would
- * have caught it, and a reader who has asked for less movement should not have
- * the page holding elements in place under them.
- */
+/* A card that stacks under the one before it as the page scrolls. */
 @utility stack-card {
   position: sticky;
   top: var(--stack-top);
@@ -795,13 +475,7 @@
   }
 }
 
-/**
- * Token-built artwork for the capability stack.
- *
- * These panels stand in for custom 3D/illustration assets without pretending to
- * be real client work. The section needs a visual beat on each card, but stock
- * photos would make Kalaa's own agency site feel borrowed.
- */
+/* Token-built artwork for the capability stack. */
 @utility capability-visual {
   background:
     radial-gradient(circle at 18% 18%, color-mix(in srgb, var(--surface) 72%, transparent), transparent 24%),
@@ -837,34 +511,12 @@
     linear-gradient(135deg, color-mix(in srgb, var(--ink) 92%, var(--page)), color-mix(in srgb, var(--tint-cloud) 54%, var(--ink)));
 }
 
-/**
- * The arrow that swipes out of its badge and back in.
- *
- * Two identical arrows share one clipped circle. At rest the first sits centred
- * and the second waits off to the left; on hover the first leaves to the right
- * and the second takes its place. The reader sees one arrow travelling through
- * the badge rather than an arrow that nudges and returns, and because the badge
- * clips, neither arrow is ever visible outside it.
- *
- * The distance is a percentage of the arrow, not a pixel count, so the gesture
- * stays the same size relative to the icon whatever size the badge is set to.
- *
- * Driven from `.group:hover` on the button rather than from `:hover` on the
- * badge itself. Hovering the badge alone would mean the animation only plays
- * when the pointer reaches the last forty pixels of a control the whole width
- * of a card.
- */
+/* The arrow that swipes out of its badge and back in. */
 @utility arrow-swipe {
   position: relative;
   overflow: hidden;
 
-  /*
-   * `--dur-slow`, not `--dur-base`. At 200ms the swap was over before the eye
-   * had followed the arrow across the badge, so what a reader saw was an arrow
-   * that changed rather than one that travelled. The badge is only forty-four
-   * pixels wide, and a short distance needs the longer duration to read as
-   * movement at all.
-   */
+  /* `--dur-slow`, not `--dur-base`. */
   & svg {
     position: absolute;
     inset: 0;
@@ -887,13 +539,7 @@
   }
 }
 
-/**
- * Reduced motion keeps the arrow still rather than teleporting it.
- *
- * Removing only the transition would leave the swap instant, which is a jump
- * cut where there was movement. The arrow simply stays where it is, and the
- * second one stays outside the badge where the clip hides it.
- */
+/* Reduced motion keeps the arrow still rather than teleporting it. */
 @media (prefers-reduced-motion: reduce) {
   .arrow-swipe svg {
     transition: none;
@@ -908,63 +554,19 @@
   }
 }
 
-/**
- * The hairline inside a plan card, drawn from ink rather than from `--line`.
- *
- * `--line` is `#e6e4ee`, a cool grey with violet in it. On a white card that
- * reads as plain grey and it is right everywhere else on the site. On the butter
- * card it read as a pale blue rule, because a cool grey against a warm yellow
- * shows its hue: the same colour looked like two different lines on one row.
- *
- * A translucent ink hairline takes its cast from whatever it is drawn on, so it
- * is the same grey on white, on butter and on any tint a card is given later.
- */
+/* The hairline inside a plan card, drawn from ink rather than from `--line`. */
 @utility plan-rule {
   border: 0;
   border-top: var(--border-w) solid color-mix(in srgb, var(--ink) 13%, transparent);
 }
 
-
-
-
-
-
-
-
-/**
- * The work mosaic.
- *
- * One composition rather than a row per format. Kalaa makes reels and posts for
- * the same accounts, so showing them in separate lanes describes the agency's
- * own filing system rather than its work. Mixed, the section reads like a feed.
- *
- * Areas rather than spans, because the arrangement IS the design here and a list
- * of `col-span-2 row-span-3` scattered through a component hides it. The shape is
- * legible below: six tall reels holding the outer and middle columns down the
- * composition, with posts at two sizes filling around them.
- *
- * THE CELL RATIO IS 27:32, AND THAT NUMBER IS NOT ARBITRARY. A reel tile is two
- * columns by three rows, so its ratio is 2*27 : 3*32, which is exactly 9:16, the
- * ratio the videos were shot in. It was 4:5 before, which made a reel tile 0.533
- * against the footage's 0.5625 and cropped a strip off every video: the reels
- * came out half framed. The posts pay for it instead, at 0.84 against their own
- * 0.8, which is a two percent trim off a still rather than a head cut off a
- * person.
- *
- * Eight columns rather than six, which is what makes each tile smaller without
- * making the section shorter, and leaves room for all six reels rather than
- * three.
- */
+/* The work mosaic. */
 @utility work-mosaic {
   display: grid;
   gap: 0.5rem;
   grid-template-columns: repeat(4, minmax(0, 1fr));
   grid-template-rows: repeat(39, minmax(0, 1fr));
-  /*
-    Derived, not chosen: four cells of 27 across, thirty-nine rows of 32 down,
-    108 over 1248, which reduces to 9 over 104. Recompute from 32 per row if a
-    band is added or removed below.
-  */
+  /* Derived, not chosen: four cells of 27 across, thirty-nine rows of 32 down, 108 over 1248, which reduces to 9 over 104. */
   aspect-ratio: 9 / 104;
   grid-template-areas:
     "r1 r1 r2 r2"
@@ -1008,78 +610,9 @@
     "r8 r8 r9 r9";
 }
 
-/*
- * Below `md` the wall is the whole wall.
- *
- * It used to be two columns on a phone holding two reels and three posts, and
- * four columns on a tablet holding two and six, with every other tile hidden.
- * The client's reading of that was that a phone got a fifth of the section,
- * and he asked for all of it. So the template above places every one of the
- * nine reels and thirty posts, and there is no longer a rule hiding tiles at
- * any width.
- *
- * **Four columns, and the same two post shapes as the wide layout.** Two
- * columns cannot carry it: a reel is two cells by three, so at two columns a
- * reel is the full width and 9:16 of it, and nine of those with thirty posts
- * ran the section past ten thousand pixels. Four columns keeps a reel at half
- * the width and a 2x2 post beside it, which is a tile a thumb can stop on.
- * There are six 1x1 posts on the wall, not thirty: at a 375px phone a cell is
- * about 78px, and a wall of those is a contact sheet.
- *
- * **Reels are paired, and the wall ends on a pair.** Bands of two reels side
- * by side, with two or three bands of posts between them, the same rhythm as
- * the wide layout. The odd ninth reel sits beside a 2x2 post with two 1x1s
- * under it, third band down, so the last band is still a pair of reels and
- * the wall does not trail off into stills.
- */
+/* Below `md` the wall is the whole wall. */
 
-/**
- * The full composition, eight columns, from `md` up.
- *
- * From 768px rather than from 1024px, because the four-column phone template
- * above is thirty-nine rows tall: at 768px that is a 176px cell and an
- * 8,000px section, which is a scroll nobody finishes. Eight columns at 768px
- * is an 88px cell and a 1,250px section. Small tiles on a tablet were the
- * reason four columns used to start here, and that argument held when the
- * tablet only showed eight tiles; showing all thirty-nine, the whole wall in
- * view wins over a bigger tile.
- *
- * Nine tall reels and thirty posts, which is every file in the manifest. Four
- * bands of three rows, and every band is 24 cells with nothing auto-placed.
- *
- * **Two tile shapes for posts, and only two.** A cell is an eighth of the width
- * and 4/27 of it tall, so a 1x1 tile and a 2x2 tile are both 0.844 wide over
- * tall, against 0.800 for a 1080x1350 post. They crop by a hair. A 2x1 tile is
- * 1.688, which is more than twice a post's own shape, so `object-fit: cover`
- * throws over half the artwork away; that is what "half cut" meant when a band
- * of them shipped, and it is why there is not one left on the wall. A 2x3 tile
- * is 0.563, which is the reel shape, and it does the same damage to a post
- * upside down. Reels get 2x3 and nothing else, posts get 1x1 or 2x2 and nothing
- * else.
- *
- * **A two-column strip of three rows is the unit the wall is built from.** It
- * holds one reel, or a 2x2 over two 1x1s, or six 1x1s. Four strips per band, so
- * B bands give 4B strips, nine of which are reels. That arithmetic is what set
- * the band count: at five bands the post strips need at least 33 posts and
- * there are 30, so the wall would have had to repeat three. Four bands take
- * between 21 and 42, and 30 lands inside it as four strips of three posts and
- * three strips of six.
- *
- * **The last band carries two reels and the odd ninth sits in the band above
- * it.** Three at the bottom was tried and read as a row of video rather than as
- * the end of a wall of work. Nine reels do not divide into four pairs, so one
- * band has to carry three whichever way it falls; putting it third leaves the
- * bottom matching the rhythm of every band above it, and the wall still ends on
- * moving pieces rather than trailing off into stills.
- *
- * Moving a reel is a swap, never a deletion: `r9` and the three-post strip that
- * used to sit at the end of the last band traded places, so both bands are
- * still 24 cells and all 30 posts are still placed.
- *
- * **The aspect ratio is derived, not chosen.** A row is 4/27 of the width, so
- * twelve rows make the box 16/9 tall, an aspect of 9/16. Recompute from 4/27
- * per row if a band is ever added or removed.
- */
+/* The full composition, eight columns, from `md` up. */
 @media (min-width: 48rem) {
   .work-mosaic {
     gap: 0.6rem;
@@ -1110,44 +643,12 @@
   box-shadow: var(--shadow-soft);
 }
 
-/*
- * The hero headline, which sets one step smaller than `display-xl` on a phone.
- *
- * The token's own minimum is 2.25rem and the copy no longer fits it: at 36px in
- * a 307px column, "strategic marketing," measures 348px and wraps, and so does
- * the third line, so a three line headline renders as five. The project's rule
- * is that no heading wraps past four lines at 375px.
- *
- * The maximum is untouched, so every width from about 700px up is identical to
- * before. Only the phone step moves, and it moves because the copy changed
- * rather than because the scale was wrong: `display-xl` is still right for the
- * styleguide's own h1, which is the only other place it is used.
- *
- * Measured rather than guessed. `canvas.measureText` at the rendered font gives
- * the width of each line, and 1.9375rem is the largest step where all three
- * clear a 307px column.
- */
+/* The hero headline, which sets one step smaller than `display-xl` on a phone. */
 .hero-headline {
   font-size: clamp(1.9375rem, 4.6vw, 4rem);
 }
 
-/*
- * The FAQ rows.
- *
- * Native `details` and `summary`, with no library and no client component. That
- * is a deliberate choice for this section rather than a shortcut: every answer
- * is in the server-rendered HTML whether or not it is open, so a crawler and an
- * answer engine read all seven, and the keyboard behaviour, the focus handling
- * and the expanded state are the browser's rather than ours to get wrong.
- *
- * `list-style: none` plus the WebKit pseudo-element removes the default
- * triangle. Both are needed: Safari ignores the first and Chrome ignores the
- * second.
- *
- * The mark is a plus that becomes a minus. Two bars share a box and the
- * upright one rotates flat, so nothing is added or removed on toggle and there
- * is no second glyph to keep in sync.
- */
+/* The FAQ rows. */
 .faq-row summary {
   list-style: none;
   cursor: pointer;
@@ -1157,12 +658,7 @@
   display: none;
 }
 
-/*
- * A summary is focusable, and browsers draw their own outline on it. That ring
- * is a full-width black box around the row, which is what "the first one looks
- * boxed" was: a click had focused it. The site's own ring replaces it, and it
- * is `:focus-visible` only, so it appears for a keyboard and not for a mouse.
- */
+/* A summary is focusable, and browsers draw their own outline on it. */
 .faq-row summary:focus {
   outline: none;
 }
@@ -1173,27 +669,7 @@
   border-radius: var(--radius);
 }
 
-/*
- * The answer opens and closes on a transition rather than appearing.
- *
- * **`::details-content` and `interpolate-size`, not a client component.** An
- * animated accordion is normally a height measured in JavaScript, and this
- * section is the one place on the site that cannot afford that: every answer
- * has to be in the server-rendered HTML for the `FAQPage` markup to be honoured
- * and for an answer engine to read it. The CSS route keeps native `details` and
- * animates the part the browser already owns.
- *
- * `interpolate-size` is what allows a transition to `auto`, and it is scoped to
- * this row rather than set on `:root`. Global, it would quietly let every other
- * `auto` in the project become animatable, which is a large change to make as a
- * side effect of an accordion.
- *
- * `content-visibility` is transitioned with `allow-discrete` so the content
- * stays present for the length of the close instead of vanishing on frame one
- * and collapsing an empty box.
- *
- * Where it is unsupported the row opens instantly, which is what it did before.
- */
+/* The answer opens and closes on a transition rather than appearing. */
 .faq-row {
   interpolate-size: allow-keywords;
 }
@@ -1201,22 +677,9 @@
 .faq-row::details-content {
   block-size: 0;
   overflow: hidden;
-  /*
-    **Declared, not left to the browser, and that is a real fix rather than a
-    tidy-up.** The transition below names `content-visibility` with
-    `allow-discrete`, and a transition can only run between two declared values.
-    Without this line the closed answer was fully laid out and merely clipped by
-    `overflow: hidden`: invisible to a reader, and still a measurable box sitting
-    on top of the next question. `tests/responsive.spec.ts` reads text through a
-    Range and reported six answers overlapping the six questions under them.
-  */
+  /* Declared, not left to the browser, and that is a real fix rather than a tidy-up. */
   content-visibility: hidden;
-  /*
-    `--dur-base`, the same clock the plus mark rotates on. They are one gesture:
-    on `--dur-slow` the panel was still opening after the mark had finished
-    turning, and two halves of one control running at different speeds reads as
-    lag rather than as motion.
-  */
+  /* `--dur-base`, the same clock the plus mark rotates on. */
   transition:
     block-size var(--dur-base) var(--ease-brand),
     content-visibility var(--dur-base) allow-discrete;
@@ -1240,25 +703,7 @@
   height: 0.875rem;
 }
 
-/*
- * **2px, not `--border-w`, and this is a rendering fix rather than a style
- * preference.**
- *
- * The bars were one CSS pixel. Measured on the running page, all seven marks
- * land on fractional device pixels, around .375 of a pixel down, because the
- * row heights are not whole numbers. A 1px line drawn across two physical
- * pixels is painted as two half-lit rows, so it reads as grey rather than
- * black; on a display running Windows scaling at 125 or 150 percent each row
- * lands on a different phase, and the column of plus marks comes out alternating
- * dark, faded, dark, faded. It was reported exactly that way, twice.
- *
- * Chasing whole-pixel row heights is the wrong fix, because it breaks again the
- * moment a question wraps to two lines. At two pixels the core of the bar is
- * always fully covered whatever the phase, so every mark renders the same.
- *
- * `border-radius` keeps the thicker bar from reading as a heavy slab at the
- * ends, which is the one thing 2px costs against 1px.
- */
+/* 2px, not `--border-w`, and this is a rendering fix rather than a style preference. */
 .faq-mark::before,
 .faq-mark::after {
   content: "";
@@ -1275,13 +720,7 @@
   transform: rotate(90deg);
 }
 
-/*
- * **Open is a cross, not a minus, and that is the client's correction.**
- * Turning the vertical bar flat left one horizontal rule 14px long sitting in
- * the margin, and read as an em dash rather than as a control. Rotating the
- * whole mark keeps both bars on screen in every state: a plus closed, a cross
- * open, and nothing that looks like punctuation in between.
- */
+/* Open is a cross, not a minus, and that is the client's correction. */
 .faq-mark {
   transition: transform var(--dur-base) var(--ease-brand);
 }
@@ -1290,53 +729,19 @@
   transform: rotate(45deg);
 }
 
-/*
- * The mark still has to change, or an open row and a closed row look identical.
- * Reduced motion removes the travel between the two states, not the states.
- */
+/* The mark still has to change, or an open row and a closed row look identical. */
 @media (prefers-reduced-motion: reduce) {
   .faq-mark {
     transition: none;
   }
 }
 
-/*
- * The hero artifacts, which are cut-out objects rather than pictures of them.
- *
- * `drop-shadow` rather than `box-shadow`, and the difference is the whole
- * point: `box-shadow` draws around the element's rectangle, so a transparent
- * PNG of a ring light gets a shadow in the shape of a square. `drop-shadow`
- * follows the alpha channel, so the shadow is the shape of the object.
- *
- * One filter for every object, which is what makes six things generated
- * separately look photographed together. The images themselves were asked for
- * with no shadow for exactly this reason: six baked-in shadows are six guesses
- * at a light source, and the eye reads the disagreement long before it works
- * out what is wrong.
- *
- * Two stacked shadows, close and far. The close one seats the object on the
- * sage and the far one gives it height. The project bans stacked shadows as a
- * decorative device on panels; this is a single light modelled correctly, which
- * is the thing that rule exists to protect.
- */
+/* The hero artifacts, which are cut-out objects rather than pictures of them. */
 .artifact-shadow {
   filter: drop-shadow(0 2px 3px rgb(20 19 26 / 0.14)) drop-shadow(0 16px 28px rgb(20 19 26 / 0.16));
 }
 
-/**
- * The typing line under the hero headline.
- *
- * One grid cell holding two children. The sizer carries the longest phrase at
- * the same weight and is hidden with `visibility`, not `display`, so it still
- * takes its space: that reserves the box at its widest and tallest, and the
- * paragraph below never moves while the phrase grows and shrinks. `display:
- * none` would reserve nothing, which is the version of this that ships a
- * section jumping every four seconds.
- *
- * Both children sit in `1 / 1` rather than one being absolutely positioned,
- * because an absolute child leaves the grid's own height to the sizer alone and
- * a two-line phrase on a phone then overflows its own line box.
- */
+/* The typing line under the hero headline. */
 .typed-line {
   display: grid;
 }
@@ -1350,13 +755,7 @@
   visibility: hidden;
 }
 
-/**
- * The caret. A block the height of the type, riding the text baseline.
- *
- * `1ch` reads wrong here: `ch` is the width of a zero, which in a bold face is
- * wide enough that the caret looks like a highlighted character. A fixed
- * fraction of the em keeps it a caret at every size the line is set at.
- */
+/* The caret. */
 .typed-caret {
   display: inline-block;
   width: 0.09em;
@@ -1384,24 +783,7 @@
   }
 }
 
-/**
- * One artifact on the about board, placed by custom property.
- *
- * The coordinates are inline, because they are data: ten objects each with
- * their own left, top and width cannot be a class list. What cannot be inline
- * is the phone arrangement, because an inline style has no media query, so the
- * two sets are passed as custom properties and this rule chooses between them.
- *
- * A phone genuinely needs a different arrangement, and that is worth saying
- * because the hero deliberately avoided one. The hero has four artifacts, so
- * the same coordinates shrink with the box and stay readable at 375px. Ten do
- * not: measured, the plan sheet came out 215px wide with its five column
- * headings at about four pixels tall, and the swatch tag was 37px. Below `sm`
- * five of the ten show instead, at roughly twice the width.
- *
- * `--piece-phone-*` falls back to the desktop value when a piece does not set
- * one, so an artifact that wants the same place at both sizes says nothing.
- */
+/* One artifact on the about board, placed by custom property. */
 .about-piece {
   left: var(--piece-phone-left, var(--piece-left));
   top: var(--piece-phone-top, var(--piece-top));
@@ -1425,43 +807,14 @@
   }
 }
 
-/**
- * The about board's ground.
- *
- * A single warm sheet under all the objects. Before it existed each artifact
- * sat on `--surface` carrying its own cream inside its alpha, so ten pieces of
- * cream paper floated on white and the composition read as scattered rather
- * than as a board. The pieces did not move; the ground did the work.
- *
- * The inset shadow is the paper's own edge rather than a decorative lift: one
- * hairline at the top where a sheet catches the light, nothing else. The
- * project bans stacked shadows as a device and this is a single edge, not a
- * lift.
- */
+/* The about board's ground. */
 .board-ground {
   background: var(--board);
   border-radius: var(--radius);
   box-shadow: inset 0 1px 0 color-mix(in srgb, var(--surface) 70%, transparent);
 }
 
-/**
- * The footer's column headings, drawn as a strip of tape.
- *
- * The client asked for this footer with the three column headings sitting on
- * torn tape, and an explicit instruction outranks the default rule against a
- * small uppercase label. The rule it is written against is the *eyebrow*, a
- * label floating above a display heading, which is the template tell. A tape
- * strip naming a column of links is a label doing a job.
- *
- * **Three shapes, not one used three times.** Tape is torn by hand and no two
- * pieces come off the roll alike, so a single clip path repeated down the row
- * reads as a graphic asset rather than as tape. The long edges are nearly
- * straight and the short ends are ragged, which is how tape actually tears:
- * the fibres run the length of the strip.
- *
- * The rotation belongs here rather than in the component, because a tape strip
- * is the clip and the tilt together. Nothing lands square.
- */
+/* The footer's column headings, drawn as a strip of tape. */
 .tape-1 {
   clip-path: polygon(
     1.2% 6%, 18% 2%, 46% 5%, 74% 1%, 98.6% 4%,
@@ -1492,19 +845,7 @@
   transform: rotate(-0.7deg);
 }
 
-/**
- * One of the four objects scattered around the footer.
- *
- * Same arrangement as `about-piece` and for the same reason: an inline style
- * cannot hold a media query, so both sets of coordinates are passed as custom
- * properties and this chooses between them.
- *
- * `bottom` rather than `top` for three of the four. The footer is one component
- * on every page but not one height on every screen, and a piece placed from the
- * top lands in the torn band on a desktop and in the middle of a link column on
- * a tablet. The fallbacks are `auto` so a piece can set either edge and leave
- * the other alone.
- */
+/* One of the four objects scattered around the footer. */
 .footer-piece {
   left: var(--piece-phone-left, var(--piece-left));
   bottom: var(--piece-phone-bottom, var(--piece-bottom, auto));
@@ -1517,17 +858,7 @@
   display: none;
 }
 
-/*
-  `64rem`, not the `40rem` the about board switches at.
-
-  The wide arrangement is the client's drawing, and the drawing is of a footer
-  whose four columns sit in one row: the camera rests on the sage at 15% of the
-  height and the colophon is inset to half the sheet so it can. Below `lg` the
-  columns stack, the footer runs half as tall again, and every one of those
-  percentages lands somewhere else. Measured at 768px the camera crossed the
-  copyright and the privacy link. So the middle range keeps the two-object
-  arrangement rather than a squeezed copy of a composition it cannot hold.
-*/
+/* `64rem`, not the `40rem` the about board switches at. */
 @media (min-width: 64rem) {
   .footer-piece {
     left: var(--piece-left);
@@ -1540,44 +871,14 @@
   }
 }
 
-/**
- * The footer fills the screen below the masthead.
- *
- * **Not the same arithmetic as `hero-screen`, and the difference is the whole
- * point.** The hero sits under the bar with the frame above it only, so it
- * subtracts one frame. The footer sits between the bar and the bottom of the
- * document, so it has to subtract the frame TWICE, once at each end, and the
- * frame here is three tokens deep: the page margin, the ring, and the second
- * line drawn inside it. Subtracting one frame leaves the footer 36px too tall
- * and its first rows behind the masthead, which is what the first version did.
- *
- * Related reason, though. Scrolled to the
- * end, anything the footer does not cover is the previous section showing in a
- * strip between the sticky bar and the footer: on the landing page that is the
- * closing band's sage, and it reads as a seam rather than as a section.
- *
- * A minimum rather than a height. The footer is taller than this on a phone,
- * where the four columns stack, and it must be allowed to be.
- */
+/* The footer fills the screen below the masthead. */
 @utility footer-screen {
   min-height: calc(
     100svh - var(--masthead) - 2 * (var(--frame) + var(--ring) + var(--frame-line))
   );
 }
 
-/**
- * The map's frame, and the only styling a third-party document allows.
- *
- * The map is an iframe from Google, so nothing in this stylesheet can reach the
- * colours inside it. A filter on the parent applies to the rendered frame,
- * which is the one hook available: the saturation comes down so the blue river
- * and the red pins stop being the loudest thing on a page built out of sage and
- * cream, and a little contrast puts the road names back after the desaturation
- * softens them.
- *
- * Not greyscale. A map with no colour at all stops reading as a map, and the
- * client asked for it to look better rather than to look off.
- */
+/* The map's frame, and the only styling a third-party document allows. */
 .map-frame iframe {
   filter: saturate(0.62) contrast(1.06);
 }

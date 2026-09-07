@@ -8,19 +8,7 @@ import { TypeScale } from "./blocks/TypeScale";
 import { Typefaces } from "./blocks/Typefaces";
 import { Section } from "@/components/ui/Section";
 
-/**
- * The style tile. Every decision the design system makes, on one page.
- *
- * It exists so the expensive decisions get made here rather than three sections
- * into a real page. Changing the corner or the display face on this page costs
- * nothing. Changing it after five sections are built costs five sections.
- *
- * **This page is not part of the site.** It sits in a route group, so
- * `check-structure.mjs` does not expect it in the route registry, it is absent
- * from the sitemap, and it returns 404 in production. That is deliberate rather
- * than an oversight: a style guide is for the people building the site, and
- * shipping one to visitors and to crawlers is a page of lorem with no purpose.
- */
+/* The style tile. */
 export const metadata: Metadata = {
   title: "Style tile",
   robots: { index: false, follow: false },

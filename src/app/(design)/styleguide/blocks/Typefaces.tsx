@@ -1,17 +1,6 @@
 import { Block } from "../Block";
 
-/**
- * The two faces, as specimens rather than as a comparison.
- *
- * Chillax was chosen over Clash Display and Panchang. Both losing families are
- * deleted, files and all, because an unused font in a repository is a decision
- * waiting to be relitigated.
- *
- * What is left to check here is the pairing, not the choice: whether Chillax at
- * display size and Switzer at reading size look like they belong to the same
- * site. That is the failure mode with two families, and it is easier to see in
- * a paragraph than in a headline.
- */
+/* The two faces, as specimens rather than as a comparison. */
 const DISPLAY_STEPS = [
   { weight: 700, label: "Bold, the top of the family" },
   { weight: 600, label: "Semibold" },

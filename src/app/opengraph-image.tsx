@@ -3,29 +3,7 @@ import { join } from "node:path";
 import { ImageResponse } from "next/og";
 import { OG_IMAGE } from "@/site";
 
-/**
- * The card people see when a link to this site is shared.
- *
- * 1200x630 is not a preference. A different ratio gets cropped differently by
- * each platform, which is how a share card ends up with half a word in it.
- *
- * **The real mark, and the site's own words.** This card used to draw a K from
- * line segments in crimson on cream and carry a headline nobody had approved.
- * All three were leftovers from the previous design. The mark is now the
- * client's own file, cut and converted by `scripts/brand.mjs` because Satori
- * reads PNG and neither WebP nor AVIF, and the copy is the hero's copy, which
- * came from the live kalaa.io and ships verbatim everywhere it appears.
- *
- * The type renders in Satori's fallback sans rather than in Satoshi, and that
- * is a constraint rather than a choice: `next/font` downloads woff2, and Satori
- * reads TTF, OTF and WOFF. Which is the argument for the mark being artwork
- * rather than a letterform. Artwork is the same everywhere; a letter is only as
- * good as whether the renderer happens to have the font.
- *
- * The colours are literals because Satori cannot resolve CSS custom properties.
- * Recorded in `ALLOWED` in `scripts/check-structure.mjs`; keep them in step with
- * `src/styles/tokens.css` by hand.
- */
+/* The card people see when a link to this site is shared. */
 const LOGO = `data:image/png;base64,${readFileSync(
   join(process.cwd(), "public/brand/kalaa-logo.png"),
 ).toString("base64")}`;
@@ -70,11 +48,7 @@ export default function OpengraphImage() {
           </div>
         </div>
 
-        {/*
-          The accent, spent once here as it is spent once on the page: a field,
-          never an outline and never a button. A hairline in butter would be
-          invisible against the sheet at 1.38:1.
-        */}
+        {/* The accent, spent once here as it is spent once on the page: a field, never an outline and never a button. */}
         <div style={{ display: "flex", height: 14, width: 240, background: "#ffd84d" }} />
       </div>
     ),

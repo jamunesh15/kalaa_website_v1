@@ -1,11 +1,6 @@
 import type { ClientLogo } from "@/content/types";
 
-/**
- * Real old-client logos.
- *
- * The source artwork stays in `public/client_logos/`. The home page reads the
- * compressed WebP copies so a proof section does not become a performance cost.
- */
+/* Real old-client logos. */
 export const CLIENT_LOGOS: readonly ClientLogo[] = [
   { name: "Kalaa client logo 01", image: "/client_logos/webp/01.webp", width: 420, height: 176 },
   { name: "Kalaa client logo 02", image: "/client_logos/webp/02.webp", width: 420, height: 159 },

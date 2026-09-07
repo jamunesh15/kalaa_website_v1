@@ -1,28 +1,9 @@
-﻿/**
- * Every public page, in one place.
- *
- * This exists so a route is named once rather than in the sitemap, the nav, the
- * tests and each page's metadata separately. `lastModified` here is a claim
- * about the page itself, so it changes only when that page's content changes.
- * See `.claude/skills/web-standard/references/seo.md` under "lastmod is a
- * claim about one page, not a build timestamp".
- *
- * Adding a page? Add it here. The sitemap is built from this list, the browser
- * tests iterate it, and a test fails if a page exists under `src/app` without an
- * entry, so forgetting is caught rather than shipped.
- */
+﻿/* Every public page, in one place. */
 
 export type Route = {
   /** The URL path, exactly as a visitor sees it. */
   path: string;
-  /**
-   * The day this page's content last changed, as YYYY-MM-DD.
-   *
-   * Update it when you change what the page says, and leave every other entry
-   * alone. Never derive it from the build, the file mtime, or an unrelated
-   * commit: a crawler stops trusting the field for the whole site once it stops
-   * matching what really changed.
-   */
+  /* The day this page's content last changed, as YYYY-MM-DD. */
   lastModified: string;
   changeFrequency: "always" | "hourly" | "daily" | "weekly" | "monthly" | "yearly" | "never";
   priority: number;

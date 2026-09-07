@@ -1,23 +1,6 @@
 import type { ProcessStep } from "@/content/types";
 
-/**
- * A month of social media work, in the order it happens.
- *
- * Numbered because the order is real, not because a numbered list looks
- * organised. If two of these could swap places, they should be one step.
- *
- * Written in the work rather than in the abstract. "We put money behind it"
- * described a budget moving; "We run ads for leads" describes the thing a
- * client is buying. Every line names something an agency does to a social
- * account: shoot days, captions, retargeting, saves and shares. The version
- * before this one would have suited any agency of any kind, which is another
- * way of saying it described none.
- *
- * Nothing here states a timescale, a result, a reach figure or a cost, because
- * none of those are verified for Kalaa and a process section is where an
- * invented one reads most like a commitment. `outcome` is what the step hands
- * to the next step, never what it earns.
- */
+/* A month of social media work, in the order it happens. */
 export const PROCESS_STEPS: readonly ProcessStep[] = [
   {
     number: "01",

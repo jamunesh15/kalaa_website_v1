@@ -1,13 +1,4 @@
-/**
- * The tokens, exposed to Tailwind.
- *
- * `@theme inline` is what turns a custom property into a utility class, so
- * `--color-tint-mint` becomes `bg-tint-mint` and `--text-display-xl` becomes
- * `text-display-xl`. Keeping it apart from `tokens.css` means the decisions and
- * the plumbing that publishes them are not tangled in one file.
- *
- * Every entry here reads a token. None of them declares a value.
- */
+/* The tokens, exposed to Tailwind. */
 @theme inline {
   --color-page: var(--page);
   --color-sheet: var(--sheet);
@@ -46,53 +37,18 @@
 
   --ease-brand: var(--ease-brand);
 
-  /**
-   * Clash Display for display, Switzer for text. Both self-hosted; see
-   * `src/fonts/README.md`.
-   *
-   * The fallback stack matters more than it looks. `display: swap` means a
-   * visitor reads the fallback for the first moment of the page, so a stack
-   * that jumps from a rounded face to a default serif is a visible lurch.
-   */
+  /* Clash Display for display, Switzer for text. */
   --font-display: var(--font-display-face), ui-sans-serif, system-ui, sans-serif;
   --font-sans: var(--font-switzer), ui-sans-serif, system-ui, sans-serif;
-  /*
-    The hand. `cursive` last rather than a grotesque, because if Kalam fails to
-    load the two lines it sets should still read as handwriting rather than
-    silently becoming body text in the wrong place.
-  */
+  /* The hand. */
   --font-hand: var(--font-hand-face), "Segoe Print", "Bradley Hand", cursive;
 
-  /**
-   * The type scale. Fluid between a phone and a desktop, so there is no step
-   * where a heading is suddenly too big for the screen it is on.
-   *
-   * Display sizes carry their own tight line height and negative tracking. A
-   * heavy face at 5rem with body line height looks like a mistake, and leaving
-   * that to each section is how six sections end up with six answers.
-   *
-   * `wordmark` is not a heading and is not read. It is the texture behind the
-   * hero artwork, set enormous and low in contrast, and it needs a step of its
-   * own because nothing else on the site is anywhere near this size.
-   */
+  /* The type scale. */
   --text-wordmark: clamp(3.5rem, 13vw, 9.5rem);
   --text-wordmark--line-height: 1;
   --text-wordmark--letter-spacing: -0.04em;
 
-  /*
-   * Stepped back up once the hero was given the whole first screen. The step
-   * DOWN below is still the important part of this note, because it is the fix
-   * for a documented mistake
-   * rather than a taste adjustment. CLAUDE.md records "made the type dominate
-   * and the artwork subordinate" as mistake two from the previous attempt, and
-   * the first build of this hero repeated it exactly: a headline at 80px beside
-   * artwork that had nothing to say. In the references the heading is compact
-   * and the pictures carry the page.
-   *
-   * Line heights loosened at the same time. A tighter face needs more air, and
-   * a highlighted word needs the lines further apart than its own marker box is
-   * tall or the highlight paints over the descenders above it.
-   */
+  /* Stepped back up once the hero was given the whole first screen. */
   --text-display-xl: clamp(2.25rem, 4.6vw, 4rem);
   --text-display-xl--line-height: 1.26;
   --text-display-xl--letter-spacing: -0.02em;

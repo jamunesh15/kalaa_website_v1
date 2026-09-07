@@ -4,23 +4,12 @@ import { HandAccent } from "@/components/ui/HandAccent";
 import { getCapabilities } from "@/content";
 import { CapabilityDeck } from "@/sections/home/CapabilityDeck";
 
-/**
- * The social presence story before the direct services section.
- *
- * This uses the stacked tilted cards the client liked in the reference, adapted
- * to Kalaa's light sheet and tint system. The motion explains momentum: each
- * reason lands on top of the one before it until social presence feels like a
- * business system, not a posting habit.
- */
+/* The social presence story before the direct services section. */
 export function Capabilities() {
   const capabilities = getCapabilities();
 
   return (
-    /*
-      `overflow-x-clip`, not `overflow-hidden`: the stacked deck inside is
-      sticky and a scroll container above it would pin nothing. Clip only
-      stops the cards' sideways entrance from widening the page.
-    */
+    /* `overflow-x-clip`, not `overflow-hidden`: the stacked deck inside is sticky and a scroll container above it would pin. */
     <Section id="capabilities" fill="overflow-x-clip bg-tint-violet">
       <SectionHeading
         align="center"

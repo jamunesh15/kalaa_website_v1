@@ -113,72 +113,25 @@ export function ServiceShowcase({
   );
 }
 
-/**
- * One service, arriving from the side it sits on.
- *
- * The entrance is `whileInView` per card rather than one scroll progress value
- * driving all six, and the difference is the whole reason this was rewritten.
- * Tying six cards to the section's own scroll range meant they all moved
- * together, most of the travel happened before the section was on screen, and
- * what a reader actually saw was six cards already in place. Each card now
- * waits until it is in view and then travels in, so the movement happens where
- * somebody is looking at it.
- *
- * The reveal replays every time the reader comes back down to it, and only
- * downward: see `useReplayOnScrollDown`. It used to be `once: true`, which meant
- * the cards introduced themselves exactly once in the life of the page. Driving
- * it from intersection alone would replay the animation in reverse under a
- * reader who has already scrolled past it.
- *
- * The distance is a percentage of the card rather than a pixel count, so the
- * gesture is the same size relative to the card on a phone as on a desktop. The
- * section clips it: `overflow-hidden` on the band means a card starting off to
- * the left never widens the page.
- */
+/* One service, arriving from the side it sits on. */
 function ServiceCard({ service, index }: { service: Service; index: number }) {
   const Icon = SERVICE_ICONS[service.slug] ?? BrandIcon;
   const fromLeft = index % 2 === 0;
   const narrow = useNarrowViewport();
   const { shown, handlers } = useReplayOnScrollDown();
 
-  /*
-    How far the card starts from home. Half a column on the desktop grid, where
-    it has a gap to cross; a shorter run on a phone, where the card is alone in
-    its column and 52% of it was most of the screen.
-  */
+  /* How far the card starts from home. */
   const travel = narrow ? "28%" : "52%";
   const offstage = { x: fromLeft ? `-${travel}` : travel, opacity: 0 };
 
   return (
     <motion.article
       {...handlers}
-      /*
-        A fifth of the card, not a third. At 0.35 the entrance did not begin
-        until a reader had already scrolled a third of the card into view, and
-        with the travel on top of that the card arrived after they had looked.
-      */
+      /* A fifth of the card, not a third. */
       viewport={{ amount: 0.2 }}
       initial={offstage}
       animate={shown ? { x: 0, opacity: 1 } : offstage}
-      /*
-        The curve matters more than the duration. The site's standard ease is
-        heavily front-loaded, so on it the card covered two thirds of its
-        distance in the first 300ms and then crept the rest, which reads as
-        fast followed by nothing. This is an ease-in-out instead, so the
-        distance is spent evenly and the card is seen crossing the gap. Local
-        to this one entrance rather than a new token: every hover and
-        transition on the site still uses `--ease-brand`, which is the right
-        curve for a 200ms state change and the wrong one for a second of
-        travel.
-
-        The duration has been both ways. 0.72s was over before a reader had
-        looked at the card; 1.4s, which fixed that, was then called late on the
-        desktop and too slow on a phone, where the cards queue one under the
-        other and each waits its turn. A second on the wide grid, and 0.6s
-        stacked. The right-hand card of a desktop pair hangs back a beat so the
-        two read as a sequence rather than a mirror; stacked there is no pair,
-        so there is nothing to hang back from.
-      */
+      /* The curve matters more than the duration. */
       transition={{
         duration: narrow ? 0.6 : 1,
         ease: [0.45, 0, 0.2, 1],
@@ -202,12 +155,7 @@ function ServiceCard({ service, index }: { service: Service; index: number }) {
           </h3>
         </div>
         <p className="mt-4 text-body text-ink-body">{service.summary}</p>
-        {/*
-          One line, and written to be one rather than trimmed into one. The
-          deliverables joined with commas ran to two and three lines and left
-          the six cards at six different heights; `tagline` in the content file
-          is the short version, and the full list stays in `includes`.
-        */}
+        {/* One line, and written to be one rather than trimmed into one. */}
         <p className="mt-auto pt-5 text-small font-semibold text-ink-body">
           {service.tagline}
         </p>
@@ -225,15 +173,7 @@ function PortfolioStack() {
   return (
     <motion.div
       {...handlers}
-      /*
-        A fixed 60px of the stack, not a fraction of it. At `amount: 0.2` this
-        800px column needed 160px on screen before it appeared, while the
-        cards beside it needed 43px, so a reader easing into the section saw
-        both cards arrive around an empty middle and asked where the posts
-        had gone. The client's word for it was "silly", and it was. A negative
-        bottom margin on the observer's root means "60px of it is showing",
-        whatever the column's height happens to be at this width.
-      */
+      /* A fixed 60px of the stack, not a fraction of it. */
       viewport={{ amount: "some", margin: "0px 0px -60px 0px" }}
       initial={{ opacity: 0, y: 28, scale: 0.97 }}
       animate={

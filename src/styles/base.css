@@ -2,67 +2,24 @@
  * Base layer. The few rules that apply to the document itself.
  */
 
-/**
- * Anchor targets have to clear the masthead, which is sticky.
- *
- * `scroll-padding-top` on the scroll container rather than `scroll-margin-top`
- * on each target: one declaration instead of one per section, and it also
- * covers scrolling caused by keyboard focus and by find-in-page.
- */
+/* Anchor targets have to clear the masthead, which is sticky. */
 html {
   scroll-padding-top: 6rem;
 
-  /**
-   * Anchor jumps travel instead of teleporting, asked for 2026-09-07.
-   *
-   * **This is not the smooth scrolling the project rules out, and the
-   * difference is worth being precise about.** What is banned is a library that
-   * takes the scroll position away from the browser and re-animates every wheel
-   * event: `lenis` was removed for exactly that, and it costs real input
-   * latency to do something nobody asked for. This affects only scrolls the
-   * page itself causes, which on this site means clicking a nav link. The
-   * wheel, the trackpad, the scrollbar and the keyboard all stay native and
-   * instant.
-   *
-   * The reduced-motion block below already puts it back to `auto`, so a reader
-   * who asks for less motion still lands on the section immediately.
-   */
+  /* Anchor jumps travel instead of teleporting, asked for 2026-09-07. */
   scroll-behavior: smooth;
 
-  /**
-   * No rubber band at either end.
-   *
-   * Edge and Chrome on Windows bounce the page past its ends on a precision
-   * touchpad, and this page cannot afford it: the frame cap over the masthead
-   * is `position: fixed` (see `layout.tsx`), so during the bounce the cap
-   * stays put while the sheet slides out from under it, and a band of field
-   * opens between the two. The client read that as the page scrolling past
-   * itself, which is what it is. The field colour on `body` below
-   * kept the bounce from flashing white; this stops it moving at all.
-   *
-   * Both axes. It shipped as `y` only on the reasoning that a page with no
-   * sideways scroll has no sideways bounce, and the client swiped left on
-   * the touchpad and watched the sheet slide out from under the cap anyway:
-   * Edge rubber-bands an axis that cannot scroll at all.
-   */
+  /* No rubber band at either end. */
   overscroll-behavior: none;
 }
 
-/**
- * The sage is on the document rather than on a wrapper, so it also paints the
- * overscroll area. Without that, bouncing the page on a trackpad shows white
- * above a page whose whole idea is that it sits on a coloured field.
- */
+/* The sage is on the document rather than on a wrapper, so it also paints the overscroll area. */
 body {
   background: var(--page);
   color: var(--ink-body);
 }
 
-/**
- * Any pure-CSS animation added later needs its own guard in this block.
- * Framework-driven motion honours the preference on its own; a keyframe
- * animation written by hand does not.
- */
+/* Any pure-CSS animation added later needs its own guard in this block. */
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

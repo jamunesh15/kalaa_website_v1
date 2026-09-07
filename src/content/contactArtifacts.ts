@@ -1,29 +1,10 @@
-/**
- * The contact page's artwork, and where each piece lands.
- *
- * Same model as the about board and the footer: every number is a percentage of
- * the box its arrangement is given, so one set of coordinates serves every
- * width and the pieces shrink with the column rather than needing a second
- * arrangement per breakpoint.
- *
- * Two arrangements, because the page uses artwork twice and for different
- * reasons. The opening pair is a still life a reader looks at while deciding
- * whether to write. The checklist is not decoration at all: it is the section's
- * content, photographed, which is why it is alone in its box and why its alt
- * text carries all four lines.
- */
+/* The contact page's artwork, and where each piece lands. */
 
 export type ContactArtifact = {
   readonly id: string;
   /** Slug in `CONTACT_MEDIA`. */
   readonly image: string;
-  /**
-   * What the artwork says, for a reader who cannot see it.
-   *
-   * Every one of these carries handwriting inside the picture, so the words
-   * exist nowhere else on the page. Artwork that contains text is not
-   * decorative, and the impact cards set that rule on this site already.
-   */
+  /* What the artwork says, for a reader who cannot see it. */
   readonly alt: string;
   /** Percentages of the box the arrangement is given. */
   readonly left: number;
@@ -35,15 +16,7 @@ export type ContactArtifact = {
   readonly delay: number;
 };
 
-/**
- * The opening still life: the notebook and coffee, with the clipped note
- * landing over its corner.
- *
- * The note is written second so it lies on top, which is the order paper lands
- * on a desk. It also arrives second, from the left, while the notebook comes in
- * from the right: two pieces travelling the same way read as one object sliding
- * rather than as two being set down.
- */
+/* The opening still life: the notebook and coffee, with the clipped note landing over its corner. */
 export const HERO_ARTIFACTS: readonly ContactArtifact[] = [
   {
     id: "desk",

@@ -2,33 +2,7 @@
 
 import { useEffect, useState } from "react";
 
-/**
- * The line under the headline, typing itself out one service at a time.
- *
- * The device is taken from bgmediaagency.in, and it is taken as the reference
- * actually has it rather than as it looked in a screenshot. Measured on the
- * running site: their h1 does not animate at all. The movement is on the line
- * below it, a fixed lead followed by a phrase that types, holds, deletes and is
- * replaced. Animating the headline would have been the obvious reading and the
- * wrong one, and it would also have cost this page its LCP element.
- *
- * The lead is fixed so the sentence is always grammatical mid-keystroke, and
- * the first phrase leads with the exact words the page needs to be found for.
- *
- * Three things here are not decoration:
- *
- * - **The server renders the first phrase in full.** Nothing about the markup
- *   depends on the motion preference, which is the rule `MotionProvider` exists
- *   to enforce; the loop starts in an effect, after hydration, and a visitor who
- *   has asked for less movement simply keeps the sentence that was already
- *   there. A crawler gets a real sentence rather than an empty span.
- * - **The visible line is `aria-hidden` and the real sentence sits beside it.**
- *   A screen reader following the animated node would announce the same clause
- *   letter by letter, forever.
- * - **The box is reserved by the longest phrase**, drawn hidden underneath. A
- *   phrase that grows from "Meta ads" to "social media management" wraps to two
- *   lines on a phone, and the paragraph under it would move every four seconds.
- */
+/* The line under the headline, typing itself out one service at a time. */
 
 /** The offer, in the order a visitor cares about it. First is the SEO phrase. */
 const PHRASES = [
@@ -38,18 +12,10 @@ const PHRASES = [
   "websites and software",
 ];
 
-/*
-  British spelling, to match "recognise" and "organised" in the copy already on
-  the page. The reference this device comes from is American and writes
-  "specialize"; one site cannot hold both.
-*/
+/* British spelling, to match "recognise" and "organised" in the copy already on the page. */
 const LEAD = "We specialise in ";
 
-/*
-  Keystroke timings, in milliseconds. Deleting is faster than typing because a
-  reader is not reading it, and the hold is long enough to finish the phrase
-  twice over.
-*/
+/* Keystroke timings, in milliseconds. */
 const TYPE_MS = 58;
 const DELETE_MS = 28;
 const HOLD_MS = 1700;
@@ -63,12 +29,7 @@ export function HeroTypedLine() {
   const [deleting, setDeleting] = useState(false);
   const [running, setRunning] = useState(false);
 
-  /*
-    Reading the preference in an effect rather than during render is what keeps
-    the server and the browser writing the same markup. `useReducedMotion`
-    returns null on the server, so branching on it up there is a hydration bug
-    dressed as care.
-  */
+  /* Reading the preference in an effect rather than during render is what keeps the server and the browser writing the same. */
   useEffect(() => {
     const query = window.matchMedia("(prefers-reduced-motion: reduce)");
     const sync = () => setRunning(!query.matches);

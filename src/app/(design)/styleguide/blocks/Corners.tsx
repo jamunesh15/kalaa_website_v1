@@ -1,14 +1,7 @@
 import { Block } from "../Block";
 import { CornerPicker } from "../CornerPicker";
 
-/**
- * The corner, which is the one decision still open.
- *
- * Whichever wins becomes `--radius` and applies to every button, input, card,
- * image frame and panel on the site. There is no second value. v1 split it
- * between square surfaces and rounded controls, and that split is most of why
- * the old page read as assembled rather than designed.
- */
+/* The corner, which is the one decision still open. */
 export function Corners() {
   return (
     <Block

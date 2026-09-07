@@ -3,21 +3,7 @@
 import { useEffect, useState } from "react";
 import { FOCUS_RING, SURFACE } from "@/components/ui/surface";
 
-/**
- * Changes `--radius` on the document, live.
- *
- * The block this replaced showed four empty tiles at four different corners,
- * and it was the wrong way to ask the question: nobody can judge a corner on a
- * coloured square. A corner is only judgeable on a small button sitting next to
- * a large panel, which is to say on the whole page at once.
- *
- * So this writes the token itself. Every button, card, pill and panel below
- * re-renders at the chosen value, because all of them read the same token. That
- * is also a live proof that the one-radius rule holds: if anything on the page
- * does not change when this does, that thing has a hardcoded corner in it.
- *
- * Development only, like the rest of this page. Nothing here ships.
- */
+/* Changes `--radius` on the document, live. */
 const OPTIONS = [
   { label: "Square", value: "0px" },
   { label: "Slight", value: "0.5rem" },

@@ -1,26 +1,6 @@
 import type { FaqItem } from "@/content/types";
 
-/**
- * The questions a business owner asks before they enquire.
- *
- * Written from the page rather than invented for it. Each answer restates
- * something the site already commits to somewhere else, so the FAQ cannot drift
- * away from what the rest of the page says: the process steps in `process.ts`,
- * the services in `services.ts`, the sectors in `sectors.ts` and the plans in
- * `pricing.ts`. Change one of those and check this file in the same edit.
- *
- * **This is the block most likely to be quoted.** It is marked up as `FAQPage`,
- * which means a search engine may lift a question and its answer whole, and an
- * assistant may read one aloud with no page around it. So no answer here leans
- * on context from the section above it, and no answer states a fact that is not
- * already true elsewhere on the site.
- *
- * Four questions people definitely ask are missing on purpose, because nobody
- * has confirmed the answers: how long the commitment is, how quickly Kalaa
- * replies, where Kalaa is based, and whether anything is guaranteed. Inventing
- * any of them would put a false statement into structured data, which is the
- * worst place on the site to put one.
- */
+/* The questions a business owner asks before they enquire. */
 export const FAQ_ITEMS: readonly FaqItem[] = [
   {
     slug: "what-happens-first-month",

@@ -1,15 +1,6 @@
 import { Block } from "../Block";
 
-/**
- * The scale. Every size the site is allowed to use.
- *
- * A heading picks a step. It never invents a size, which is how a page ends up
- * with a 27px heading nothing else on the site matches.
- *
- * The display steps are fluid between a phone and a desktop, so what is shown
- * here changes with the window. That is the point: there is no width at which a
- * heading is suddenly too big for the screen it is on.
- */
+/* The scale. */
 const STEPS = [
   { token: "text-display-xl", label: "Display XL", display: true },
   { token: "text-display-l", label: "Display L", display: true },

@@ -1,18 +1,9 @@
-/**
- * The facts about this site that more than one file needs.
- *
- * The canonical, og:url, the sitemap and robots.txt all have to describe the
- * same address. Reading them from here is what keeps them from drifting apart,
- * which is a failure nothing warns about: the page compiles, and crawlers are
- * quietly told two different stories about where it lives.
- */
+/* The facts about this site that more than one file needs. */
 export const SITE = {
   name: "Kalaa",
-  /**
-   * No trailing slash. Every consumer appends a path that starts with one, so a
-   * trailing slash here produces a double slash in the canonical.
-   */
-  url: "https://kalaa.io",
+  /* No trailing slash. */
+  // Canonical origin for links, sitemap and social cards. Override per environment.
+  url: process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, "") ?? "https://kalaa.io",
   locale: "en",
 } as const;
 
@@ -21,17 +12,7 @@ export function absoluteUrl(path: string): string {
   return path === "/" ? `${SITE.url}/` : `${SITE.url}${path}`;
 }
 
-/**
- * The share card, described once.
- *
- * `src/app/opengraph-image.tsx` renders the picture and reads its dimensions and
- * alt text from here, so the file and the tags can never disagree about what
- * they are.
- *
- * The dimensions are declared rather than left for a crawler to discover.
- * Without them the card reflows while the image loads, and some platforms give
- * up and show no image at all.
- */
+/* The share card, described once. */
 export const OG_IMAGE = {
   url: "/opengraph-image",
   width: 1200,
@@ -39,15 +20,7 @@ export const OG_IMAGE = {
   alt: `${SITE.name}, creative social media marketing agency`,
 } as const;
 
-/**
- * The Open Graph block for one page.
- *
- * This exists because Next replaces the parent `openGraph` object wholesale when
- * a page declares its own, rather than merging field by field. A page that sets
- * `openGraph` to override the title therefore silently drops the share image
- * too, and nothing warns: the page builds, and the card just renders blank when
- * somebody shares the link. Going through this helper is what stops that.
- */
+/* The Open Graph block for one page. */
 export function openGraphFor(options: {
   path: string;
   title: string;

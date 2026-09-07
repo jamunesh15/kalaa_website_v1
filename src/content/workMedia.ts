@@ -1,10 +1,4 @@
-/**
- * WRITTEN BY `npm run media`. Do not edit by hand.
- *
- * Every entry is a file that exists in `public/work/`. The captions and the
- * client names that go with them live in `src/content/work.ts`, which is hand
- * written, so regenerating this never destroys copy.
- */
+/* WRITTEN BY `npm run media`. */
 
 export type PostMedia = {
   readonly slug: string;

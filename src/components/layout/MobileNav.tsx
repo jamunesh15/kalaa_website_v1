@@ -7,44 +7,7 @@ import { FOCUS_RING, HOVER_PLATE, SURFACE } from "@/components/ui/surface";
 import { NavLink } from "@/components/layout/NavLink";
 import { CONTACT_LINK, PHONE_BAR_LINK, PRIMARY_LINKS } from "@/nav";
 
-/**
- * The phone menu, below `md:`.
- *
- * It exists because the masthead links are hidden on a phone, and links hidden
- * with nothing behind them is how this site once shipped a layout where a
- * visitor on a phone could reach exactly one destination. `responsive.spec.ts`
- * guards that now: it finds this control by its accessible name, opens it, and
- * fails if the phone menu lists fewer places than the desktop masthead.
- *
- * **Two things stay in the bar: Packages and the control.** The client asked
- * for Packages to be one tap away on a phone without opening the menu, so it
- * sits beside the control as a plain link and stays in the menu as well, the
- * way the desktop bar lists it once and the footer lists it again.
- *
- * **The control is three lines that fold into a cross, not the word "Menu".**
- * The word was a pale pill that read as a second button beside the black
- * action; the glyph is what a phone reader expects to find in that corner.
- * Its accessible name is still the word, because the responsive suite finds
- * the control by `/menu/i` and a screen reader wants a word, not a shape. The
- * lines are an SVG at 24px so all three rasterise alike; see `hamburger` in
- * `utilities.css` for the bar that came out darker than its neighbours.
- *
- * **The panel hangs straight off the bar.** It opened 8px below it at first,
- * inset from both sides, and through that gap the hero artwork showed between
- * the bar and the menu, which the client read as a hole. Full width, flush,
- * with a hairline between them.
- *
- * **Contact is the button it is on the desktop.** The wide bar ends in the
- * black arrow button; the phone menu listed the same destination as a plain
- * link, and the client asked why. Same control, same place: last.
- *
- * **It opens and closes on a transition, not a cut.** The panel drops in from
- * the bar and folds back into it on `AnimatePresence`, so closing animates
- * too, which a conditional render cannot do: the moment `open` flips the
- * element is gone. The lines turn on the same clock, `--dur-base`, so the
- * control and the panel read as one gesture. `MotionProvider` sets
- * `reducedMotion="user"`, so a reader who asked for less motion gets the cut.
- */
+/* The phone menu, below `md:`. */
 export function MobileNav() {
   const [open, setOpen] = useState(false);
   const panelId = useId();
@@ -116,11 +79,7 @@ export function MobileNav() {
                 </li>
               ))}
             </ul>
-            {/*
-              A tap on the button bubbles here and closes the menu behind it.
-              `fit`, like every other button on the site: it shipped full
-              width once and the client called it out.
-            */}
+            {/* A tap on the button bubbles here and closes the menu behind it. */}
             <div className="mt-5" onClick={() => setOpen(false)}>
               <ArrowButton href={CONTACT_LINK.href} width="fit">
                 {CONTACT_LINK.label}

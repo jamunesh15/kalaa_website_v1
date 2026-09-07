@@ -1,15 +1,4 @@
-/**
- * The shapes the site's content comes in.
- *
- * Written as if a CMS were already returning them, because one day something
- * will. The CMS is not chosen yet, so today these are typed arrays in
- * `src/content/`. Pages never import those arrays: they call the accessors in
- * `index.ts`. When a CMS lands, only those accessors change, and every page,
- * route, sitemap entry and schema block keeps working.
- *
- * That indirection is the whole point. A page reaching into a data file is a
- * page that has to be rewritten the day the data moves.
- */
+/* The shapes the site's content comes in. */
 
 /** One thing Kalaa sells. */
 export type Service = {
@@ -19,16 +8,7 @@ export type Service = {
   readonly summary: string;
   /** What is actually delivered. Concrete nouns, not adjectives. */
   readonly includes: readonly string[];
-  /**
-   * The deliverables again, as one short line for the card.
-   *
-   * Separate from `includes` rather than joined from it, because the two answer
-   * different questions. `includes` is the full list a service page will show;
-   * this is the line that has to finish inside one line of a card that is about
-   * 300px wide. Joining the list produced two and three line taglines and made
-   * the six cards different heights, so the card now reads a line written to
-   * fit and the full list stays intact for the page that has room for it.
-   */
+  /* The deliverables again, as one short line for the card. */
   readonly tagline: string;
 };
 
@@ -61,13 +41,7 @@ export type ProcessStep = {
   readonly outcome: string;
 };
 
-/**
- * One thing a business owner already knows is going wrong.
- *
- * Written in their words rather than in the agency's, because the section it
- * feeds exists to be recognised, not to inform. `image` is a placeholder path
- * today; see the note in `problems.ts`.
- */
+/* One thing a business owner already knows is going wrong. */
 export type Problem = {
   readonly slug: string;
   readonly title: string;
@@ -75,19 +49,7 @@ export type Problem = {
   readonly image: string;
 };
 
-/**
- * One package a business can buy, with its real price.
- *
- * Every field here is the client's own wording and the client's own number,
- * taken from the pricing they supplied. Nothing in this type may be filled in
- * by guessing: a price is the one piece of content on the site a reader will
- * hold the company to, and an invented one is a quote nobody authorised.
- *
- * `price` and `period` are two fields rather than one string because the last
- * plan does not have a number. "Custom" sits where "$449" sits and "Pricing"
- * sits where "/month" sits, so the three cards share one shape instead of the
- * third needing its own layout.
- */
+/* One package a business can buy, with its real price. */
 export type Plan = {
   readonly slug: string;
   readonly name: string;
@@ -105,14 +67,7 @@ export type Plan = {
   readonly featured: boolean;
 };
 
-/**
- * One piece of Kalaa's own work, ready to draw.
- *
- * A union rather than one shape with optional fields, because a reel and a post
- * need different elements: a reel has three files and plays, a post has two and
- * does not. Optional fields would let a post be written with a poster and a reel
- * with no video, and nothing would say so until the page rendered.
- */
+/* One piece of Kalaa's own work, ready to draw. */
 export type WorkPiece =
   | {
       readonly kind: "reel";
@@ -132,21 +87,7 @@ export type WorkPiece =
       readonly alt: string;
     };
 
-/**
- * One question a business owner actually asks, and its answer.
- *
- * The answers are the constraint here rather than the questions. Every one is
- * derived from something the site already states: the five process steps, the
- * service list, the sector list or the pricing table. Nothing in an answer may
- * introduce a fact that exists nowhere else, because an FAQ is the block most
- * likely to be lifted whole into a search result or read aloud by an assistant,
- * and it is marked up as `FAQPage` so a machine reads it as fact.
- *
- * The questions that cannot be answered yet are the interesting ones and they
- * are deliberately absent: how long a contract runs, how quickly Kalaa replies,
- * where Kalaa is, and whether anything is guaranteed. See the open list in
- * CLAUDE.md.
- */
+/* One question a business owner actually asks, and its answer. */
 export type FaqItem = {
   readonly slug: string;
   readonly question: string;

@@ -28,20 +28,10 @@ export function CapabilityCard({
   deckProgress: MotionValue<number>;
   stacked: boolean;
 }) {
-  /*
-    Wraps rather than assuming four photographs for four capabilities, so
-    adding a fifth capability shows a repeat instead of crashing on undefined.
-  */
+  /* Wraps rather than assuming four photographs for four capabilities, so adding a fifth capability shows a repeat instead. */
   const photo = CARD_MEDIA[index % CARD_MEDIA.length];
 
-  /*
-    The list variant's entrance, below `xl` where the deck does not stack.
-    The client asked for the same alternation the service cards have: one
-    from the left, the next from the right. Same run and clock as those
-    cards get stacked, 28% and 0.7s on the travel ease, so the two sections
-    move alike on a phone. The stacked deck ignores all of this; its motion
-    is the scroll-driven arrival above.
-  */
+  /* The list variant's entrance, below `xl` where the deck does not stack. */
   const fromLeft = index % 2 === 0;
   const offstage = { x: fromLeft ? "-28%" : "28%", opacity: 0 };
   const entrance = useReplayOnScrollDown();
@@ -62,23 +52,7 @@ export function CapabilityCard({
   const direction = index % 2 === 0 ? -1 : 1;
   const entryX = index === 0 ? 0 : direction * 170;
   const entryY = index === 0 ? 0 : 560;
-  /*
-    **Scroll-linked, and no longer spring-smoothed. That is a measured
-    performance fix.**
-
-    Each card ran three `useSpring`s over these three values, and a spring is a
-    physics simulation that keeps a frame loop alive for as long as it is
-    settling. Five cards times three springs is fifteen simulations updating
-    transforms on every frame the deck is anywhere near the viewport, and the
-    client reported this band and the work mosaic as the two places scrolling
-    felt heavy.
-
-    The smoothing bought little here because the input is already continuous:
-    `deckProgress` is the scroll position itself, so a value mapped straight off
-    it moves exactly as smoothly as the reader's own scrolling. What the spring
-    added was lag between the finger and the card, which is the thing that reads
-    as jank rather than as easing.
-  */
+  /* Scroll-linked, and no longer spring-smoothed. */
   const arriveRotate = useTransform(
     deckProgress,
     [arriveFrom, arriveTo],
@@ -112,12 +86,7 @@ export function CapabilityCard({
           className="min-h-[26rem]"
         >
           <div className="grid min-h-[23rem] gap-5 md:grid-cols-[0.9fr_1.1fr] md:gap-8">
-            {/*
-              Centred below `md`, where the card is one column and the copy sits
-              under the photograph rather than beside it. Side by side the two
-              share a left edge; stacked, a left-aligned block under a
-              full-width picture reads as having slid to one side.
-            */}
+            {/* Centred below `md`, where the card is one column and the copy sits under the photograph rather than beside it. */}
             <div className="flex min-w-0 flex-col justify-center p-4 text-center sm:p-6 md:text-left lg:p-8">
               <p className="text-label font-bold tracking-[0.08em] text-ink-body">
                 {capability.label}
@@ -131,12 +100,7 @@ export function CapabilityCard({
               </p>
             </div>
 
-            {/*
-              **First on a phone, second from `md`.** The client's order for the
-              stacked card is photograph, title, copy: the picture is what says
-              which capability this is before a word is read, and on a phone it
-              was arriving last, under two paragraphs.
-            */}
+            {/* First on a phone, second from `md`. */}
             <div
               aria-hidden
               className="rounded-token relative order-first min-h-64 overflow-hidden bg-surface shadow-soft md:order-none"

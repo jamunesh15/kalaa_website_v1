@@ -1,12 +1,7 @@
 import type { ReactNode } from "react";
 import { Section } from "@/components/ui/Section";
 
-/**
- * One titled block of the style tile.
- *
- * Every block on this page is the same shape, so the page reads as one document
- * rather than as six people's screenshots stacked up.
- */
+/* One titled block of the style tile. */
 export function Block({
   title,
   note,
