@@ -1,9 +1,24 @@
 /* The facts about this site that more than one file needs. */
+const DEFAULT_URL = "https://kalaa.io";
+
+// Canonical origin for links, sitemap and social cards, from NEXT_PUBLIC_SITE_URL.
+// Empty, missing, scheme-less or unparseable values all fall back to the default,
+// because a bad value here fails the whole build inside `new URL()`.
+function siteUrl(): string {
+  const raw = process.env.NEXT_PUBLIC_SITE_URL?.trim();
+  if (!raw) return DEFAULT_URL;
+  const candidate = /^https?:\/\//i.test(raw) ? raw : `https://${raw}`;
+  try {
+    return new URL(candidate).origin;
+  } catch {
+    return DEFAULT_URL;
+  }
+}
+
 export const SITE = {
   name: "Kalaa",
   /* No trailing slash. */
-  // Canonical origin for links, sitemap and social cards. Override per environment.
-  url: process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, "") ?? "https://kalaa.io",
+  url: siteUrl(),
   locale: "en",
 } as const;
 
