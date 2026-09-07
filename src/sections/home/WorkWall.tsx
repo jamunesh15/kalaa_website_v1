@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import type { WorkPiece } from "@/content/types";
-import { isScrolling, subscribeScrolling, useScrolling } from "@/motion/useScrolling";
+import { isScrolling, subscribeScrolling } from "@/motion/useScrolling";
 
 /* One mosaic of real work, mixed rather than filed by format. */
 
@@ -110,26 +110,24 @@ function Reel({
   const media = useRef<HTMLVideoElement>(null);
   const inRange = useRef(false);
   const [mounted, setMounted] = useState(false);
-  const scrolling = useScrolling();
 
-  /* The video element is created only while the page is still, one reel at a time, and never removed. */
+  /* Nothing here touches a video while the page moves: a resume restarts a decoder and that is a dropped frame. */
   useEffect(() => {
     const node = frame.current;
     if (!node) return;
     let queued = false;
     let gone = false;
 
-    const settle = () => {
+    /* Runs at rest only: play if within a screen, pause if further, create if missing. */
+    const apply = () => {
       if (isScrolling()) return;
-      if (!inRange.current) {
-        media.current?.pause();
+      const video = media.current;
+      if (video) {
+        if (inRange.current) void video.play().catch(() => {});
+        else video.pause();
         return;
       }
-      if (media.current) {
-        void media.current.play().catch(() => {});
-        return;
-      }
-      if (queued) return;
+      if (!inRange.current || queued) return;
       queued = true;
       enqueueMount(() => {
         queued = false;
@@ -140,15 +138,16 @@ function Reel({
     const observer = new IntersectionObserver(
       ([entry]) => {
         inRange.current = entry.isIntersecting;
-        settle();
+        apply();
       },
       {
-        /* A quarter of a screen early, not a whole one. */
-        rootMargin: "25% 0px",
+        /* A full screen each way, so a reel is already playing before it scrolls into view. */
+        rootMargin: "100% 0px",
       },
     );
     observer.observe(node);
-    const unsubscribe = subscribeScrolling(settle);
+    /* When the page settles, mount whatever came into range while it moved. */
+    const unsubscribe = subscribeScrolling(apply);
     return () => {
       gone = true;
       observer.disconnect();
@@ -156,13 +155,13 @@ function Reel({
     };
   }, []);
 
-  /* The reels stop while the page is moving. */
+  /* A freshly created reel starts at once if it is still in range. */
   useEffect(() => {
     const video = media.current;
-    if (!video) return;
-    if (scrolling || !inRange.current) video.pause();
-    else void video.play().catch(() => {});
-  }, [scrolling, mounted]);
+    if (!video || !mounted) return;
+    if (inRange.current) void video.play().catch(() => {});
+    else video.pause();
+  }, [mounted]);
 
   return (
     <figure
