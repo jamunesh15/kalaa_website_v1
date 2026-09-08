@@ -26,12 +26,11 @@ export function ArticleCard({
   return (
     <div className="relative h-full">
       {/*
-       * The sage the site is framed in, at the weight the footer and the closing
-       * ask already use their own back sheets at. A tint is invisible against
+       * The site's sage, resolved to a solid colour. A tint is invisible against
        * this band, and the lead piece above carries kraft so the two rows of
        * paper are never the same sheet.
        */}
-      <div aria-hidden className="paper-mat absolute -inset-6 bg-page/65" />
+      <div aria-hidden className="paper-mat absolute -inset-6 bg-mat-sage" />
 
       <div
         className={`${SURFACE} relative flex h-full flex-col ${CARD_FILLS[fill]} p-5 text-ink`}

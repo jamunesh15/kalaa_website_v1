@@ -29,7 +29,8 @@
 
   --color-board: var(--board);
   --color-tape: var(--tape);
-  --color-mat: var(--mat);
+  --color-mat-sage: var(--mat-sage);
+  --color-mat-kraft: var(--mat-kraft);
 
   --radius-token: var(--radius);
 

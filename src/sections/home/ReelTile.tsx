@@ -121,7 +121,9 @@ function ReelLoop({ item }: { item: Reel }) {
           alt={item.alt}
           width={720}
           height={1280}
-          loading="lazy"
+          /* Asked for up front at low priority, the same as the post wall: a poster
+           * that arrives when the tile is already on screen reads as a slow page. */
+          fetchPriority="low"
           decoding="async"
           className="h-full w-full object-cover"
         />

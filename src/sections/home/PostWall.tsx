@@ -27,7 +27,10 @@ export function PostWall({ posts }: { posts: readonly WorkPiece[] }) {
   const bands: WorkPiece[][] = [];
   for (let start = 0; start < TILES; start += perBand) {
     bands.push(
-      Array.from({ length: perBand }, (_, offset) => posts[(start + offset) % posts.length]),
+      Array.from(
+        { length: perBand },
+        (_, offset) => posts[(start + offset) % posts.length],
+      ),
     );
   }
 
@@ -40,7 +43,9 @@ export function PostWall({ posts }: { posts: readonly WorkPiece[] }) {
           from={index % 2 === 0 ? "left" : "right"}
           travel={ROW_TRAVEL}
           className="col-span-full row-span-2 grid min-w-0 grid-cols-subgrid grid-rows-subgrid will-change-transform"
-          style={belowMd ? undefined : { gridTemplateAreas: BAND_AREAS[index % 2] }}
+          style={
+            belowMd ? undefined : { gridTemplateAreas: BAND_AREAS[index % 2] }
+          }
         >
           {band.map((post, slot) =>
             post?.kind === "post" ? (
@@ -78,7 +83,17 @@ function PostSlot({
         width={item.width}
         height={item.height}
         alt={item.alt}
-        loading="lazy"
+        /*
+         * Not lazy, and that is the fix rather than a preference.
+         *
+         * A lazy tile is not requested until it is nearly on screen, so the wall
+         * filled in a beat behind the reader on the way down while every other
+         * section was already there. `fetchPriority="low"` is what makes asking
+         * for all of them at once safe: the browser still serves the opening and
+         * anything above the fold first, and these twenty-eight arrive in the
+         * gaps. They are 87KB each on average, the small file at this size.
+         */
+        fetchPriority="low"
         decoding="async"
         draggable={false}
         className="h-full w-full object-cover"

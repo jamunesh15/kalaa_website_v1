@@ -49,10 +49,21 @@
   /* Masking tape. Kraft, and darker than the board so a strip reads against every paper on the site. */
   --tape: #d9cdb4;
 
-  /* The sheet behind a card. A deeper kraft, because every tint in this palette
-   * disappears against the band the blog cards sit on. Measured at card size
-   * against sage, pale sage, violet and clay before it was picked. */
-  --mat: #c6b8a0;
+  /*
+   * The two sheets a card is mounted on.
+   *
+   * Both are OPAQUE, and that is the point rather than a detail. They were the
+   * page's sage at 65 percent, which reads correctly against a flat band and
+   * goes wrong the moment two cards overlap: the sheet in front turns into a
+   * window onto the card behind it. This is that same sage resolved against the
+   * bands it sits on, #a2c1bc over the blog's sky and #a6bfbe over the deck's
+   * violet, so one value covers both and nothing is see-through.
+   *
+   * The kraft was measured at card size against sage, pale sage, violet and clay
+   * before it was picked.
+   */
+  --mat-sage: #a3c0bd;
+  --mat-kraft: #c6b8a0;
 
   /* CONTRAST RULES THAT ARE NOT SUGGESTIONS On the sheet: ink 18.5:1, body 12.8:1, muted 7.4:1. */
 
@@ -96,6 +107,10 @@
 
   /* The curve for travel, as opposed to for a state change. */
   --ease-travel: cubic-bezier(0.45, 0, 0.2, 1);
+
+  /* A whole turn. Longer than every step above, because a full rotation at those
+   * lengths reads as a twitch rather than as a turn. */
+  --dur-turn: 900ms;
 }
 
 @media (min-width: 48rem) {

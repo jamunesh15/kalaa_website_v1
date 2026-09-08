@@ -832,6 +832,85 @@
   mask-repeat: no-repeat;
 }
 
+/*
+ * The WhatsApp button, docked inside the bottom right of the sheet.
+ *
+ * The offsets are the sheet's own inset, not the viewport's. `--frame`, the sage
+ * ring and the frame line stack up to the sheet's inner edge, and the button
+ * clears that by a further 1.25rem, so it rests ON the page rather than against
+ * its border. The `max()` is the same expression `frame-cap` uses: past
+ * `--sheet-max` the sheet stops growing and centres, and without it the button
+ * would drift out onto the sage on a wide monitor.
+ */
+.whatsapp-dock {
+  position: fixed;
+  right: calc(
+    max(var(--frame), (100% - var(--sheet-max)) / 2) + var(--ring) + var(--frame-line) + 1.25rem +
+      env(safe-area-inset-right, 0px)
+  );
+  bottom: calc(
+    var(--frame) + var(--ring) + var(--frame-line) + 1.25rem + env(safe-area-inset-bottom, 0px)
+  );
+  z-index: 40;
+  display: grid;
+  place-items: center;
+  width: 3.5rem;
+  height: 3.5rem;
+  border-radius: 999px;
+  background: var(--action);
+  color: var(--on-action);
+  /*
+   * Two shadows, and the second one is an edge rather than depth.
+   *
+   * A fixed button passes over everything the page has, and on a phone the thing
+   * it spends most of its time over is the footer's own artwork, which is dark.
+   * Black on that is a black shape on a black shape. The ring in the sheet's
+   * colour is invisible against the paper, where it is not needed, and cuts the
+   * button out against anything darker, where it is.
+   *
+   * An `outline` would have been the tidier way to draw it and is not available:
+   * the focus ring is an outline, and the two would fight.
+   */
+  box-shadow:
+    var(--shadow-lift),
+    0 0 0 3px var(--sheet);
+}
+
+/*
+ * The black does NOT lift to `--action-hover` on hover, which every other button
+ * on this site does. At this size the lighter black reads as a grey wash coming
+ * over the disc rather than as a button responding, so the colour holds and the
+ * turn is the whole of the feedback.
+ */
+
+/*
+ * One turn, and the mark is its own element so the turning happens inside a
+ * button that does not move. `--ease-brand` is a state curve and whips a
+ * rotation; `--ease-travel` eases both ends, which is what a turn wants.
+ */
+.whatsapp-dock-mark {
+  display: grid;
+  place-items: center;
+  transition: transform var(--dur-turn) var(--ease-travel);
+}
+
+.whatsapp-dock:hover .whatsapp-dock-mark,
+.whatsapp-dock:focus-visible .whatsapp-dock-mark {
+  transform: rotate(360deg);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .whatsapp-dock,
+  .whatsapp-dock-mark {
+    transition: none;
+  }
+
+  .whatsapp-dock:hover .whatsapp-dock-mark,
+  .whatsapp-dock:focus-visible .whatsapp-dock-mark {
+    transform: none;
+  }
+}
+
 /* The 3:2 sheet, for an article's own cover. */
 .paper-mat-hero {
   -webkit-mask-image: url("/frames/frame-hero.png");

@@ -79,14 +79,14 @@ export function CapabilityCard({
         <div className="relative">
           {/*
            * The same torn sheet the blog cards are mounted on, through the wide
-           * stencil because these are twice as wide as they are tall. The site's
-           * own sage, at the weight the footer and the closing ask use their back
-           * sheets at: a tint vanishes under cards that already cycle butter,
-           * sage, peach and cloud on a violet band.
+           * stencil because these are twice as wide as they are tall. The sage
+           * has to be OPAQUE here above anywhere else: these cards overlap as
+           * they stack, and a translucent sheet turns the card in front into a
+           * window onto the one behind it.
            */}
           <div
             aria-hidden
-            className="paper-mat-wide absolute -inset-6 bg-page/65"
+            className="paper-mat-wide absolute -inset-6 bg-mat-sage"
           />
 
           <Card

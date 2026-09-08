@@ -4,6 +4,7 @@ import { MotionProvider } from "@/components/layout/MotionProvider";
 import { PageFrame } from "@/components/layout/PageFrame";
 import { SiteFooter } from "@/components/layout/SiteFooter";
 import { SiteHeader } from "@/components/layout/SiteHeader";
+import { WhatsappDock } from "@/components/layout/WhatsappDock";
 import { displayFace, hand, switzer } from "@/fonts/fonts";
 import { SITE, openGraphFor } from "@/site";
 import "./globals.css";
@@ -61,6 +62,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           {/* The pale band around the content, and the third step of the frame. */}
           <main className="flex-1">{children}</main>
           <SiteFooter />
+          <WhatsappDock />
         </PageFrame>
         </MotionProvider>
         <Script src="https://js.feedspace.io/v1/embed/embed.min.js" strategy="afterInteractive" />

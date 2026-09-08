@@ -15,7 +15,7 @@ export function FeaturedArticle({ item }: { item: Article }) {
   return (
     <div className="relative">
       {/* Kraft, and deliberately not the sage the grid below is mounted on. The tear cuts up to 18px into this, so the overhang has to clear that before any of it shows. */}
-      <div aria-hidden className="paper-mat-wide absolute -inset-6 bg-mat" />
+      <div aria-hidden className="paper-mat-wide absolute -inset-6 bg-mat-kraft" />
 
       <div className={`${SURFACE} relative bg-tint-butter p-5 text-ink`}>
         {/* The picture keeps its own shape rather than stretching to the copy, because its title is printed inside it. */}

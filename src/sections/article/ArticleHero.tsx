@@ -41,7 +41,7 @@ export function ArticleHero({ article }: { article: FullArticle }) {
 
         <SlideIn from="right" className="relative min-w-0">
           {/* The sheet behind the cover, standing out the same 24px as everywhere else. */}
-          <div aria-hidden className="paper-mat-hero absolute -inset-6 bg-page/65" />
+          <div aria-hidden className="paper-mat-hero absolute -inset-6 bg-mat-sage" />
 
           <ArticleArtwork
             image={article.image}
