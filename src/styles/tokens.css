@@ -65,6 +65,24 @@
   --mat-sage: #a3c0bd;
   --mat-kraft: #c6b8a0;
 
+  /*
+   * The three plan strips.
+   *
+   * Sage and peach are sampled off the SUPPLIED impact artwork in
+   * `public/impact/`, which carries the same torn strip further up the page and
+   * whose colours are baked in and cannot move. `scripts/plan-sheets.mjs` grades
+   * the photographed strips onto these, so one page does not show one device in
+   * two palettes. Butter has no counterpart in that artwork and is set to the
+   * same lightness as the other two.
+   *
+   * The strip on the card is the graded photograph itself, so these are not what
+   * draws it. They exist so the marker stroke under each price matches the paper
+   * that plan is torn from. Keep the two in step.
+   */
+  --plan-sage: #a5b395;
+  --plan-butter: #f2d792;
+  --plan-peach: #fbc4ad;
+
   /* CONTRAST RULES THAT ARE NOT SUGGESTIONS On the sheet: ink 18.5:1, body 12.8:1, muted 7.4:1. */
 
   /* -------------------------------------------------------------------- Corner ONE value. */

@@ -9,6 +9,7 @@ export const PLANS: readonly Plan[] = [
     period: "/month",
     summary: "Perfect for startups and small businesses building consistency",
     includes: ["12 Posts", "4 Reels", "Marketing Strategy", "Up to 3 Platforms"],
+    icon: "rocket",
     cta: "Start with Launch",
     featured: false,
   },
@@ -20,6 +21,7 @@ export const PLANS: readonly Plan[] = [
     summary:
       "Good for ambitious companies and teams with evolving requirements and advanced objectives",
     includes: ["15-18 Posts", "6-8 Reels", "Paid Ads Strategy", "Branding Support"],
+    icon: "chart",
     cta: "Start with Growth",
     featured: true,
   },
@@ -31,6 +33,7 @@ export const PLANS: readonly Plan[] = [
     period: "",
     summary: "Perfect for aspiring entrepreneurs and businesses on the path to success.",
     includes: ["All from Growth package", "Unlimited Posts", "Unlimited Reels", "Premium support"],
+    icon: "team",
     cta: "Tell us what you need",
     featured: false,
   },

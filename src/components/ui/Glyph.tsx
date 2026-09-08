@@ -25,6 +25,50 @@ export function ChannelGlyph({ name, size }: { name: "mail" | "phone" | "whatsap
   return <WhatsappMark size={size} />;
 }
 
+/*
+ * The plan marks.
+ *
+ * One per plan and each one says what that plan is: a rocket for the month a
+ * brand gets off the ground, a rising bar for the month it starts buying reach, two
+ * people for the month the scope is written rather than picked off a card. They
+ * are named after the plan's meaning, not its position, so reordering the three
+ * cards cannot silently hand a plan somebody else's icon.
+ */
+export function PlanGlyph({ name, size = 22 }: { name: "rocket" | "chart" | "team"; size?: number }) {
+  if (name === "rocket") {
+    return (
+      <Glyph size={size}>
+        {/* Nose, window, two fins and the burn, which is the fewest parts that still read as a rocket at 22px. */}
+        <path d="M12 2.4c2.9 2.5 4.5 6 4.5 9.7v3.5h-9v-3.5c0-3.7 1.6-7.2 4.5-9.7z" />
+        <circle cx="12" cy="10.2" r="1.9" />
+        <path d="M7.5 12.2C5.3 13.4 4 15.7 4 18.3l3.5-1.6z" />
+        <path d="M16.5 12.2c2.2 1.2 3.5 3.5 3.5 6.1l-3.5-1.6z" />
+        <path d="M10.1 18.3c.4 1.4 1 2.5 1.9 3.3.9-.8 1.5-1.9 1.9-3.3" />
+      </Glyph>
+    );
+  }
+
+  if (name === "chart") {
+    return (
+      <Glyph size={size}>
+        <rect x="3.8" y="13" width="4.4" height="7.2" rx="1.2" />
+        <rect x="9.8" y="8.4" width="4.4" height="11.8" rx="1.2" />
+        <rect x="15.8" y="3.8" width="4.4" height="16.4" rx="1.2" />
+      </Glyph>
+    );
+  }
+
+  /* One whole person and the shoulder of a second, which is how a group reads at this size without turning into a crowd. */
+  return (
+    <Glyph size={size}>
+      <circle cx="9.4" cy="8.3" r="3.3" />
+      <path d="M3.4 19.7c0-3.3 2.7-5.5 6-5.5s6 2.2 6 5.5" />
+      <path d="M16.5 5.9a3.3 3.3 0 010 6.4" />
+      <path d="M18.1 14.8c2.1.8 3.5 2.6 3.5 4.9" />
+    </Glyph>
+  );
+}
+
 /** The map pin, for the studio line. */
 export function PinGlyph() {
   return (

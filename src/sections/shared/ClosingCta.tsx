@@ -1,15 +1,27 @@
 "use client";
 
+import Image from "next/image";
 import { motion } from "motion/react";
+import stripEdge from "@/media/plan-strips/strip-edge-sage.webp";
 import { ArrowButton } from "@/components/ui/ArrowButton";
 import { Section } from "@/components/ui/Section";
 import { useReplayOnScrollDown } from "@/motion/useReplayOnScrollDown";
 
 /* The ask, as a torn sheet taped to the desk. */
 
-/* The tear, in `objectBoundingBox` units so one path fits both sheets whatever size they end up. */
-const TORN =
-  "M0,0 L1,0 L1,0.9630 L0.9896,0.9634 L0.9792,0.9674 L0.9688,0.9671 L0.9583,0.9623 L0.9479,0.9587 L0.9375,0.9580 L0.9271,0.9580 L0.9167,0.9580 L0.9063,0.9610 L0.8958,0.9585 L0.8854,0.9590 L0.8750,0.9580 L0.8646,0.9580 L0.8542,0.9580 L0.8438,0.9580 L0.8333,0.9593 L0.8229,0.9589 L0.8125,0.9632 L0.8021,0.9661 L0.7917,0.9693 L0.7813,0.9679 L0.7708,0.9642 L0.7604,0.9610 L0.7500,0.9627 L0.7396,0.9580 L0.7292,0.9580 L0.7188,0.9580 L0.7083,0.9580 L0.6979,0.9580 L0.6875,0.9585 L0.6771,0.9580 L0.6667,0.9580 L0.6563,0.9592 L0.6458,0.9621 L0.6354,0.9580 L0.6250,0.9605 L0.6146,0.9593 L0.6042,0.9580 L0.5938,0.9587 L0.5833,0.9644 L0.5729,0.9668 L0.5625,0.9686 L0.5521,0.9663 L0.5417,0.9640 L0.5313,0.9633 L0.5208,0.9661 L0.5104,0.9684 L0.5000,0.9730 L0.4896,0.9683 L0.4792,0.9686 L0.4688,0.9703 L0.4583,0.9709 L0.4479,0.9692 L0.4375,0.9732 L0.4271,0.9739 L0.4167,0.9692 L0.4063,0.9642 L0.3958,0.9668 L0.3854,0.9727 L0.3750,0.9713 L0.3646,0.9760 L0.3542,0.9703 L0.3438,0.9747 L0.3333,0.9798 L0.3229,0.9784 L0.3125,0.9782 L0.3021,0.9769 L0.2917,0.9794 L0.2813,0.9736 L0.2708,0.9682 L0.2604,0.9685 L0.2500,0.9635 L0.2396,0.9657 L0.2292,0.9642 L0.2188,0.9585 L0.2083,0.9593 L0.1979,0.9616 L0.1875,0.9643 L0.1771,0.9588 L0.1667,0.9585 L0.1563,0.9580 L0.1458,0.9617 L0.1354,0.9610 L0.1250,0.9663 L0.1146,0.9667 L0.1042,0.9620 L0.0938,0.9604 L0.0833,0.9650 L0.0729,0.9693 L0.0625,0.9643 L0.0521,0.9668 L0.0417,0.9683 L0.0313,0.9727 L0.0208,0.9761 L0.0104,0.9761 L0.0000,0.9761 Z";
+/*
+ * The torn bottom edge is a PHOTOGRAPH now, the same one the plan cards use,
+ * turned on its side by `scripts/plan-sheets.mjs`.
+ *
+ * It replaces a hand written `clip-path` of 96 points. That path was the reason
+ * this sheet could not have the site's corner: `clip-path` runs `M0,0 L1,0` and
+ * straight down both sides, so all four corners were square, and rounding the
+ * bottom two was impossible without writing arcs into bounding-box units, where
+ * a fixed radius stretches into an ellipse at every size the sheet takes.
+ *
+ * As a strip laid ON the sheet, the sheet underneath is an ordinary rounded
+ * rectangle with the site's one corner, and the tear is real rather than drawn.
+ */
 
 /** The three lines on the right, which are the offer in the client's own voice. */
 const PROMISES = ["Strategy that's thoughtful.", "Content that connects.", "Growth that shows."];
@@ -25,15 +37,6 @@ export function ClosingCta() {
 
   return (
     <Section fill="overflow-hidden bg-tint-sage" padding="py-16 sm:py-20 lg:py-24">
-      {/* The clip path lives in a zero-size SVG rather than in a stylesheet. */}
-      <svg aria-hidden className="absolute h-0 w-0" focusable="false">
-        <defs>
-          <clipPath id="cta-torn" clipPathUnits="objectBoundingBox">
-            <path d={TORN} />
-          </clipPath>
-        </defs>
-      </svg>
-
       <motion.div
         {...handlers}
         className="relative mx-auto max-w-6xl pt-5"
@@ -44,8 +47,7 @@ export function ClosingCta() {
         {/* The sage sheet under the cream one, offset down and left and carrying the same tear. */}
         <motion.div
           aria-hidden
-          className="absolute inset-x-0 -bottom-3 -left-2 top-12 bg-page/60"
-          style={{ clipPath: "url(#cta-torn)" }}
+          className="rounded-token absolute inset-x-0 -bottom-3 -left-2 top-12 bg-page/60"
           variants={{
             hidden: { opacity: 0, y: 26, transition: OUT },
             shown: { opacity: 1, y: 0, transition: SPRING },
@@ -64,8 +66,7 @@ export function ClosingCta() {
         />
 
         <motion.div
-          className="relative bg-board px-6 pb-24 pt-14 sm:px-12 sm:pb-28 sm:pt-16 lg:px-16"
-          style={{ clipPath: "url(#cta-torn)" }}
+          className="rounded-token relative overflow-hidden bg-board px-6 pb-24 pt-14 sm:px-12 sm:pb-28 sm:pt-16 lg:px-16"
           variants={{
             hidden: { opacity: 0, y: 34, transition: OUT },
             shown: { opacity: 1, y: 0, transition: { ...SPRING, delay: 0.06 } },
@@ -166,6 +167,11 @@ export function ClosingCta() {
                 <path d="M2 7C40 2 120 1 198 4C120 8 40 9 2 7Z" fill="currentColor" />
               </svg>
             </div>
+          </div>
+
+          {/* Laid on the sheet's bottom edge, so the tear is what ends it. `pb-24` above is the clearance that keeps copy off it. */}
+          <div aria-hidden className="pointer-events-none absolute inset-x-0 bottom-0 h-7 sm:h-9">
+            <Image src={stripEdge} alt="" fill sizes="100vw" className="object-fill" />
           </div>
         </motion.div>
       </motion.div>

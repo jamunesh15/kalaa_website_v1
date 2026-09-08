@@ -1,6 +1,7 @@
 import { Section } from "@/components/ui/Section";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { HandAccent } from "@/components/ui/HandAccent";
+import { ArrowButton } from "@/components/ui/ArrowButton";
 import { getPlanOffer, getPlans } from "@/content";
 import { PricingPlans } from "@/sections/home/PricingPlans";
 
@@ -18,6 +19,25 @@ export function Pricing() {
       />
 
       <PricingPlans plans={plans} offer={offer} />
+
+      {/*
+       * The way out for the reader none of the three cards fitted. One line
+       * under the row rather than a fourth card, because a card is an offer and
+       * this is a question.
+       *
+       * The site's own button, the same one on every other section, rather than
+       * the handwritten link this was: a fourth call to action that looks unlike
+       * the three above it reads as decoration instead of a control.
+       */}
+      {/* Wraps rather than stacking outright, so the two sit on one line wherever there is room for them and only break apart on a narrow phone. */}
+      <div className="mt-20 flex flex-wrap items-center justify-center gap-x-6 gap-y-4 lg:mt-24">
+        <p className="text-center text-lead text-ink-body">
+          Not sure which plan is right for you?
+        </p>
+        <ArrowButton href="/contact" width="fit">
+          Let&apos;s talk
+        </ArrowButton>
+      </div>
     </Section>
   );
 }

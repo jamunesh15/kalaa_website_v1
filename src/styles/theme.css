@@ -31,6 +31,9 @@
   --color-tape: var(--tape);
   --color-mat-sage: var(--mat-sage);
   --color-mat-kraft: var(--mat-kraft);
+  --color-plan-sage: var(--plan-sage);
+  --color-plan-butter: var(--plan-butter);
+  --color-plan-peach: var(--plan-peach);
 
   --radius-token: var(--radius);
 

@@ -61,6 +61,8 @@ export type Plan = {
   readonly summary: string;
   /** What the month actually contains. Counts, not adjectives. */
   readonly includes: readonly string[];
+  /** The mark on the card. Chosen for what the plan is, so it travels with the plan rather than with the column. */
+  readonly icon: "rocket" | "chart" | "team";
   /** The button's words. Different per plan, because the three asks are different. */
   readonly cta: string;
   /** The one plan drawn as the filled card. Exactly one may set this. */
