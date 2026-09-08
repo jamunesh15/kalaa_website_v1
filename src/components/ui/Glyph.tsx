@@ -69,6 +69,25 @@ export function PlanGlyph({ name, size = 22 }: { name: "rocket" | "chart" | "tea
   );
 }
 
+/** The tick inside a tinted disc, on the plan cards and in the services list. */
+export function CheckGlyph({ size = 14 }: { size?: number }) {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={3}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden
+    >
+      <path d="M4.5 12.5l5 5 10-11" />
+    </svg>
+  );
+}
+
 /** The map pin, for the studio line. */
 export function PinGlyph() {
   return (

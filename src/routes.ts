@@ -28,6 +28,14 @@ export const ROUTES: Route[] = [
     priority: 0.8,
   },
   {
+    path: "/services",
+    // The six services on a page of their own, so each can be searched for and
+    // cited. The home page section stays as the overview.
+    lastModified: "2026-09-08",
+    changeFrequency: "monthly",
+    priority: 0.9,
+  },
+  {
     path: "/blog",
     // Built to the reference layout: the opening, the topic filter, the featured
     // piece beside the note, and the list. The posts themselves are placeholders.

@@ -1,6 +1,5 @@
 "use client";
 
-import type { SVGProps } from "react";
 import Image, { type StaticImageData } from "next/image";
 import stripSage from "@/media/plan-strips/strip-sage.webp";
 import stripButter from "@/media/plan-strips/strip-butter.webp";
@@ -9,7 +8,7 @@ import { motion, type Variants } from "motion/react";
 import { ArrowButton } from "@/components/ui/ArrowButton";
 import { FOCUS_RING } from "@/components/ui/surface";
 import { Card } from "@/components/ui/Card";
-import { PlanGlyph } from "@/components/ui/Glyph";
+import { CheckGlyph, PlanGlyph } from "@/components/ui/Glyph";
 import { MarkerUnderline } from "@/components/ui/MarkerUnderline";
 import { useReplayOnScrollDown } from "@/motion/useReplayOnScrollDown";
 import type { Plan } from "@/content/types";
@@ -221,7 +220,7 @@ function PlanCard({
                 <span
                   className={`mt-0.5 grid size-6 shrink-0 place-items-center rounded-full ${tone.tint}`}
                 >
-                  <CheckIcon aria-hidden="true" className="size-3.5 text-ink" />
+                  <CheckGlyph />
                 </span>
                 <span className="min-w-0">{item}</span>
               </li>
@@ -274,21 +273,5 @@ function PlanCard({
         <Image src={tone.strip} alt="" fill sizes="6rem" className="object-cover object-left" />
       </div>
     </motion.li>
-  );
-}
-
-function CheckIcon(props: SVGProps<SVGSVGElement>) {
-  return (
-    <svg
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="3"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      {...props}
-    >
-      <path d="M4.5 12.5l5 5 10-11" />
-    </svg>
   );
 }

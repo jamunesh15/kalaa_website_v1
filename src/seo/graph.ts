@@ -28,7 +28,7 @@ function organization(): SchemaNode {
     ...(telephone ? { telephone } : null),
     address: { "@type": "PostalAddress", ...studio.postal },
     description:
-      "Kalaa is a creative social media marketing agency helping businesses build stronger brands through social strategy, content creation, campaign management, creative direction, and performance-focused marketing.",
+      "Kalaa is a technology growth partner helping businesses grow revenue through social media, content, paid campaigns, websites and software.",
   };
 }
 
@@ -109,6 +109,42 @@ export function articlePage(article: {
 }
 
 /* The contact page, as `ContactPage`. */
+/*
+ * The services page, and the six services on it as an `ItemList`.
+ *
+ * Name and description only. No price and no `Offer`, deliberately: the packages
+ * have real figures from the client, but a plan is not the same thing as a
+ * service, and pricing one against the other in structured data would state a
+ * fact that is not true. Machines read this as fact.
+ */
+export function servicesPage(
+  services: readonly { slug: string; title: string; summary: string }[],
+): SchemaNode {
+  return {
+    "@type": "CollectionPage",
+    "@id": `${absoluteUrl("/services")}#webpage`,
+    url: absoluteUrl("/services"),
+    name: "Services",
+    isPartOf: { "@id": WEBSITE_ID },
+    about: { "@id": ORGANIZATION_ID },
+    inLanguage: SITE.locale,
+    mainEntity: {
+      "@type": "ItemList",
+      itemListElement: services.map((service, index) => ({
+        "@type": "ListItem",
+        position: index + 1,
+        item: {
+          "@type": "Service",
+          name: service.title,
+          description: service.summary,
+          url: `${absoluteUrl("/services")}#${service.slug}`,
+          provider: { "@id": ORGANIZATION_ID },
+        },
+      })),
+    },
+  };
+}
+
 export function contactPage(): SchemaNode {
   return {
     "@type": "ContactPage",

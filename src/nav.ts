@@ -7,7 +7,7 @@ export type NavLink = {
 /* The three places the client wants a visitor sent, given 2026-09-07. */
 export const PRIMARY_LINKS: readonly NavLink[] = [
   { href: "/", label: "Home" },
-  { href: "/#services", label: "Services" },
+  { href: "/services", label: "Services" },
   { href: "/#work", label: "Work" },
   { href: "/#pricing", label: "Packages" },
   { href: "/blog", label: "Blog" },

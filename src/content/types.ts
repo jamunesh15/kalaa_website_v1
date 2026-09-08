@@ -10,6 +10,27 @@ export type Service = {
   readonly includes: readonly string[];
   /* The deliverables again, as one short line for the card. */
   readonly tagline: string;
+  /**
+   * The long form, for the services page only.
+   *
+   * Two or three sentences saying what actually happens and what the client
+   * ends up holding. Not a restatement of `summary` at greater length: the
+   * summary is the pitch and this is the method, which is what somebody
+   * comparing two agencies is reading for.
+   */
+  readonly detail: string;
+  /**
+   * What the client ends up holding, as whole lines.
+   *
+   * Separate from `includes` because the two do different jobs. `includes` is
+   * chips on a card and reads as "Captions", "Scheduling", which is fine at a
+   * glance and useless on a page somebody is reading to decide. These are
+   * sentences, and they say what is actually handed over.
+   */
+  readonly delivers: readonly string[];
+  /** Slug in `SERVICE_DETAIL_MEDIA`, and the picture beside it on the services page. */
+  readonly image: string;
+  readonly alt: string;
 };
 
 /** One approved old-client logo. */
