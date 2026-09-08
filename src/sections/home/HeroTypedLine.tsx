@@ -4,12 +4,29 @@ import { useEffect, useState } from "react";
 
 /* The line under the headline, typing itself out one service at a time. */
 
-/** The offer, in the order a visitor cares about it. First is the SEO phrase. */
+/**
+ * The offer, in the order a visitor cares about it. First is the SEO phrase, and
+ * social media leads whatever else is added.
+ *
+ * Every phrase is lifted from `services.ts`, so the line cannot promise
+ * something the site does not sell. Four of the six are the technology side,
+ * which is the point of the line: social media is what Kalaa is known for and
+ * the software is what the CEO wants a visitor to learn.
+ *
+ * Six is the ceiling: at roughly three and a half seconds each, a longer
+ * rotation takes half a minute to show itself and nobody waits that long.
+ *
+ * Keep every phrase at or under the length of "social media management". The
+ * line reserves its width from the longest of them, so a longer entry widens the
+ * hero for all of them and shifts the layout.
+ */
 const PHRASES = [
   "social media management",
-  "reels and posts",
-  "Meta ads",
   "websites and software",
+  "custom software",
+  "landing pages",
+  "Meta and Google ads",
+  "business growth",
 ];
 
 /* British spelling, to match "recognise" and "organised" in the copy already on the page. */

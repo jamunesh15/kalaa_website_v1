@@ -1,13 +1,13 @@
 import type { ProcessStep } from "@/content/types";
 
-/* A month of social media work, in the order it happens. */
+/* A month of work, in the order it happens. */
 export const PROCESS_STEPS: readonly ProcessStep[] = [
   {
     number: "01",
     tag: "Discovery",
     title: "We learn your business",
-    deliverables: ["Your offer and your buyers", "What your competitors post", "Questions buyers ask"],
-    outcome: "This becomes the content plan.",
+    deliverables: ["Your offer and your buyers", "What your competitors run", "Questions buyers ask"],
+    outcome: "This becomes the plan.",
   },
   {
     number: "02",
@@ -34,7 +34,7 @@ export const PROCESS_STEPS: readonly ProcessStep[] = [
     number: "05",
     tag: "Report",
     title: "We report what happened",
-    deliverables: ["Reach, saves and shares", "Ad spend and enquiries", "What to repeat next month"],
+    deliverables: ["Enquiries and where they came from", "Ad spend against results", "Reach, saves and shares"],
     outcome: "Next month is planned on it.",
   },
 ];

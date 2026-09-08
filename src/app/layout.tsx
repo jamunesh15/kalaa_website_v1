@@ -12,9 +12,9 @@ import "./globals.css";
 /* Two families, declared once on the root element. */
 const fontVariables = [switzer.variable, displayFace.variable, hand.variable].join(" ");
 
-const title = "Kalaa, creative social media marketing agency";
+const title = "Kalaa, social media and technology growth partner";
 const description =
-  "Kalaa creates social media strategies, content, and campaigns that turn attention into real business growth.";
+  "Kalaa is a technology growth partner. We run social media and ads, build websites and software, and report what the work returned.";
 
 /* Everything below `title` is inherited by every page, so a new page gets the canonical pattern, the social tags and the. */
 export const metadata: Metadata = {

@@ -1,11 +1,14 @@
 # Kalaa
 
-> Creative social media marketing agency. Kalaa creates social strategies,
-> content, and campaigns that turn attention into real business growth.
+> Technology growth partner. Kalaa runs social media, content and paid
+> campaigns, builds websites and software, and reports what the work returned.
 
 ## Pages
 
 - [Home](https://kalaa.io/): What Kalaa does, and who it is for.
+- [Services](https://kalaa.io/services): The six services in full. Social media
+  management, campaign management, content creation, website and software
+  development, business growth strategy, brand strategy and design.
 - [Contact](https://kalaa.io/contact): How to reach Kalaa. Email, WhatsApp and
   the office address in Surat, Gujarat.
 - [Privacy policy](https://kalaa.io/privacy-policy): What personal data Kalaa

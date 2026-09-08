@@ -17,7 +17,7 @@ export function Services() {
       <SectionHeading
         align="center"
         title={<>Services <HandAccent>We Provide</HandAccent></>}
-        lead="Social media, content, ads and websites made to help people notice, trust, and enquire."
+        lead="Social media, content, ads, websites and software, built so attention turns into enquiries and revenue."
       />
 
       <ServiceShowcase services={services} />

@@ -32,7 +32,7 @@ export const OG_IMAGE = {
   url: "/opengraph-image",
   width: 1200,
   height: 630,
-  alt: `${SITE.name}, creative social media marketing agency`,
+  alt: `${SITE.name}, social media and technology growth partner`,
 } as const;
 
 /* The Open Graph block for one page. */

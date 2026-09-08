@@ -12,7 +12,7 @@ const title = "Contact";
 
 /* Verbatim from the live kalaa.io/contact. */
 const description =
-  "Contact Kalaa, a creative digital marketing and social media marketing agency. Let's work together to build your brand, create engaging content, and drive growth.";
+  "Contact Kalaa, a technology growth partner. Tell us about your business and we will show you what to run, what to build, and what it should return.";
 
 export const metadata: Metadata = {
   title,

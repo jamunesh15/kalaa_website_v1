@@ -11,7 +11,7 @@ const path = "/blog";
 const title = "Blog";
 
 const description =
-  "Guides, breakdowns and the reasoning behind the social media, content and advertising work Kalaa runs for clients every month.";
+  "Guides, breakdowns and the reasoning behind the social media, technology and advertising work Kalaa runs for clients every month.";
 
 export const metadata: Metadata = {
   title,

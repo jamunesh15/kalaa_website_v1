@@ -103,7 +103,7 @@ export function ProcessPath({ steps }: { steps: readonly ProcessStep[] }) {
         <SectionHeading
           align="center"
           title={<>How we <HandAccent>grow your business</HandAccent></>}
-          lead="The same five steps every month, from learning your business to sending the report."
+          lead="The same five steps every month, from learning your business to reporting what it returned. Websites and software run alongside them."
         />
       </motion.div>
 

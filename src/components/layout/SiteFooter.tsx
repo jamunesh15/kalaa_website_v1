@@ -71,11 +71,16 @@ export function SiteFooter() {
             <BrandMark className="mx-auto h-9 w-auto self-start md:mx-0" decorative />
 
             <p className="mx-auto mt-5 max-w-[16ch] font-display text-display-m font-bold text-ink md:mx-0">
-              Creative social media <span className="text-ink-sage">marketing agency.</span>
+              Technology <span className="text-ink-sage">Growth Partners.</span>
+            </p>
+
+            {/* The CEO's line, given 2026-09-08. His phrasing was "Bring your business to online"; the stray "to" is a slip rather than a choice, so it ships as English. */}
+            <p className="mx-auto mt-3 max-w-[38ch] text-body font-semibold text-ink md:mx-0">
+              Bring your business online.
             </p>
 
             {/* The client's own sentence, from the live kalaa.io hero, serial comma included. */}
-            <p className="mx-auto mt-3 max-w-[38ch] text-body text-ink-body md:mx-0">
+            <p className="mx-auto mt-2 max-w-[38ch] text-body text-ink-body md:mx-0">
               We help brands grow through purposeful design, storytelling, and data-driven
               marketing.
             </p>
@@ -186,8 +191,9 @@ export function SiteFooter() {
       <div className="relative z-10 mx-auto w-full max-w-7xl px-5 pb-36 pt-10 sm:pb-40 lg:mt-auto lg:pb-7 lg:pt-6">
         {/* No rule above it. */}
         <div className="flex flex-col items-center gap-4 text-center lg:mx-auto lg:w-full lg:max-w-[56%] lg:flex-row lg:items-center lg:justify-between lg:text-left">
+          {/* The business model line, the CEO's own words, given 2026-09-08. It sits in the colophon rather than in the brand block because it describes what the company IS to a partner, not what it sells to a visitor. */}
           <p className="text-small text-ink">
-            &copy; {year} {SITE.name}. All rights reserved.
+            &copy; {year} {SITE.name}, a Distribution Operating Company. All rights reserved.
           </p>
 
           <nav aria-label="Legal">
