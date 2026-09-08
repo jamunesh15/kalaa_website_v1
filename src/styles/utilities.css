@@ -899,6 +899,20 @@
   transform: rotate(360deg);
 }
 
+/*
+ * Not on a phone.
+ *
+ * The screen is small enough that a fixed button is standing on the content
+ * rather than beside it, and the footer already carries the same WhatsApp link
+ * a thumb's reach away. `47.999rem` is the same edge `useBelowMd` reads, so the
+ * button appears exactly where the site starts calling itself a tablet.
+ */
+@media (max-width: 47.999rem) {
+  .whatsapp-dock {
+    display: none;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .whatsapp-dock,
   .whatsapp-dock-mark {
