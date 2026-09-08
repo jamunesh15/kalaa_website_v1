@@ -22,7 +22,7 @@ export function TopicFilter({
   onSelect: (topic: string) => void;
 }) {
   return (
-    <div className="-mx-6 overflow-x-auto px-6 py-1">
+    <div className="-mx-3 overflow-x-auto px-3 py-1 md:-mx-6 md:px-6">
       <ul className="flex w-max min-w-full items-center gap-2">
         {topics.map((topic) => {
           const selected = topic === active;

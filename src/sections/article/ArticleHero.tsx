@@ -17,7 +17,7 @@ import { ArticleArtwork } from "@/sections/blog/ArticleArtwork";
  */
 export function ArticleHero({ article }: { article: FullArticle }) {
   return (
-    <Section fill="overflow-x-clip bg-board" padding="pb-14 pt-10 lg:pb-20 lg:pt-14" className="px-6">
+    <Section fill="overflow-x-clip bg-board" padding="pb-14 pt-10 lg:pb-20 lg:pt-14" className="px-3 md:px-6">
       <div className="grid items-center gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,0.92fr)] lg:gap-16">
         <SlideIn from="left" className="min-w-0">
           <nav aria-label="Breadcrumb" className="text-small text-ink-muted">
@@ -41,7 +41,7 @@ export function ArticleHero({ article }: { article: FullArticle }) {
 
         <SlideIn from="right" className="relative min-w-0">
           {/* The sheet behind the cover, standing out the same 24px as everywhere else. */}
-          <div aria-hidden className="paper-mat-hero absolute -inset-6 bg-mat-sage" />
+          <div aria-hidden className="paper-mat-hero absolute -inset-3 bg-mat-sage md:-inset-6" />
 
           <ArticleArtwork
             image={article.image}

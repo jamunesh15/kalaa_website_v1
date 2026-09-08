@@ -30,7 +30,7 @@ export function ArticleCard({
        * this band, and the lead piece above carries kraft so the two rows of
        * paper are never the same sheet.
        */}
-      <div aria-hidden className="paper-mat absolute -inset-6 bg-mat-sage" />
+      <div aria-hidden className="paper-mat absolute -inset-3 bg-mat-sage md:-inset-6" />
 
       <div
         className={`${SURFACE} relative flex h-full flex-col ${CARD_FILLS[fill]} p-5 text-ink`}

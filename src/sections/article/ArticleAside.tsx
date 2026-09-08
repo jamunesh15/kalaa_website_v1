@@ -10,7 +10,7 @@ import { SURFACE } from "@/components/ui/surface";
 export function ArticleAside() {
   return (
     <div className="relative">
-      <div aria-hidden className="paper-mat absolute -inset-6 bg-mat-sage" />
+      <div aria-hidden className="paper-mat absolute -inset-3 bg-mat-sage md:-inset-6" />
 
       <div className={`${SURFACE} relative bg-tint-butter p-6 text-ink`}>
         <h2 className="font-display text-display-m font-bold leading-snug text-ink">

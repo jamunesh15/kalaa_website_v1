@@ -25,7 +25,7 @@ import { ArticleContents } from "@/sections/article/ArticleContents";
  */
 export function ArticleBody({ article }: { article: FullArticle }) {
   return (
-    <Section fill="bg-tint-sky" padding="py-14 lg:py-20" className="px-6">
+    <Section fill="bg-tint-sky" padding="py-14 lg:py-20" className="px-3 md:px-6">
       <div className="grid gap-12 lg:grid-cols-[minmax(0,14rem)_minmax(0,1fr)] lg:gap-14 xl:grid-cols-[minmax(0,14rem)_minmax(0,1fr)_minmax(0,17rem)]">
         <div className="min-w-0 lg:sticky lg:top-[calc(var(--masthead)+4.5rem)] lg:self-start">
           <ArticleContents sections={article.sections} />

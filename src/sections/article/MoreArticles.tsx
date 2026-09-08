@@ -16,13 +16,13 @@ export function MoreArticles({ articles }: { articles: readonly Article[] }) {
   if (articles.length === 0) return null;
 
   return (
-    <Section fill="overflow-x-clip bg-board" padding="py-14 lg:py-20" className="px-6">
+    <Section fill="overflow-x-clip bg-board" padding="py-14 lg:py-20" className="px-3 md:px-6">
       <h2 className="font-display text-display-l font-bold text-ink">More from the blog</h2>
 
       <SlideIn
         from="left"
         travel={96}
-        className="mt-10 grid min-w-0 gap-16 will-change-transform md:grid-cols-2 lg:grid-cols-3"
+        className="mt-10 grid min-w-0 gap-10 will-change-transform md:grid-cols-2 md:gap-16 lg:grid-cols-3"
       >
         {articles.map((article, index) => (
           <ArticleCard

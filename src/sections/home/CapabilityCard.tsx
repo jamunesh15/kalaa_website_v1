@@ -86,24 +86,29 @@ export function CapabilityCard({
            */}
           <div
             aria-hidden
-            className="paper-mat-wide absolute -inset-6 bg-mat-sage"
+            className="paper-mat-wide absolute -inset-3 bg-mat-sage md:-inset-6"
           />
 
+          {/*
+           * The minimum heights start at `md`. Below it the card is one column,
+           * so a floor written for two columns side by side only padded the
+           * bottom of an already tall stack.
+           */}
           <Card
             fill={FILLS[index % FILLS.length]}
             padding="p-4 sm:p-5"
-            className="relative min-h-[26rem]"
+            className="relative md:min-h-[26rem]"
           >
-            <div className="grid min-h-[23rem] gap-5 md:grid-cols-[0.9fr_1.1fr] md:gap-8">
-              {/* Centred below `md`, where the card is one column and the copy sits under the photograph rather than beside it. */}
-              <div className="flex min-w-0 flex-col justify-center p-4 text-center sm:p-6 md:text-left lg:p-8">
+            <div className="grid gap-5 md:min-h-[23rem] md:grid-cols-[0.9fr_1.1fr] md:gap-8">
+              {/* Left aligned at every width. Centred multi-line copy is harder to read, and on a phone it was a ragged column against a wide card. */}
+              <div className="flex min-w-0 flex-col justify-center p-2 sm:p-6 lg:p-8">
                 <p className="text-label font-bold tracking-[0.08em] text-ink-body">
                   {capability.label}
                 </p>
-                <h3 className="mx-auto mt-4 max-w-[12ch] font-display text-display-l font-bold text-ink md:mx-0">
+                <h3 className="mt-4 max-w-[12ch] font-display text-display-l font-bold text-ink">
                   {capability.title}
                 </h3>
-                <p className="mx-auto mt-4 max-w-[38ch] text-body text-ink-body md:mx-0">
+                <p className="mt-4 max-w-[38ch] text-body text-ink-body">
                   {capability.summary}
                 </p>
                 <p className="mt-6 text-small font-medium text-ink-body">
@@ -114,7 +119,7 @@ export function CapabilityCard({
               {/* First on a phone, second from `md`. */}
               <div
                 aria-hidden
-                className="rounded-token relative order-first min-h-64 overflow-hidden bg-surface shadow-soft md:order-none"
+                className="rounded-token relative order-first min-h-52 overflow-hidden bg-surface shadow-soft md:order-none md:min-h-64"
               >
                 <Image
                   src={photo.src}

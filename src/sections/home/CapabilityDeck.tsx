@@ -33,7 +33,7 @@ export function CapabilityDeck({
     <>
       {/* `gap-16` and `px-6` clear the mat's overhang: at `gap-5` two sheets collide, and without the padding the outer edges are clipped by the band. */}
       <ul
-        className={`mt-12 grid gap-16 px-6 lg:mt-16 ${reduced ? "" : "xl:hidden"}`}
+        className={`mt-12 grid gap-10 px-3 md:gap-16 md:px-6 lg:mt-16 ${reduced ? "" : "xl:hidden"}`}
       >
         {capabilities.map((capability, index) => (
           <CapabilityCard

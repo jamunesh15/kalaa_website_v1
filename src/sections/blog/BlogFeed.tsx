@@ -47,7 +47,7 @@ export function BlogFeed({ articles }: { articles: readonly Article[] }) {
 
   return (
     /* `px-6` is the mat's own overhang: without it the sheets behind the outer cards are cut off by the page edge. */
-    <Section fill="overflow-x-clip bg-tint-sky" padding="pb-16 pt-10 lg:pb-24 lg:pt-14" className="px-6">
+    <Section fill="overflow-x-clip bg-tint-sky" padding="pb-16 pt-10 lg:pb-24 lg:pt-14" className="px-3 md:px-6">
       {/* The row was floating: a bare control under the opening with nothing holding it to the page. The written line anchors it, and it is the site's own voice. */}
       <div className="flex flex-wrap items-center gap-x-6 gap-y-3">
         <p className="font-hand text-[1.3rem] leading-none text-ink">Read by topic</p>
@@ -75,14 +75,14 @@ export function BlogFeed({ articles }: { articles: readonly Article[] }) {
           <h2 className="mt-20 font-display text-display-l font-bold text-ink">Latest articles</h2>
 
           {/* The gap has to clear two mats, each standing 24px out of its card. */}
-          <div className="mt-14 grid gap-16 md:grid-cols-2 lg:grid-cols-3">
+          <div className="mt-14 grid gap-10 md:grid-cols-2 md:gap-16 lg:grid-cols-3">
             {rows.map((row, rowIndex) => (
               /* A subgrid row, so the cards keep the grid's columns while the row moves as one. */
               <SlideIn
                 key={row[0].slug}
                 from={rowIndex % 2 === 0 ? "left" : "right"}
                 travel={ROW_TRAVEL}
-                className="col-span-full grid min-w-0 grid-cols-subgrid gap-16 will-change-transform"
+                className="col-span-full grid min-w-0 grid-cols-subgrid gap-10 will-change-transform md:gap-16"
               >
                 {row.map((item, column) => (
                   <ArticleCard
