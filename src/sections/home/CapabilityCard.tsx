@@ -1,10 +1,6 @@
 "use client";
 
-import {
-  motion,
-  useTransform,
-  type MotionValue,
-} from "motion/react";
+import { motion, useTransform, type MotionValue } from "motion/react";
 import Image from "next/image";
 import { Card, type CardFill } from "@/components/ui/Card";
 import { CARD_MEDIA } from "@/content/cardMedia";
@@ -80,41 +76,57 @@ export function CapabilityCard({
               }
         }
       >
-        <Card
-          fill={FILLS[index % FILLS.length]}
-          padding="p-4 sm:p-5"
-          className="min-h-[26rem]"
-        >
-          <div className="grid min-h-[23rem] gap-5 md:grid-cols-[0.9fr_1.1fr] md:gap-8">
-            {/* Centred below `md`, where the card is one column and the copy sits under the photograph rather than beside it. */}
-            <div className="flex min-w-0 flex-col justify-center p-4 text-center sm:p-6 md:text-left lg:p-8">
-              <p className="text-label font-bold tracking-[0.08em] text-ink-body">
-                {capability.label}
-              </p>
-              <h3 className="mx-auto mt-4 max-w-[12ch] font-display text-display-l font-bold text-ink md:mx-0">
-                {capability.title}
-              </h3>
-              <p className="mx-auto mt-4 max-w-[38ch] text-body text-ink-body md:mx-0">{capability.summary}</p>
-              <p className="mt-6 text-small font-medium text-ink-body">
-                {capability.includes.join(" · ")}
-              </p>
-            </div>
+        <div className="relative">
+          {/*
+           * The same torn sheet the blog cards are mounted on, through the wide
+           * stencil because these are twice as wide as they are tall. The site's
+           * own sage, at the weight the footer and the closing ask use their back
+           * sheets at: a tint vanishes under cards that already cycle butter,
+           * sage, peach and cloud on a violet band.
+           */}
+          <div
+            aria-hidden
+            className="paper-mat-wide absolute -inset-6 bg-page/65"
+          />
 
-            {/* First on a phone, second from `md`. */}
-            <div
-              aria-hidden
-              className="rounded-token relative order-first min-h-64 overflow-hidden bg-surface shadow-soft md:order-none"
-            >
-              <Image
-                src={photo.src}
-                alt=""
-                fill
-                sizes="(min-width: 768px) 30rem, 90vw"
-                className="object-cover"
-              />
+          <Card
+            fill={FILLS[index % FILLS.length]}
+            padding="p-4 sm:p-5"
+            className="relative min-h-[26rem]"
+          >
+            <div className="grid min-h-[23rem] gap-5 md:grid-cols-[0.9fr_1.1fr] md:gap-8">
+              {/* Centred below `md`, where the card is one column and the copy sits under the photograph rather than beside it. */}
+              <div className="flex min-w-0 flex-col justify-center p-4 text-center sm:p-6 md:text-left lg:p-8">
+                <p className="text-label font-bold tracking-[0.08em] text-ink-body">
+                  {capability.label}
+                </p>
+                <h3 className="mx-auto mt-4 max-w-[12ch] font-display text-display-l font-bold text-ink md:mx-0">
+                  {capability.title}
+                </h3>
+                <p className="mx-auto mt-4 max-w-[38ch] text-body text-ink-body md:mx-0">
+                  {capability.summary}
+                </p>
+                <p className="mt-6 text-small font-medium text-ink-body">
+                  {capability.includes.join(" · ")}
+                </p>
+              </div>
+
+              {/* First on a phone, second from `md`. */}
+              <div
+                aria-hidden
+                className="rounded-token relative order-first min-h-64 overflow-hidden bg-surface shadow-soft md:order-none"
+              >
+                <Image
+                  src={photo.src}
+                  alt=""
+                  fill
+                  sizes="(min-width: 768px) 30rem, 90vw"
+                  className="object-cover"
+                />
+              </div>
             </div>
-          </div>
-        </Card>
+          </Card>
+        </div>
       </motion.article>
     </li>
   );

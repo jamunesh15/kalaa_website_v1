@@ -4,7 +4,8 @@ import { HandAccent } from "@/components/ui/HandAccent";
 import { Section } from "@/components/ui/Section";
 import { getChannels } from "@/content";
 import { HERO_ARTIFACTS } from "@/content/contactArtifacts";
-import { ContactArtifacts } from "@/sections/contact/ContactArtifacts";
+import { ArtifactStage } from "@/components/ui/ArtifactStage";
+import { CONTACT_MEDIA } from "@/content/contactMedia";
 import { SlideIn } from "@/components/ui/SlideIn";
 
 /* The top of the contact page: the ask, two ways to answer it, and the desk. */
@@ -44,7 +45,7 @@ export function ContactHero() {
             {whatsapp ? (
               <ArrowButton href={whatsapp.href} width="fit" external={whatsapp.external}>
                 <span className="flex items-center gap-2.5">
-                  <ChannelGlyph name="whatsapp" />
+                  <ChannelGlyph name="whatsapp" size={22} />
                   {whatsapp.action}
                 </span>
               </ArrowButton>
@@ -53,7 +54,7 @@ export function ContactHero() {
             {email ? (
               <ArrowButton href={email.href} width="fit" tone="light" external={email.external}>
                 <span className="flex items-center gap-2.5">
-                  <ChannelGlyph name="mail" />
+                  <ChannelGlyph name="mail" size={20} />
                   {email.action}
                 </span>
               </ArrowButton>
@@ -62,7 +63,7 @@ export function ContactHero() {
         </SlideIn>
 
         {/* It runs off the right edge of the sheet, which is what the client's drawing does and what stops the band reading as a. */}
-        <ContactArtifacts pieces={HERO_ARTIFACTS} ratio={1.34} className="lg:-mr-16 xl:-mr-24" eager />
+        <ArtifactStage media={CONTACT_MEDIA} pieces={HERO_ARTIFACTS} ratio={1.34} className="lg:-mr-16 xl:-mr-24" eager />
       </div>
     </Section>
   );

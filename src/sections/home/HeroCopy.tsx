@@ -31,25 +31,36 @@ export function HeroCopy() {
       {/* The headline is outcome-led, which is a change of kind rather than of wording. */}
 
       {/* The text column is the wider of the two, and that is measured rather than chosen: line one needs 620px at this size and. */}
+      {/* The tagline, chosen by him on 2026-09-07 after Chirag asked for the technology-first angle. One sentence a line, held whole. */}
       <h1 className="hero-headline mt-4 font-display text-display-xl font-black text-ink">
-        We turn social media
+        <span className="whitespace-nowrap">Technology plans it.</span>
         <br />
-        into steady{" "}
-        {/* The marker and the hand on one word, which is the only place the two devices are allowed to meet. */}
-        <span className="inline-block rounded-token bg-accent px-[0.16em] pt-[0.1em] pb-[0.16em] font-hand text-[1.12em] font-bold leading-[0.93]">
-          revenue
+        <span className="whitespace-nowrap">Social media shows it.</span>
+        <br />
+        <span className="whitespace-nowrap">
+          {/* The marker and the hand on one word, which is the only place the two devices are allowed to meet. */}
+          <span className="inline-block rounded-token bg-accent px-[0.16em] pt-[0.1em] pb-[0.16em] font-hand text-[1.12em] font-bold leading-[0.93]">
+            Revenue
+          </span>{" "}
+          proves it.
         </span>
       </h1>
 
       <HeroTypedLine />
 
+      {/* The positioning line, chosen by him from a set on 2026-09-07 after Chirag asked for the technology-first angle. */}
       <p className="mx-auto mt-2 max-w-[46ch] text-body text-ink-body sm:mt-3 lg:mx-0">
         We plan the month, make the work, run the ads, and report what it did.
       </p>
 
       {/* The same arrow button the about section ends on, at the client's instruction, so the two calls to action on the first. */}
       {/* Centred below `lg` along with the rest of the column, at the client's ask: on a phone the copy is alone on the screen. */}
-      <div className="mt-7 flex justify-center lg:justify-start">
+      {/* Real client ratings from Feedspace; `hero-badge` in utilities.css shrinks the widget's host to its avatars so they sit on the copy's edge. */}
+      <div className="hero-badge mt-6 flex justify-center lg:justify-start">
+        <div className="feedspace-embed" data-id="66d7fadc-4bef-4e37-b39f-19b451fa303a" />
+      </div>
+
+      <div className="mt-6 flex justify-center lg:justify-start">
         <ArrowButton href="/contact" width="fit">
           Get free strategy call
         </ArrowButton>

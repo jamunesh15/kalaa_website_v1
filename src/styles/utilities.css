@@ -560,78 +560,24 @@
   border-top: var(--border-w) solid color-mix(in srgb, var(--ink) 13%, transparent);
 }
 
-/* The work mosaic. */
+/* The post mosaic: the tracks only. The bands inside are subgrids and carry the arrangement. */
 @utility work-mosaic {
   display: grid;
   gap: 0.5rem;
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  grid-template-rows: repeat(39, minmax(0, 1fr));
-  /* Derived, not chosen: four cells of 27 across, thirty-nine rows of 32 down, 108 over 1248, which reduces to 9 over 104. */
-  aspect-ratio: 9 / 104;
-  grid-template-areas:
-    "r1 r1 r2 r2"
-    "r1 r1 r2 r2"
-    "r1 r1 r2 r2"
-    "p1 p1 p2 p2"
-    "p1 p1 p2 p2"
-    "r3 r3 p3 p3"
-    "r3 r3 p3 p3"
-    "r3 r3 p4 p5"
-    "p6 p6 p7 p7"
-    "p6 p6 p7 p7"
-    "r4 r4 r5 r5"
-    "r4 r4 r5 r5"
-    "r4 r4 r5 r5"
-    "p8 p8 p9 p9"
-    "p8 p8 p9 p9"
-    "p10 p10 p11 p12"
-    "p10 p10 p13 p14"
-    "r6 r6 r7 r7"
-    "r6 r6 r7 r7"
-    "r6 r6 r7 r7"
-    "p15 p15 p16 p16"
-    "p15 p15 p16 p16"
-    "p17 p17 p18 p18"
-    "p17 p17 p18 p18"
-    "p19 p19 p20 p20"
-    "p19 p19 p20 p20"
-    "p21 p21 p22 p22"
-    "p21 p21 p22 p22"
-    "p23 p23 p24 p24"
-    "p23 p23 p24 p24"
-    "p25 p25 p26 p26"
-    "p25 p25 p26 p26"
-    "p27 p27 p28 p28"
-    "p27 p27 p28 p28"
-    "p29 p29 p30 p30"
-    "p29 p29 p30 p30"
-    "r8 r8 r9 r9"
-    "r8 r8 r9 r9"
-    "r8 r8 r9 r9";
+  grid-template-rows: repeat(28, minmax(0, 1fr));
+  /* Two posts across, each 4:5: fourteen rows of tiles at five quarters of half the width, so 4 over 35. */
+  aspect-ratio: 4 / 35;
 }
-
-/* Below `md` the wall is the whole wall. */
 
 /* The full composition, eight columns, from `md` up. */
 @media (min-width: 48rem) {
   .work-mosaic {
     gap: 0.6rem;
     grid-template-columns: repeat(8, minmax(0, 1fr));
-    grid-template-rows: repeat(12, minmax(0, 1fr));
-    aspect-ratio: 9 / 16;
-    grid-template-areas:
-      "r1 r1 p1 p1 r2 r2 p4 p5"
-      "r1 r1 p1 p1 r2 r2 p6 p7"
-      "r1 r1 p2 p3 r2 r2 p8 p9"
-      "p10 p10 r3 r3 p13 p14 r4 r4"
-      "p10 p10 r3 r3 p15 p16 r4 r4"
-      "p11 p12 r3 r3 p17 p18 r4 r4"
-      "r5 r5 p19 p19 r6 r6 r9 r9"
-      "r5 r5 p19 p19 r6 r6 r9 r9"
-      "r5 r5 p20 p21 r6 r6 r9 r9"
-      "r7 r7 p25 p26 r8 r8 p22 p22"
-      "r7 r7 p27 p28 r8 r8 p22 p22"
-      "r7 r7 p29 p30 r8 r8 p23 p24";
+    grid-template-rows: repeat(8, minmax(0, 1fr));
+    /* Eight cells across and eight down, each 4:5, so the whole is 4:5 too. */
+    aspect-ratio: 4 / 5;
   }
 }
 
@@ -645,7 +591,15 @@
 
 /* The hero headline, which sets one step smaller than `display-xl` on a phone. */
 .hero-headline {
-  font-size: clamp(1.9375rem, 4.6vw, 4rem);
+  /* Stacked layout: the line is centred on the whole width, so it follows the viewport, down to a 320px phone. */
+  font-size: clamp(1.4375rem, 7.4vw, 3.75rem);
+}
+
+@media (min-width: 64rem) {
+  .hero-headline {
+    /* Two columns: the tagline's longest line, "Social media shows it.", sat on the column's edge at 4rem and clears it with room at 3.75rem. */
+    font-size: clamp(2.5rem, 4.3vw, 3.75rem);
+  }
 }
 
 /* The FAQ rows. */
@@ -845,6 +799,49 @@
   transform: rotate(-0.7deg);
 }
 
+/*
+ * The sheet of paper BEHIND a card, cut from the photograph in `public/frames/`.
+ *
+ * The card in front keeps the site's one radius, the same as every button. Only
+ * this is torn.
+ *
+ * The picture is white paper on black, converted by `node scripts/frames.mjs`
+ * into a white PNG whose alpha is the paper. Used as a mask it decides the
+ * shape only, so the colour is still the element's own background and still
+ * comes from a token. One photograph therefore serves every colour on the site.
+ *
+ * A mask clips a box shadow off with everything else, which is why depth here is
+ * the mat behind the sheet rather than an elevation.
+ */
+.paper-mat {
+  -webkit-mask-image: url("/frames/frame-card.png");
+  mask-image: url("/frames/frame-card.png");
+  -webkit-mask-size: 100% 100%;
+  mask-size: 100% 100%;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+}
+
+/* The wide sheet, for a box far off the card's proportion. */
+.paper-mat-wide {
+  -webkit-mask-image: url("/frames/frame-wide.png");
+  mask-image: url("/frames/frame-wide.png");
+  -webkit-mask-size: 100% 100%;
+  mask-size: 100% 100%;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+}
+
+/* The 3:2 sheet, for an article's own cover. */
+.paper-mat-hero {
+  -webkit-mask-image: url("/frames/frame-hero.png");
+  mask-image: url("/frames/frame-hero.png");
+  -webkit-mask-size: 100% 100%;
+  mask-size: 100% 100%;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+}
+
 /* One of the four objects scattered around the footer. */
 .footer-piece {
   left: var(--piece-phone-left, var(--piece-left));
@@ -881,4 +878,37 @@
 /* The map's frame, and the only styling a third-party document allows. */
 .map-frame iframe {
   filter: saturate(0.62) contrast(1.06);
+}
+
+/*
+ * The Feedspace avatar badge in the hero. The widget's own stylesheet sets
+ * `div.feedspace-embed { width: 100% }` and centres the avatars inside a shadow
+ * root, which nothing outside can reach. Two class selectors outrank its one,
+ * and a host sized to its content leaves the centring nowhere to go, so the
+ * avatars land on the column's left edge. On a phone the wrapper centres it.
+ */
+.hero-badge {
+  /* Exactly the avatar row. The widget's host is 90px with 42px of nothing under the faces, so a fixed height keeps the button close and still from the first paint. */
+  height: 3rem;
+}
+
+.hero-badge div.feedspace-embed {
+  width: fit-content;
+  max-width: 100%;
+}
+
+@media (min-width: 64rem) {
+  /* The widget pads its avatars 12px in from its host; pull the host out by the same so the first face sits on the heading's edge. */
+  .hero-badge div.feedspace-embed {
+    margin-inline-start: -12px;
+  }
+}
+
+/* The seek bar. */
+.reel-seek {
+  flex: 1 1 auto;
+  min-width: 0;
+  height: 1.25rem;
+  accent-color: var(--surface);
+  cursor: pointer;
 }

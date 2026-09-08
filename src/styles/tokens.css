@@ -46,6 +46,14 @@
   /* The about board's own ground, and the only warm neutral in the palette. */
   --board: #f3f0e9;
 
+  /* Masking tape. Kraft, and darker than the board so a strip reads against every paper on the site. */
+  --tape: #d9cdb4;
+
+  /* The sheet behind a card. A deeper kraft, because every tint in this palette
+   * disappears against the band the blog cards sit on. Measured at card size
+   * against sage, pale sage, violet and clay before it was picked. */
+  --mat: #c6b8a0;
+
   /* CONTRAST RULES THAT ARE NOT SUGGESTIONS On the sheet: ink 18.5:1, body 12.8:1, muted 7.4:1. */
 
   /* -------------------------------------------------------------------- Corner ONE value. */

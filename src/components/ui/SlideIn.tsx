@@ -1,21 +1,30 @@
 "use client";
 
-import type { ReactNode } from "react";
+import type { CSSProperties, ReactNode } from "react";
 import { motion } from "motion/react";
 import { useReplayOnScrollDown } from "@/motion/useReplayOnScrollDown";
 
 /* A block that arrives from one side. */
 const SPRING = { type: "spring", stiffness: 34, damping: 16, mass: 1.1 } as const;
 
+/* How far it starts from where it lands. */
+const TRAVEL = 44;
+
 export function SlideIn({
   from,
   delay = 0,
   className = "",
+  style,
+  travel = TRAVEL,
   children,
 }: {
   from: "left" | "right";
   delay?: number;
   className?: string;
+  /** Pixels of travel. A whole row of the work wants more than a block of copy. */
+  travel?: number;
+  /** For a block that is also a grid item and has to carry its area. */
+  style?: CSSProperties;
   children: ReactNode;
 }) {
   const { shown, handlers } = useReplayOnScrollDown();
@@ -24,6 +33,7 @@ export function SlideIn({
     <motion.div
       {...handlers}
       className={className}
+      style={style}
       /* A fixed 80px of the block, not a fifth of it. */
       viewport={{ amount: "some", margin: "0px 0px -80px 0px" }}
       initial="hidden"
@@ -31,7 +41,7 @@ export function SlideIn({
       variants={{
         hidden: {
           opacity: 0,
-          x: from === "left" ? -44 : 44,
+          x: from === "left" ? -travel : travel,
           transition: { duration: 0 },
         },
         shown: { opacity: 1, x: 0, transition: { ...SPRING, delay } },

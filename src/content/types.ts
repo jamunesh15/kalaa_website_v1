@@ -75,6 +75,12 @@ export type WorkPiece =
       readonly webm: string;
       readonly mp4: string;
       readonly poster: string;
+      /** The whole reel with its sound, for the player. */
+      readonly full: string;
+      readonly fullWidth: number;
+      readonly fullHeight: number;
+      /** Seconds. */
+      readonly duration: number;
       readonly alt: string;
     }
   | {
@@ -86,6 +92,64 @@ export type WorkPiece =
       readonly height: number;
       readonly alt: string;
     };
+
+/** One piece of supplied artwork, and where it lands on its board. */
+export type Artifact = {
+  readonly id: string;
+  /** Slug in the set's generated media module. */
+  readonly image: string;
+  /* What the artwork says, for a reader who cannot see it. */
+  readonly alt: string;
+  /** Percentages of the box the arrangement is given. */
+  readonly left: number;
+  readonly top: number;
+  readonly width: number;
+  readonly rotate: number;
+  /** Where it travels in from, as a percentage of its own size. */
+  readonly from: { readonly x: number; readonly y: number };
+  readonly delay: number;
+};
+
+/** One entry in a set written by `npm run artifacts`. */
+export type ArtifactMedia = {
+  readonly slug: string;
+  readonly src: string;
+  readonly width: number;
+  readonly height: number;
+};
+
+/* One blog article. Local data now, shaped like a CMS response so a CMS later is a fetch swap. */
+export type Article = {
+  readonly slug: string;
+  /** The filter row is built from these, so a new topic needs no other change. */
+  readonly topic: string;
+  readonly title: string;
+  /** Two lines at most, in the same voice as the page it sits on. */
+  readonly excerpt: string;
+  /** Slug in `BLOG_MEDIA`. The article's own title is printed inside the picture. */
+  readonly image: string;
+  readonly alt: string;
+};
+
+/* One part of an article, and one entry in its table of contents. */
+export type ArticleSection = {
+  /** The anchor, and what the contents list links to. Unique within one article. */
+  readonly id: string;
+  readonly heading: string;
+  readonly body: readonly string[];
+  /** For a section that is a list rather than prose. */
+  readonly list?: readonly string[];
+};
+
+/* What an article says, as opposed to what the card for it says. */
+export type ArticleBody = {
+  /** Before the first heading, so it is never in the contents. */
+  readonly intro: readonly string[];
+  readonly sections: readonly ArticleSection[];
+};
+
+/** An article and its body, which is what a page needs and a card does not. */
+export type FullArticle = Article & ArticleBody;
 
 /* One question a business owner actually asks, and its answer. */
 export type FaqItem = {

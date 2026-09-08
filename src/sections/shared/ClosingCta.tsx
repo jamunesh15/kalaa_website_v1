@@ -56,7 +56,7 @@ export function ClosingCta() {
         {/* The tape lands after the paper and rotates as it does, from a steeper angle than it settles at. */}
         <motion.span
           aria-hidden
-          className="absolute left-8 top-1 z-10 h-8 w-24 origin-center rounded-[1px] bg-[#d9cdb4]/85 sm:left-12 sm:h-9 sm:w-28"
+          className="absolute left-8 top-1 z-10 h-8 w-24 origin-center rounded-[1px] bg-tape/85 sm:left-12 sm:h-9 sm:w-28"
           variants={{
             hidden: { opacity: 0, rotate: -64, y: -14, transition: OUT },
             shown: { opacity: 1, rotate: -28, y: 0, transition: { ...SPRING, delay: 0.16 } },

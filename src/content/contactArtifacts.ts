@@ -1,20 +1,9 @@
-/* The contact page's artwork, and where each piece lands. */
+/* The contact page's artwork, and where each piece lands. The shape is shared with every other board on the site. */
 
-export type ContactArtifact = {
-  readonly id: string;
-  /** Slug in `CONTACT_MEDIA`. */
-  readonly image: string;
-  /* What the artwork says, for a reader who cannot see it. */
-  readonly alt: string;
-  /** Percentages of the box the arrangement is given. */
-  readonly left: number;
-  readonly top: number;
-  readonly width: number;
-  readonly rotate: number;
-  /** Where it travels in from, as a percentage of its own size. */
-  readonly from: { readonly x: number; readonly y: number };
-  readonly delay: number;
-};
+import type { Artifact } from "@/content/types";
+
+/** The shape every board on this site uses. Kept under the old name so the page reads the same. */
+export type ContactArtifact = Artifact;
 
 /* The opening still life: the notebook and coffee, with the clipped note landing over its corner. */
 export const HERO_ARTIFACTS: readonly ContactArtifact[] = [

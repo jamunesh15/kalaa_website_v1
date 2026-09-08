@@ -27,8 +27,8 @@ export function SiteHeader() {
               {link.label}
             </NavLink>
           ))}
-          {/* The same button as everywhere else on the site, at the same size. */}
-          <ArrowButton href={CONTACT_LINK.href} width="fit">
+          {/* The bar's own size: the base button is 52px in a 64px bar and the client called it too big. */}
+          <ArrowButton href={CONTACT_LINK.href} width="fit" size="sm">
             {CONTACT_LINK.label}
           </ArrowButton>
         </nav>

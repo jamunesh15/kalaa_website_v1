@@ -28,6 +28,8 @@
   --color-tint-sky: var(--tint-sky);
 
   --color-board: var(--board);
+  --color-tape: var(--tape);
+  --color-mat: var(--mat);
 
   --radius-token: var(--radius);
 

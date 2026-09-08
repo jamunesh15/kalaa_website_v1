@@ -68,6 +68,57 @@ export function WhatsappMark({ size = 17 }: { size?: number }) {
   );
 }
 
+/* The reel player's marks. */
+export function PlayerGlyph({
+  name,
+  size = 18,
+}: {
+  name: "play" | "pause" | "sound" | "muted" | "close";
+  size?: number;
+}) {
+  if (name === "play") {
+    return (
+      <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor" aria-hidden>
+        <path d="M7.5 4.5v15l12-7.5z" />
+      </svg>
+    );
+  }
+
+  if (name === "pause") {
+    return (
+      <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor" aria-hidden>
+        <rect x="6" y="4.5" width="4" height="15" rx="1" />
+        <rect x="14" y="4.5" width="4" height="15" rx="1" />
+      </svg>
+    );
+  }
+
+  if (name === "sound") {
+    return (
+      <Glyph size={size}>
+        <path d="M4 9.5v5h3.5L12 18.5v-13L7.5 9.5z" fill="currentColor" />
+        <path d="M15.5 9a4.2 4.2 0 010 6" />
+        <path d="M18.2 6.3a8 8 0 010 11.4" />
+      </Glyph>
+    );
+  }
+
+  if (name === "muted") {
+    return (
+      <Glyph size={size}>
+        <path d="M4 9.5v5h3.5L12 18.5v-13L7.5 9.5z" fill="currentColor" />
+        <path d="M16 9.5l5 5M21 9.5l-5 5" />
+      </Glyph>
+    );
+  }
+
+  return (
+    <Glyph size={size}>
+      <path d="M6 6l12 12M18 6L6 18" />
+    </Glyph>
+  );
+}
+
 /* The frame every glyph in this file is drawn in. */
 export function Glyph({ children, size = 18 }: { children: ReactNode; size?: number }) {
   return (

@@ -1,7 +1,8 @@
 import { Section } from "@/components/ui/Section";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { BRIEF_ARTIFACTS } from "@/content/contactArtifacts";
-import { ContactArtifacts } from "@/sections/contact/ContactArtifacts";
+import { ArtifactStage } from "@/components/ui/ArtifactStage";
+import { CONTACT_MEDIA } from "@/content/contactMedia";
 import { SlideIn } from "@/components/ui/SlideIn";
 
 /* What to put in the message, as a photographed checklist. */
@@ -34,7 +35,7 @@ export function ContactBrief() {
           />
         </SlideIn>
 
-        <ContactArtifacts pieces={BRIEF_ARTIFACTS} ratio={1.55} />
+        <ArtifactStage media={CONTACT_MEDIA} pieces={BRIEF_ARTIFACTS} ratio={1.55} />
       </div>
     </Section>
   );

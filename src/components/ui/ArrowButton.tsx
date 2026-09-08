@@ -44,7 +44,8 @@ export function ArrowButton({
   external = false,
   className = "",
 }: {
-  href: string;
+  /** Left off for a control that has nowhere to go yet. It renders a button instead of a link. */
+  href?: string;
   children: ReactNode;
   width?: ArrowButtonWidth;
   size?: ArrowButtonSize;
@@ -54,13 +55,10 @@ export function ArrowButton({
   className?: string;
 }) {
   const step = SIZES[size];
+  const classes = `group items-center font-semibold ${step.shell} ${WIDTHS[width]} ${SURFACE_FLAT} ${TONES[tone].shell} ${FOCUS_RING} ${className}`;
 
-  return (
-    <Link
-      href={href}
-      {...(external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
-      className={`group items-center font-semibold ${step.shell} ${WIDTHS[width]} ${SURFACE_FLAT} ${TONES[tone].shell} ${FOCUS_RING} ${className}`}
-    >
+  const label = (
+    <>
       <span className="min-w-0 whitespace-nowrap">{children}</span>
       <span
         className={`arrow-swipe grid shrink-0 place-items-center rounded-full ${TONES[tone].badge} ${step.badge}`}
@@ -68,6 +66,25 @@ export function ArrowButton({
         <ArrowIcon aria-hidden="true" className={step.icon} />
         <ArrowIcon aria-hidden="true" className={step.icon} />
       </span>
+    </>
+  );
+
+  /* No destination yet, so a button. A link to a page that does not exist is a broken link, and the suite is right to say so. */
+  if (!href) {
+    return (
+      <button type="button" className={classes}>
+        {label}
+      </button>
+    );
+  }
+
+  return (
+    <Link
+      href={href}
+      {...(external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+      className={classes}
+    >
+      {label}
     </Link>
   );
 }

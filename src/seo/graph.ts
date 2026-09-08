@@ -66,6 +66,48 @@ export function siteGraph(...nodes: SchemaNode[]): SchemaNode {
   };
 }
 
+/* The blog index, as `CollectionPage`. It lists no posts, because none are published yet. */
+export function blogPage(): SchemaNode {
+  return {
+    "@type": "CollectionPage",
+    "@id": `${absoluteUrl("/blog")}#webpage`,
+    url: absoluteUrl("/blog"),
+    name: "Blog",
+    isPartOf: { "@id": WEBSITE_ID },
+    about: { "@id": ORGANIZATION_ID },
+    inLanguage: SITE.locale,
+  };
+}
+
+/*
+ * One article, as `BlogPosting`.
+ *
+ * No `datePublished` and no named author, because neither is known: the dates on
+ * this blog were invented and were taken out, and structured data is read by a
+ * machine as fact. The organisation is the author, which is true.
+ */
+export function articlePage(article: {
+  slug: string;
+  title: string;
+  excerpt: string;
+  image: string;
+}): SchemaNode {
+  const path = `/blog/${article.slug}`;
+
+  return {
+    "@type": "BlogPosting",
+    "@id": `${absoluteUrl(path)}#webpage`,
+    url: absoluteUrl(path),
+    headline: article.title,
+    description: article.excerpt,
+    image: absoluteUrl(article.image),
+    isPartOf: { "@id": WEBSITE_ID },
+    author: { "@id": ORGANIZATION_ID },
+    publisher: { "@id": ORGANIZATION_ID },
+    inLanguage: SITE.locale,
+  };
+}
+
 /* The contact page, as `ContactPage`. */
 export function contactPage(): SchemaNode {
   return {

@@ -1,4 +1,6 @@
-﻿/* Every public page, in one place. */
+﻿import { ARTICLES } from "@/content/blog";
+
+/* Every public page, in one place. */
 
 export type Route = {
   /** The URL path, exactly as a visitor sees it. */
@@ -26,6 +28,14 @@ export const ROUTES: Route[] = [
     priority: 0.8,
   },
   {
+    path: "/blog",
+    // Built to the reference layout: the opening, the topic filter, the featured
+    // piece beside the note, and the list. The posts themselves are placeholders.
+    lastModified: "2026-09-07",
+    changeFrequency: "weekly",
+    priority: 0.7,
+  },
+  {
     path: "/privacy-policy",
     // The date this page states in its own copy. The page reads it from here, so
     // the two cannot drift apart.
@@ -33,6 +43,18 @@ export const ROUTES: Route[] = [
     changeFrequency: "yearly",
     priority: 0.3,
   },
+  /*
+   * One entry per article, built from the content rather than typed again, so a
+   * new article reaches the sitemap and the browser suite without a second edit.
+   * They share a date because they were written in one sitting; when a piece is
+   * revised on its own it earns its own line here.
+   */
+  ...ARTICLES.map((article) => ({
+    path: `/blog/${article.slug}`,
+    lastModified: "2026-09-08",
+    changeFrequency: "yearly" as const,
+    priority: 0.6,
+  })),
 ];
 
 /** Look up one route, for a page that needs to print its own date. */

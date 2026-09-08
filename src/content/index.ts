@@ -1,4 +1,6 @@
 import { ABOUT_PILLARS } from "@/content/about";
+import { ARTICLE_BODIES } from "@/content/articles";
+import { ARTICLES } from "@/content/blog";
 import type { AboutPillar } from "@/content/about";
 import { CAPABILITIES } from "@/content/capabilities";
 import { CHANNELS, SOCIALS, STUDIO } from "@/content/contact";
@@ -11,6 +13,8 @@ import { PROCESS_STEPS } from "@/content/process";
 import { SERVICES } from "@/content/services";
 import { POSTS, REELS } from "@/content/work";
 import type {
+  Article,
+  FullArticle,
   Capability,
   ClientLogo,
   FaqItem,
@@ -50,6 +54,28 @@ export function getFaqItems(): readonly FaqItem[] {
 
 export function getProblems(): readonly Problem[] {
   return PROBLEMS;
+}
+
+/** The blog, newest first. */
+export function getArticles(): readonly Article[] {
+  return ARTICLES;
+}
+
+/**
+ * One article with its body, or nothing.
+ *
+ * Nothing rather than a throw: the page turns it into a 404, which is the honest
+ * answer for a slug that does not exist and the only one a crawler can act on.
+ */
+export function getArticle(slug: string): FullArticle | undefined {
+  const article = ARTICLES.find((entry) => entry.slug === slug);
+  const body = ARTICLE_BODIES[slug];
+  return article && body ? { ...article, ...body } : undefined;
+}
+
+/** The other articles, for the row at the foot of one. */
+export function getOtherArticles(slug: string, count = 3): readonly Article[] {
+  return ARTICLES.filter((entry) => entry.slug !== slug).slice(0, count);
 }
 
 /** The reels, in the order they are shown on the work wall. */

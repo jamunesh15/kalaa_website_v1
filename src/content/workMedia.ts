@@ -1,4 +1,10 @@
-/* WRITTEN BY `npm run media`. */
+/**
+ * WRITTEN BY `npm run media`. Do not edit by hand.
+ *
+ * Every entry is a file that exists in `public/work/`. The captions and the
+ * client names that go with them live in `src/content/work.ts`, which is hand
+ * written, so regenerating this never destroys copy.
+ */
 
 export type PostMedia = {
   readonly slug: string;
@@ -13,6 +19,12 @@ export type ReelMedia = {
   readonly webm: string;
   readonly mp4: string;
   readonly poster: string;
+  /** The whole reel with its sound, played on tap. */
+  readonly full: string;
+  readonly fullWidth: number;
+  readonly fullHeight: number;
+  /** Seconds. */
+  readonly duration: number;
 };
 
 export const POST_MEDIA: readonly PostMedia[] = [
@@ -49,13 +61,16 @@ export const POST_MEDIA: readonly PostMedia[] = [
 ];
 
 export const REEL_MEDIA: readonly ReelMedia[] = [
-  { slug: "16", webm: "/work/reels/16.webm", mp4: "/work/reels/16.mp4", poster: "/work/reels/16.jpg" },
-  { slug: "17", webm: "/work/reels/17.webm", mp4: "/work/reels/17.mp4", poster: "/work/reels/17.jpg" },
-  { slug: "18", webm: "/work/reels/18.webm", mp4: "/work/reels/18.mp4", poster: "/work/reels/18.jpg" },
-  { slug: "v1", webm: "/work/reels/v1.webm", mp4: "/work/reels/v1.mp4", poster: "/work/reels/v1.jpg" },
-  { slug: "v2", webm: "/work/reels/v2.webm", mp4: "/work/reels/v2.mp4", poster: "/work/reels/v2.jpg" },
-  { slug: "v3", webm: "/work/reels/v3.webm", mp4: "/work/reels/v3.mp4", poster: "/work/reels/v3.jpg" },
-  { slug: "v4", webm: "/work/reels/v4.webm", mp4: "/work/reels/v4.mp4", poster: "/work/reels/v4.jpg" },
-  { slug: "v5", webm: "/work/reels/v5.webm", mp4: "/work/reels/v5.mp4", poster: "/work/reels/v5.jpg" },
-  { slug: "v6", webm: "/work/reels/v6.webm", mp4: "/work/reels/v6.mp4", poster: "/work/reels/v6.jpg" },
+  { slug: "16", webm: "/work/reels/16.webm", mp4: "/work/reels/16.mp4", poster: "/work/reels/16.jpg", full: "/work/reels/full/16.mp4", fullWidth: 720, fullHeight: 1280, duration: 30.7 },
+  { slug: "17", webm: "/work/reels/17.webm", mp4: "/work/reels/17.mp4", poster: "/work/reels/17.jpg", full: "/work/reels/full/17.mp4", fullWidth: 720, fullHeight: 1280, duration: 22.7 },
+  { slug: "18", webm: "/work/reels/18.webm", mp4: "/work/reels/18.mp4", poster: "/work/reels/18.jpg", full: "/work/reels/full/18.mp4", fullWidth: 720, fullHeight: 1280, duration: 30.1 },
+  { slug: "v1", webm: "/work/reels/v1.webm", mp4: "/work/reels/v1.mp4", poster: "/work/reels/v1.jpg", full: "/work/reels/full/v1.mp4", fullWidth: 720, fullHeight: 1280, duration: 32.4 },
+  { slug: "v10", webm: "/work/reels/v10.webm", mp4: "/work/reels/v10.mp4", poster: "/work/reels/v10.jpg", full: "/work/reels/full/v10.mp4", fullWidth: 720, fullHeight: 1280, duration: 35.5 },
+  { slug: "v11", webm: "/work/reels/v11.webm", mp4: "/work/reels/v11.mp4", poster: "/work/reels/v11.jpg", full: "/work/reels/full/v11.mp4", fullWidth: 720, fullHeight: 1280, duration: 25.3 },
+  { slug: "v12", webm: "/work/reels/v12.webm", mp4: "/work/reels/v12.mp4", poster: "/work/reels/v12.jpg", full: "/work/reels/full/v12.mp4", fullWidth: 720, fullHeight: 1280, duration: 13.1 },
+  { slug: "v2", webm: "/work/reels/v2.webm", mp4: "/work/reels/v2.mp4", poster: "/work/reels/v2.jpg", full: "/work/reels/full/v2.mp4", fullWidth: 720, fullHeight: 1280, duration: 29 },
+  { slug: "v3", webm: "/work/reels/v3.webm", mp4: "/work/reels/v3.mp4", poster: "/work/reels/v3.jpg", full: "/work/reels/full/v3.mp4", fullWidth: 720, fullHeight: 1280, duration: 29.8 },
+  { slug: "v4", webm: "/work/reels/v4.webm", mp4: "/work/reels/v4.mp4", poster: "/work/reels/v4.jpg", full: "/work/reels/full/v4.mp4", fullWidth: 720, fullHeight: 1280, duration: 26.2 },
+  { slug: "v5", webm: "/work/reels/v5.webm", mp4: "/work/reels/v5.mp4", poster: "/work/reels/v5.jpg", full: "/work/reels/full/v5.mp4", fullWidth: 720, fullHeight: 1280, duration: 66.6 },
+  { slug: "v6", webm: "/work/reels/v6.webm", mp4: "/work/reels/v6.mp4", poster: "/work/reels/v6.jpg", full: "/work/reels/full/v6.mp4", fullWidth: 720, fullHeight: 404, duration: 16.1 },
 ];

@@ -2,13 +2,24 @@ import type { ReactNode } from "react";
 import { SURFACE } from "@/components/ui/surface";
 
 /* The card. */
-export type CardFill = "surface" | "butter" | "peach" | "sage" | "cloud" | "violet" | "sky";
+export type CardFill =
+  | "surface"
+  | "board"
+  | "butter"
+  | "peach"
+  | "sage"
+  | "cloud"
+  | "violet"
+  | "sky";
 
 /* The standard inset. */
 const PADDING = "p-7";
 
-const FILLS: Record<CardFill, string> = {
+/** Exported because the torn sheet is the same set of fills on a different shape. */
+export const CARD_FILLS: Record<CardFill, string> = {
   surface: "bg-surface",
+  /** The warm cream the site prints paper on. */
+  board: "bg-board",
   butter: "bg-tint-butter",
   peach: "bg-tint-peach",
   sage: "bg-tint-sage",
@@ -30,6 +41,6 @@ export function Card({
   className?: string;
 }) {
   return (
-    <div className={`${SURFACE} ${FILLS[fill]} ${padding} text-ink ${className}`}>{children}</div>
+    <div className={`${SURFACE} ${CARD_FILLS[fill]} ${padding} text-ink ${className}`}>{children}</div>
   );
 }

@@ -10,6 +10,7 @@ export const PRIMARY_LINKS: readonly NavLink[] = [
   { href: "/#services", label: "Services" },
   { href: "/#work", label: "Work" },
   { href: "/#pricing", label: "Packages" },
+  { href: "/blog", label: "Blog" },
 ];
 
 /* The action, kept apart because it is styled as a button rather than a link. */

@@ -2,14 +2,16 @@ import { getFaqItems } from "@/content";
 import { About } from "@/sections/home/About";
 import { Capabilities } from "@/sections/home/Capabilities";
 import { ClientLogos } from "@/sections/home/ClientLogos";
-import { ClosingCta } from "@/sections/home/ClosingCta";
 import { Faq } from "@/sections/home/Faq";
 import { Hero } from "@/sections/home/Hero";
 import { Impact } from "@/sections/home/Impact";
 import { Pricing } from "@/sections/home/Pricing";
+import { Posts } from "@/sections/home/Posts";
 import { Process } from "@/sections/home/Process";
+import { Reels } from "@/sections/home/Reels";
+import { ClosingCta } from "@/sections/shared/ClosingCta";
 import { Services } from "@/sections/home/Services";
-import { Work } from "@/sections/home/Work";
+import { Testimonials } from "@/sections/home/Testimonials";
 import { JsonLd } from "@/seo/JsonLd";
 import { faqPage, siteGraph } from "@/seo/graph";
 
@@ -24,8 +26,10 @@ export default function Home() {
       <About />
       <Services />
       <ClientLogos />
+      <Testimonials />
       <Capabilities />
-      <Work />
+      <Reels />
+      <Posts />
 
       <Process />
       <Impact />

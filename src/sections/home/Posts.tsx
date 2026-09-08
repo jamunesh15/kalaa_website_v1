@@ -1,20 +1,20 @@
 import { Section } from "@/components/ui/Section";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { HandAccent } from "@/components/ui/HandAccent";
-import { getPosts, getReels } from "@/content";
-import { WorkWall } from "@/sections/home/WorkWall";
+import { getPosts } from "@/content";
+import { PostWall } from "@/sections/home/PostWall";
 
-/* The work, and it comes straight after the price on purpose. */
-export function Work() {
+/* The posts, as the mosaic. */
+export function Posts() {
   return (
-    <Section id="work" fill="bg-tint-sage">
+    <Section id="posts" fill="overflow-x-clip bg-tint-sage">
       <SectionHeading
         align="center"
         title={<>Already <HandAccent>in the feed</HandAccent></>}
         lead="Made for client accounts and posted to them."
       />
 
-      <WorkWall reels={getReels()} posts={getPosts()} />
+      <PostWall posts={getPosts()} />
     </Section>
   );
 }
