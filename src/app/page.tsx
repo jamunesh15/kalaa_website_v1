@@ -11,7 +11,6 @@ import { Process } from "@/sections/home/Process";
 import { Reels } from "@/sections/home/Reels";
 import { ClosingCta } from "@/sections/shared/ClosingCta";
 import { Services } from "@/sections/home/Services";
-import { Testimonials } from "@/sections/home/Testimonials";
 import { JsonLd } from "@/seo/JsonLd";
 import { faqPage, siteGraph } from "@/seo/graph";
 
@@ -26,7 +25,6 @@ export default function Home() {
       <About />
       <Services />
       <ClientLogos />
-      <Testimonials />
       <Capabilities />
       <Reels />
       <Posts />

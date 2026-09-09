@@ -55,11 +55,6 @@ export function HeroCopy() {
 
       {/* The same arrow button the about section ends on, at the client's instruction, so the two calls to action on the first. */}
       {/* Centred below `lg` along with the rest of the column, at the client's ask: on a phone the copy is alone on the screen. */}
-      {/* Real client ratings from Feedspace; `hero-badge` in utilities.css shrinks the widget's host to its avatars so they sit on the copy's edge. */}
-      <div className="hero-badge mt-6 flex justify-center lg:justify-start">
-        <div className="feedspace-embed" data-id="66d7fadc-4bef-4e37-b39f-19b451fa303a" />
-      </div>
-
       <div className="mt-6 flex justify-center lg:justify-start">
         <ArrowButton href="/contact" width="fit">
           Get free strategy call

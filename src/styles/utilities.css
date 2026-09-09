@@ -973,30 +973,6 @@
   filter: saturate(0.62) contrast(1.06);
 }
 
-/*
- * The Feedspace avatar badge in the hero. The widget's own stylesheet sets
- * `div.feedspace-embed { width: 100% }` and centres the avatars inside a shadow
- * root, which nothing outside can reach. Two class selectors outrank its one,
- * and a host sized to its content leaves the centring nowhere to go, so the
- * avatars land on the column's left edge. On a phone the wrapper centres it.
- */
-.hero-badge {
-  /* Exactly the avatar row. The widget's host is 90px with 42px of nothing under the faces, so a fixed height keeps the button close and still from the first paint. */
-  height: 3rem;
-}
-
-.hero-badge div.feedspace-embed {
-  width: fit-content;
-  max-width: 100%;
-}
-
-@media (min-width: 64rem) {
-  /* The widget pads its avatars 12px in from its host; pull the host out by the same so the first face sits on the heading's edge. */
-  .hero-badge div.feedspace-embed {
-    margin-inline-start: -12px;
-  }
-}
-
 /* The seek bar. */
 .reel-seek {
   flex: 1 1 auto;
