@@ -5,9 +5,8 @@
 /.next/
 /out/
 
-# env files: keep the example, never the real ones
+# env files. Nothing here reads one; this keeps a stray local file out.
 .env*
-!.env.example
 
 # vercel
 .vercel

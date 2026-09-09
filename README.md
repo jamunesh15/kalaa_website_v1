@@ -13,11 +13,11 @@ Open http://localhost:3000.
 
 ## Environment
 
-Copy `.env.example` to `.env.local`. The only variable is `NEXT_PUBLIC_SITE_URL`, the canonical origin used for absolute links, the sitemap and social cards. It defaults to `https://kalaa.io` when unset.
+No configuration. The canonical origin is a constant in `src/site.ts`, because the site is static, has no backend and lives on one domain.
 
 ## Deploy
 
-The site deploys on Vercel with the default Next.js settings. Set `NEXT_PUBLIC_SITE_URL` in the project's environment variables: the production domain for Production, and leave it unset for Previews so they use the default.
+The site deploys on Vercel with the default Next.js settings and no environment variables.
 
 ## Where things live
 

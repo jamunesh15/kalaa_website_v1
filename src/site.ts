@@ -1,24 +1,26 @@
 /* The facts about this site that more than one file needs. */
-const DEFAULT_URL = "https://kalaa.io";
 
-// Canonical origin for links, sitemap and social cards, from NEXT_PUBLIC_SITE_URL.
-// Empty, missing, scheme-less or unparseable values all fall back to the default,
-// because a bad value here fails the whole build inside `new URL()`.
-function siteUrl(): string {
-  const raw = process.env.NEXT_PUBLIC_SITE_URL?.trim();
-  if (!raw) return DEFAULT_URL;
-  const candidate = /^https?:\/\//i.test(raw) ? raw : `https://${raw}`;
-  try {
-    return new URL(candidate).origin;
-  } catch {
-    return DEFAULT_URL;
-  }
-}
+/*
+ * The canonical origin, written down rather than read from the environment.
+ *
+ * This was `NEXT_PUBLIC_SITE_URL` with a fallback, a regex to tolerate a
+ * scheme-less value and a try/catch because a bad one failed the whole build
+ * inside `new URL()`. All of that guarded a setting with exactly one correct
+ * value: the site is static, has no backend and lives on one domain, so there
+ * was nothing an environment could usefully say that this line does not.
+ *
+ * A preview deployment therefore points its canonicals at the live site, which
+ * is what a preview should say anyway: the real version is over there.
+ *
+ * If the domain ever moves, change it here. It is one line, and it goes through
+ * review like any other line rather than living in a dashboard nobody reads.
+ */
+const SITE_URL = "https://kalaa.io";
 
 export const SITE = {
   name: "Kalaa",
   /* No trailing slash. */
-  url: siteUrl(),
+  url: SITE_URL,
   locale: "en",
 } as const;
 
