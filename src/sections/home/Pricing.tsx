@@ -2,12 +2,13 @@ import { Section } from "@/components/ui/Section";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { HandAccent } from "@/components/ui/HandAccent";
 import { ArrowButton } from "@/components/ui/ArrowButton";
-import { getPlanOffer, getPlans } from "@/content";
+import { getBillingTerms, getPlanOffer, getPlans } from "@/content";
 import { PricingPlans } from "@/sections/home/PricingPlans";
 
 /* What it costs. */
 export function Pricing() {
   const plans = getPlans();
+  const terms = getBillingTerms();
   const offer = getPlanOffer();
 
   return (
@@ -15,10 +16,10 @@ export function Pricing() {
       <SectionHeading
         align="center"
         title={<>Plans that fit how you <HandAccent wrap>want to grow</HandAccent></>}
-        lead="Monthly work, priced up front. If none of these fit, tell us what you need."
+        lead="Monthly work, priced up front. Buy a quarter or a year and some of those months are free."
       />
 
-      <PricingPlans plans={plans} offer={offer} />
+      <PricingPlans plans={plans} terms={terms} offer={offer} />
 
       {/*
        * The way out for the reader none of the three cards fitted. One line

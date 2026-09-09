@@ -37,6 +37,19 @@
 
   --radius-token: var(--radius);
 
+  /* The frame's two outer corners, concentric with the sheet's. */
+  --radius-frame-line: var(--frame-line-radius);
+  --radius-frame: var(--frame-radius);
+
+  /*
+   * The arrow badge inside a button. The shell's corner scaled to the badge's
+   * smaller box: the same 10px on a 40px badge and a 52px shell measures equal
+   * and does not read equal, because on the smaller box the curve takes a
+   * bigger share of the edge. `* 0.8` is the ratio the two boxes are in, and
+   * `process-detail` already steps a panel's corner down the same way.
+   */
+  --radius-badge: calc(var(--radius) * 0.8);
+
   --shadow-soft: var(--shadow-soft);
   --shadow-hover: var(--shadow-hover);
   --shadow-lift: var(--shadow-lift);

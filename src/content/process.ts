@@ -19,7 +19,7 @@ export const PROCESS_STEPS: readonly ProcessStep[] = [
   {
     number: "03",
     tag: "Production",
-    title: "We shoot, design and write",
+    title: "We shoot and design",
     deliverables: ["Reels and shoot days", "Posts and stories", "Captions and hashtags"],
     outcome: "Approved work goes live.",
   },

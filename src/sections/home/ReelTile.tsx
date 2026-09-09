@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState, type KeyboardEvent } from "react";
+import { useEffect, useRef, useState, type CSSProperties, type KeyboardEvent } from "react";
 import { PlayerGlyph } from "@/components/ui/Glyph";
 import { FOCUS_RING } from "@/components/ui/surface";
 import { isScrolling, subscribeScrolling } from "@/motion/useScrolling";
@@ -8,11 +8,26 @@ import { ReelControls } from "@/sections/home/ReelControls";
 import { closeReel, openReel, useOpenReel, type Reel } from "@/sections/home/reelPlayerStore";
 
 /* A reel card: a poster, then a silent loop when nearly on screen, and on tap the whole reel with its sound, played right here. */
-export function ReelTile({ item }: { item: Reel }) {
+export function ReelTile({
+  item,
+  fill = false,
+  className = "",
+  style,
+}: {
+  item: Reel;
+  /** The tile fills its grid area rather than carrying 9:16 itself. */
+  fill?: boolean;
+  /** For the span a phone gives it, where the tile is its own row. */
+  className?: string;
+  style?: CSSProperties;
+}) {
   const active = useOpenReel()?.slug === item.slug;
 
   return (
-    <figure className={`work-tile aspect-[9/16] ${active ? "shadow-lift" : ""}`}>
+    <figure
+      className={`work-tile min-w-0 ${fill ? "" : "aspect-[9/16]"} ${active ? "shadow-lift" : ""} ${className}`}
+      style={style}
+    >
       {active ? <ReelPlayback item={item} /> : <ReelLoop item={item} />}
     </figure>
   );

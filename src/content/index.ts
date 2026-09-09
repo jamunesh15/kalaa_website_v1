@@ -7,13 +7,15 @@ import { CHANNELS, SOCIALS, STUDIO } from "@/content/contact";
 import type { ContactChannel, SocialProfile } from "@/content/contact";
 import { CLIENT_LOGOS } from "@/content/clientLogos";
 import { FAQ_ITEMS } from "@/content/faq";
-import { PLAN_OFFER, PLANS } from "@/content/pricing";
+import { BILLING_TERMS, PLAN_OFFER, PLANS } from "@/content/pricing";
+import { TESTIMONIALS, WRITTEN_REVIEWS } from "@/content/testimonials";
 import { PROBLEMS } from "@/content/problems";
 import { PROCESS_STEPS } from "@/content/process";
 import { SERVICES } from "@/content/services";
 import { POSTS, REELS } from "@/content/work";
 import type {
   Article,
+  BillingTerm,
   FullArticle,
   Capability,
   ClientLogo,
@@ -22,6 +24,8 @@ import type {
   Problem,
   ProcessStep,
   Service,
+  Testimonial,
+  WrittenReview,
   WorkPiece,
 } from "@/content/types";
 
@@ -93,6 +97,21 @@ export function getPlans(): readonly Plan[] {
 }
 
 /** The offer line that applies to every plan, so the section states it once. */
+/** The clients who recorded a testimonial, in the order they are shown. */
+export function getTestimonials(): readonly Testimonial[] {
+  return TESTIMONIALS;
+}
+
+/** The clients who wrote a review rather than recording one. */
+export function getWrittenReviews(): readonly WrittenReview[] {
+  return WRITTEN_REVIEWS;
+}
+
+/** The three lengths a plan can be bought for. */
+export function getBillingTerms(): readonly BillingTerm[] {
+  return BILLING_TERMS;
+}
+
 export function getPlanOffer(): string {
   return PLAN_OFFER;
 }

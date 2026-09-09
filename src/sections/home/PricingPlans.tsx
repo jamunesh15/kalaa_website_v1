@@ -4,6 +4,7 @@ import Image, { type StaticImageData } from "next/image";
 import stripSage from "@/media/plan-strips/strip-sage.webp";
 import stripButter from "@/media/plan-strips/strip-butter.webp";
 import stripPeach from "@/media/plan-strips/strip-peach.webp";
+import { useState } from "react";
 import { motion, type Variants } from "motion/react";
 import { ArrowButton } from "@/components/ui/ArrowButton";
 import { FOCUS_RING } from "@/components/ui/surface";
@@ -11,7 +12,9 @@ import { Card } from "@/components/ui/Card";
 import { CheckGlyph, PlanGlyph } from "@/components/ui/Glyph";
 import { MarkerUnderline } from "@/components/ui/MarkerUnderline";
 import { useReplayOnScrollDown } from "@/motion/useReplayOnScrollDown";
-import type { Plan } from "@/content/types";
+import { formatRupees, priceFor } from "@/content/pricing";
+import { BillingToggle } from "@/sections/home/BillingToggle";
+import type { BillingKey, BillingTerm, Plan } from "@/content/types";
 
 /* The three cards, rising into place together. */
 const ROW: Variants = {
@@ -87,45 +90,59 @@ const TONES: readonly PlanTone[] = [
 ];
 
 /*
- * The strip's width.
+ * The strip's width, which FOLLOWS ITS HEIGHT rather than being a share of the
+ * card.
  *
- * The card runs its full width underneath and the strip lies ON its right edge,
- * so the tear is what ends the card. `plan-sheets.mjs` cuts the strip's outer
- * edge straight, inside the photograph's own deckle, and reports how far right
- * the tear ever wanders: 63.3 percent of the strip on the worst of the three,
- * which the card clears by running the whole way. A ragged outer edge was tried
- * and left the band showing beside the card, so the strip read as a ribbon
- * floating next to it rather than as its edge.
+ * The artwork is 98 by 1410. A fixed ten percent of the card was fine while the
+ * card was one height and went wrong the moment it was not: at 938px tall the
+ * box was 39 by 938, which is one to twenty four against the artwork's one to
+ * fourteen, so `object-cover` blew the tear up 1.7 times its own scale and cut
+ * 26px off it. A stretched deckle stops reading as paper, which is exactly what
+ * the client called out.
  *
- * Ten percent is also the strip's own proportion of the sheet, and close to its
- * natural width at these card heights, so the tear is not squashed.
+ * Given the artwork's own ratio the box crops nothing and stretches nothing at
+ * any card height, which is the same rule `PAPER = 1.8` enforces for the torn
+ * sheets: one scale everywhere, whatever the box.
+ *
+ * The cap is a guard rather than a size. A card tall enough to need more than a
+ * fifth of its own width in tear has a content problem, and the copy's padding
+ * below is what it would eat.
  */
-const STRIP_W = "w-[10%]";
+const STRIP_W = "aspect-[98/1410] w-auto max-w-[18%]";
 
 /*
  * How far the copy stays clear of the tear.
  *
- * The tear reaches its leftmost a few pixels into the strip, which is 90.6
- * percent of the way across the card. Fourteen percent of padding leaves the
- * copy ending at 86 percent, clear of it on all three.
+ * Twenty percent, against a strip that reaches about sixteen at the heights
+ * these cards run to, so the copy stops clear of it with room for the tear to
+ * wander left.
  *
  * Written with `pl`/`py` and never the `p` shorthand, and that is not tidiness.
- * A `lg:p-8` is a variant, so Tailwind emits it AFTER an unprefixed `pr-[14%]`
+ * A `lg:p-8` is a variant, so Tailwind emits it AFTER an unprefixed `pr-[20%]`
  * and quietly wins: the copy then runs into the tear at exactly the width where
  * the row goes to three columns, which is the one width anybody checks it at.
  */
-const CLEAR_OF_TEAR = "pr-[14%]";
+const CLEAR_OF_TEAR = "pr-[20%]";
 
 export function PricingPlans({
   plans,
+  terms,
   offer,
 }: {
   plans: readonly Plan[];
+  terms: readonly BillingTerm[];
   offer: string;
 }) {
   const { shown, handlers } = useReplayOnScrollDown();
+  /* The row owns the term, so the three cards cannot disagree about what a
+     reader is comparing. */
+  const [termKey, setTermKey] = useState<BillingKey>("monthly");
+  const term = terms.find((entry) => entry.key === termKey) ?? terms[0];
 
   return (
+    <>
+    <BillingToggle terms={terms} value={termKey} onChange={setTermKey} />
+
     <motion.ul
       initial="hidden"
       {...handlers}
@@ -139,29 +156,74 @@ export function PricingPlans({
         <PlanCard
           key={plan.slug}
           plan={plan}
+          term={term}
           offer={offer}
           tone={TONES[index % TONES.length]}
           order={plan.featured ? 0 : index === 0 ? 1 : 2}
         />
       ))}
     </motion.ul>
+    </>
+  );
+}
+
+/*
+ * The three figures a reader actually compares, pulled out of the list.
+ *
+ * The reference puts them in a panel above the ticks and it earns its place: the
+ * counts are what differ between the plans and the rest of the list is nearly
+ * identical down the row, so a reader scanning ticks is reading the same words
+ * three times.
+ */
+function PlanStats({ plan, term, tint }: { plan: Plan; term: BillingTerm; tint: string }) {
+  const cells = [
+    { figure: plan.reelsPerMonth, label: "Reels a month" },
+    { figure: plan.shoots, label: plan.shoots === 1 ? "Shoot visit" : "Shoot visits" },
+    { figure: term.monthsLabel, label: term.months === 1 ? "Month" : "Months" },
+  ];
+
+  return (
+    /*
+     * ONE panel with hairlines through it, not three cells with gaps between
+     * them, which is how the reference draws it and it is the better read: three
+     * separate boxes make three claims, one box with dividers makes a single
+     * claim about what a month contains.
+     */
+    <dl className={`mt-6 grid grid-cols-3 rounded-token px-1 py-3 ${tint}`}>
+      {cells.map((cell, index) => (
+        <div
+          key={cell.label}
+          className={`px-2 text-center ${index > 0 ? "border-l-token border-ink/10" : ""}`}
+        >
+          <dd className="font-display text-display-m font-bold leading-none text-ink">
+            {cell.figure}
+          </dd>
+          <dt className="mt-1.5 text-label text-ink-muted">{cell.label}</dt>
+        </div>
+      ))}
+    </dl>
   );
 }
 
 /* One plan. */
 function PlanCard({
   plan,
+  term,
   offer,
   tone,
   order,
 }: {
   plan: Plan;
+  term: BillingTerm;
   offer: string;
   tone: PlanTone;
   /** Position in the run. The featured card is 0, so it lands into an empty row. */
   order: number;
 }) {
   const featured = plan.featured;
+  const { pay, usual } = priceFor(plan, term);
+  /* Nothing to strike on the monthly term, where the two figures are the same. */
+  const saves = usual > pay;
 
   return (
     <motion.li
@@ -176,7 +238,7 @@ function PlanCard({
     >
       <Card fill="surface" padding="" className={`h-full ${featured ? "shadow-lift" : ""}`}>
         <div
-          className={`flex h-full flex-col py-7 pl-6 pb-9 sm:py-8 sm:pl-7 sm:pb-10 lg:py-9 lg:pl-8 lg:pb-11 ${CLEAR_OF_TEAR}`}
+          className={`flex h-full flex-col py-6 pl-6 pb-7 sm:py-7 sm:pl-7 sm:pb-8 lg:pl-8 ${CLEAR_OF_TEAR}`}
         >
           <div className="flex items-center gap-4">
             <span
@@ -189,29 +251,61 @@ function PlanCard({
             </h3>
           </div>
 
-          {/* The stroke is under the figure and its period together, and sized by them, so it never runs past a one word price. */}
+          {/* The stroke is under the figure and its period together, and sized by them, so it never runs past a short price. */}
           <div className="relative mt-6 w-fit">
             <p className="flex flex-wrap items-baseline gap-x-2">
-              <span className="font-display text-[2.5rem] font-black leading-none tracking-tight text-ink sm:text-[3rem]">
-                {plan.price}
+              <span className="sr-only">You pay </span>
+              {/* A step down from the 3rem this was. The figures are longer now
+                  that a year is priced: at 3rem the widest of them wrapped its
+                  period onto a second line and that card alone lost a row. */}
+              <span className="font-display text-[2rem] font-black leading-none tracking-tight text-ink sm:text-[2.5rem]">
+                {formatRupees(pay)}
               </span>
-              {plan.period ? (
-                <span className="text-small font-medium text-ink-body">
-                  {plan.period}
-                </span>
-              ) : null}
+              <span className="text-small font-medium text-ink-body">{term.period}</span>
             </p>
             <MarkerUnderline className={`absolute -bottom-3 left-0 w-full ${tone.marker}`} />
           </div>
 
-          {/* Three lines of room whether the sentence needs them or not, so the rule under it starts at the same height in all three. */}
-          <p className="mt-7 text-body text-ink-body lg:min-h-[5rem]">
-            {plan.summary}
-          </p>
+          {/*
+           * What the saving IS, stated in rupees, next to what it is a saving
+           * against. A struck figure on its own was not landing: it sat above the
+           * price in the body face at body size, so it read as a footnote rather
+           * than as the old price, and nothing on the card ever said how much
+           * came off.
+           *
+           * The struck figure is therefore in the display face beside the price,
+           * and the amount is spelled out. It is arithmetic rather than a claim:
+           * three months of a 30,000 plan is 90,000 and the quarter is 60,000, so
+           * a reader can check it. No percentage, which is a number you have to
+           * be trusted on.
+           *
+           * The butter is a field here, not a control, which is the one thing the
+           * accent is allowed to be. It appears only on a term that actually
+           * saves, so it is real state rather than a badge on every card.
+           */}
+          {/* No reserved height when a term saves nothing. The toggle belongs to
+              the row, so all three cards are always showing this line or all
+              three are hiding it, and a 2rem box held open for nobody left a gap
+              under the monthly price. The summary carries the spacing instead. */}
+          {saves ? (
+            <p className="mt-6 flex flex-wrap items-center gap-x-3 gap-y-2">
+              <s className="font-display text-lead font-bold text-ink-muted">
+                <span className="sr-only">Usual price </span>
+                {formatRupees(usual)}
+              </s>
+              <span className="rounded-token bg-accent px-2.5 py-1 text-small font-bold text-on-accent">
+                Save {formatRupees(usual - pay)}
+              </span>
+            </p>
+          ) : null}
 
-          <hr className="plan-rule mt-7" />
+          {/* The marker under the price hangs 0.75rem below its box, so the
+              clear space here is 0.75rem less than the margin says. */}
+          <p className={`text-body text-ink-body ${saves ? "mt-3" : "mt-8"}`}>{plan.summary}</p>
 
-          <ul className="mt-7 space-y-3.5">
+          <PlanStats plan={plan} term={term} tint={tone.tint} />
+
+          <ul className="mt-6 space-y-3">
             {plan.includes.map((item) => (
               <li
                 key={item}
@@ -228,11 +322,13 @@ function PlanCard({
           </ul>
 
           {/* The button is the width of its own words, not the width of the card. */}
-          <div className="mt-auto pt-9">
+          <div className="mt-auto pt-7">
             <ArrowButton href="/contact" width="fit">
               {plan.cta}
             </ArrowButton>
-            {/* Under its own button, which is where the client's card has it. */}
+            {/* Under its own button, which is where the client's card has it.
+                Centring it was tried and reverted: ranged left it lines up with
+                the button and with every other line in the card. */}
             <p className="mt-4 text-small font-semibold text-ink-body">
               {/* Opens in its own tab, because it leaves the site: a visitor reading the three plans is mid-decision, and sending them away for good is not the point. */}
               <a

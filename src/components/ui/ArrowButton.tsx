@@ -2,7 +2,18 @@ import Link from "next/link";
 import type { ReactNode, SVGProps } from "react";
 import { FOCUS_RING, SURFACE_FLAT } from "@/components/ui/surface";
 
-/* The site's black button, with the action drawn as an arrow in a badge. */
+/*
+ * The site's black button, with the action drawn as an arrow in a badge.
+ *
+ * The badge carries `--radius-badge`, the shell's corner scaled to its smaller
+ * box. It was a circle, and a circle is a shape language of its own: nothing
+ * else here is round, so the badge read as a borrowed part rather than as a
+ * piece of this button. Two other values were set on the real button and looked
+ * at before this one. The frame's concentric radius, 4px at 6px of padding,
+ * reads as a hard tile; concentricity is for a band you read as a frame, and
+ * this is an object sitting on a field. `--radius` itself, 10px, measures equal
+ * to the shell and still reads rounder, which is the client's own note.
+ */
 export type ArrowButtonWidth = "full" | "fit";
 
 /* Which way round the button is drawn. */
@@ -32,7 +43,11 @@ const SIZES: Record<ArrowButtonSize, { shell: string; badge: string; icon: strin
   /* The badge sits 6px inside the pill, not 4. */
   sm: { shell: "py-1 pr-1 pl-4 text-small", badge: "size-7", icon: "size-4" },
   /* `text-small` on a phone, `text-body` from `sm`, and the label never wraps. */
-  base: { shell: "py-1.5 pr-1.5 pl-5 text-small sm:pl-6 sm:text-body", badge: "size-10", icon: "size-5" },
+  base: {
+    shell: "py-1.5 pr-1.5 pl-5 text-small sm:pl-6 sm:text-body",
+    badge: "size-10",
+    icon: "size-5",
+  },
 };
 
 export function ArrowButton({
@@ -61,7 +76,7 @@ export function ArrowButton({
     <>
       <span className="min-w-0 whitespace-nowrap">{children}</span>
       <span
-        className={`arrow-swipe grid shrink-0 place-items-center rounded-full ${TONES[tone].badge} ${step.badge}`}
+        className={`arrow-swipe grid shrink-0 place-items-center rounded-badge ${TONES[tone].badge} ${step.badge}`}
       >
         <ArrowIcon aria-hidden="true" className={step.icon} />
         <ArrowIcon aria-hidden="true" className={step.icon} />

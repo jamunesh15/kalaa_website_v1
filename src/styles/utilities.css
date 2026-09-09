@@ -25,6 +25,23 @@
   transition-timing-function: var(--ease-brand);
 }
 
+/**
+ * The same curve, taken at the slowest step on the scale.
+ *
+ * For a surface that unfolds rather than responds: a hover that reveals a whole
+ * panel wants time to be read as one thing arriving, where a hover that tints a
+ * link wants to feel instant. Same easing, so the two still belong together.
+ *
+ * `--dur-turn` rather than `--dur-slow`, which is the next step down and was
+ * tried first. Nothing else on the site is this slow and nothing else should be:
+ * it is the one place a hover is showing a whole new surface rather than
+ * changing the state of one that is already there.
+ */
+@utility transition-token-reveal {
+  transition-duration: var(--dur-turn);
+  transition-timing-function: var(--ease-brand);
+}
+
 /* The phone menu control: three bars that fold into a cross. */
 @utility hamburger {
   /* An SVG at 24px, one CSS pixel per unit, not three `div`s. */
@@ -99,8 +116,8 @@
 }
 
 @utility frame-cap {
-  /* Never wider than the sheet. */
-  inset-inline: max(var(--frame), calc((100% - var(--sheet-max)) / 2));
+  /* The sheet fills the viewport, so the cap sits on the page margin. */
+  inset-inline: var(--frame);
   top: var(--frame);
   height: calc(var(--ring) + var(--frame-line) + var(--radius));
   /* Above the masthead, because it draws the masthead's own top corner. */
@@ -274,9 +291,34 @@
 @utility process-flow-grid {
   display: grid;
   grid-template-columns: repeat(5, minmax(0, 1fr));
-  gap: 1.25rem;
-  align-items: end;
-  padding: calc(var(--process-rise) * 2.7) 0 0;
+  /*
+   * 3.25rem, not the 1.25rem the cards want between them.
+   *
+   * Each card is mounted on a torn sheet that stands 1rem out of it, and the
+   * repo's own rule is that a margin beside a torn sheet is the gap you want
+   * PLUS the overhang. 1.25 plus 1 twice is 3.25, and at 1.25 the sheets
+   * overlapped, which an opaque mat turns into one card's paper cutting the
+   * next one's edge off.
+   */
+  gap: 3.25rem;
+  /*
+   * `start`, and this is the fix for two cards landing at the same height.
+   *
+   * The row used to be bottom aligned with a margin-bottom lifting each card.
+   * That makes a card's TOP depend on its own height, and the third card's
+   * heading runs to three lines, so it was 30px taller and its top landed
+   * exactly level with the fourth's. Measured: 127, 112, 54, 54, 30. Positioned
+   * from the top instead, the staircase is the margin and nothing else, so no
+   * amount of copy can flatten a step.
+   */
+  align-items: start;
+  /*
+   * 1.4 rises, and `TOP_PAD` in `ProcessPath.tsx` is this number. It used to be
+   * 2.7, to clear a label floating 1.8 rises above its card on a stem. The label
+   * sits on the card now, so all this has to clear is the half of it that stands
+   * proud and the torn sheet's overhang.
+   */
+  padding: calc(var(--process-rise) * 1.6) 0 0;
 
   /* `> li`, and the child combinator is not tidiness. */
   & > li {
@@ -292,51 +334,70 @@
     min-height: 21.5rem;
   }
 
+  /* `--step-drop` is how far this card hangs BELOW the highest one, so the last
+     card sits at zero and the first hangs the full climb. */
   .process-flow-grid > li {
-    margin-bottom: calc(var(--process-rise) * var(--step-lift, 0));
+    margin-top: calc(var(--process-rise) * var(--step-drop, 0));
   }
 }
 
+/*
+ * The step's label, straddling the top edge of its own card like a tab.
+ *
+ * It used to float 1.8 rises above the card with a hairline stem drawn down to
+ * it. The client called the stem cheap and he is right: it was a rule doing a
+ * job that adjacency does better, and it read as a loose thread between two
+ * things that belong together.
+ */
 @utility process-node {
   position: absolute;
-  top: calc(var(--process-rise) * -1.8);
+  top: 0;
   left: 1rem;
-  z-index: 4;
+  /* Above the connecting line, which runs at z-20 over the cards, so the line
+     passes BEHIND the label rather than stopping at its edge. */
+  z-index: 30;
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  transform: translateY(-50%);
+  /*
+   * `-100%`, so the label rests ON the card's top edge rather than straddling
+   * it. Straddling put its foot 23px into the card and the heading starts at
+   * the card's 1rem of padding, so the label was sitting on the first line of
+   * the title with nothing between them. Above it, the card's own padding is
+   * the breathing space.
+   */
+  transform: translateY(-100%);
   border-radius: var(--radius);
   background: var(--ink);
-  padding: 0.4rem 0.7rem 0.4rem 0.4rem;
+  padding: 0.5rem 0.9rem 0.5rem 0.5rem;
   color: var(--on-action);
   font-family: var(--font-display);
-  font-size: 0.8125rem;
+  /* `--text-small`, up from 0.8125rem, at the client's ask. */
+  font-size: var(--text-small);
   font-weight: 700;
   line-height: 1;
   white-space: nowrap;
   box-shadow: var(--shadow-soft);
-
-  /* The stem, from the foot of the label to the top of the card. */
-  &::after {
-    position: absolute;
-    top: 100%;
-    left: 1.35rem;
-    width: var(--border-w);
-    height: calc(var(--process-rise) * 1.8 - 50%);
-    background: color-mix(in srgb, var(--ink) 34%, transparent);
-    content: "";
-  }
 }
 
+/*
+ * The counter, drawn the way `ArrowButton` draws its arrow badge: the surface
+ * colour on the black shell, at the badge corner. It was a translucent square of
+ * the shell's own text colour, which read as a dimmed number rather than as a
+ * counter on a plate.
+ *
+ * `calc(var(--radius) * 0.8)` is the badge corner, the same ratio `ArrowButton`
+ * steps down by, because this plate is smaller than the shell it sits in.
+ */
 @utility process-node-number {
   display: grid;
-  width: 1.6rem;
+  width: 1.9rem;
   aspect-ratio: 1;
   place-items: center;
-  border-radius: var(--radius);
-  background: color-mix(in srgb, var(--on-action) 18%, transparent);
-  font-size: 0.75rem;
+  border-radius: calc(var(--radius) * 0.8);
+  background: var(--surface);
+  color: var(--ink);
+  font-size: 0.8125rem;
 }
 
 /* The card, sized so the row's top edge is the curve. */
@@ -439,7 +500,12 @@
   border-top: var(--border-w) solid color-mix(in srgb, var(--line) 88%, transparent);
   padding: 0.5rem 0;
   color: var(--ink-body);
-  font-size: 0.84rem;
+  /*
+   * `--text-small`, the same size the outcome line under this list is set at.
+   * It was 0.84rem, a number off the scale entirely, and against the outcome's
+   * 0.9375rem it read as two different sizes inside one card, which it was.
+   */
+  font-size: var(--text-small);
   font-weight: 650;
   line-height: 1.3;
 
@@ -554,30 +620,49 @@
   }
 }
 
-/* The hairline inside a plan card, drawn from ink rather than from `--line`. */
-@utility plan-rule {
-  border: 0;
-  border-top: var(--border-w) solid color-mix(in srgb, var(--ink) 13%, transparent);
-}
-
-/* The post mosaic: the tracks only. The bands inside are subgrids and carry the arrangement. */
+/*
+ * The work wall: the tracks only. The bands inside are subgrids and carry the
+ * arrangement.
+ *
+ * On a phone it is the SAME MOSAIC, at four columns instead of eight. It is a
+ * grid of work at a glance, the way a profile is, rather than a column of tiles
+ * to scroll past one at a time.
+ *
+ * Two arrangements were built before this and both were wrong. One tile to a row
+ * came to 11,883px, fourteen phone screens, and showed twelve of thirty posts.
+ * Full width reels with posts two up showed thirty six posts in the same height,
+ * because the height was never the posts: twelve full width reels at 9:16 are
+ * 6,876px on their own. Four columns is what fixes it, by making a reel two
+ * columns of four rather than the whole width.
+ */
 @utility work-mosaic {
   display: grid;
   gap: 0.5rem;
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  grid-template-rows: repeat(28, minmax(0, 1fr));
-  /* Two posts across, each 4:5: fourteen rows of tiles at five quarters of half the width, so 4 over 35. */
-  aspect-ratio: 4 / 35;
+  grid-template-rows: repeat(var(--wall-rows), minmax(0, 1fr));
+  /* Each row is five quarters of a column, so four across and `--wall-rows` down
+     is 4 over rows times 1.25. */
+  aspect-ratio: 4 / calc(var(--wall-rows) * 1.25);
 }
 
-/* The full composition, eight columns, from `md` up. */
+/*
+ * The full composition from `md`: eight columns, and bands three rows deep.
+ *
+ * Every cell is 4:5, a post's own ratio, so a post sits in one cell or in a two
+ * by two block and is never stretched. A reel takes two columns and the band's
+ * whole height, which is 2 over 3.75, close enough to 9:16 that `object-cover`
+ * only shaves the sides.
+ *
+ * The row count is not written here because it follows the number of reels.
+ * `WorkWall` sets `--wall-rows`, and the height follows from it: each row is
+ * five quarters of a column, so the whole is 8 over rows times 1.25.
+ */
 @media (min-width: 48rem) {
   .work-mosaic {
     gap: 0.6rem;
     grid-template-columns: repeat(8, minmax(0, 1fr));
-    grid-template-rows: repeat(8, minmax(0, 1fr));
-    /* Eight cells across and eight down, each 4:5, so the whole is 4:5 too. */
-    aspect-ratio: 4 / 5;
+    grid-template-rows: repeat(var(--wall-rows), minmax(0, 1fr));
+    aspect-ratio: 8 / calc(var(--wall-rows) * 1.25);
   }
 }
 
@@ -800,6 +885,77 @@
 }
 
 /*
+ * A footer link's hover state, drawn as the same tape its column heading sits on.
+ *
+ * The plate was a rounded grey rectangle, which is the one thing in this footer
+ * that looked like a component rather than like something stuck to a desk. The
+ * tape is torn on all four edges and it tilts, and successive links tilt the
+ * OPPOSITE way, so a hovered column reads as pieces put down by hand rather than
+ * as a list with a rollover on it.
+ *
+ * The tape is a pseudo element rather than the link's own background, because a
+ * `clip-path` on the link would cut the words as well as the plate. `isolate`
+ * keeps the `z-index: -1` inside the link, so the tape sits under its own text
+ * and still above the footer's artwork.
+ */
+@utility tape-hover {
+  position: relative;
+  isolation: isolate;
+  transition:
+    transform var(--dur-base) var(--ease-brand),
+    color var(--dur-base) var(--ease-brand);
+
+  &::before {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    clip-path: polygon(
+      0.6% 8%, 12% 3%, 30% 7%, 48% 2%, 66% 6%, 84% 2%, 99.4% 7%,
+      100% 30%, 98.6% 56%, 100% 80%, 99% 94%,
+      82% 98%, 62% 93%, 42% 99%, 22% 94%, 4% 98%, 0.8% 92%,
+      0% 70%, 1.4% 46%, 0% 24%
+    );
+    background: color-mix(in srgb, var(--ink) 7%, transparent);
+    /* `drop-shadow`, not `box-shadow`: a clip cuts a box shadow off with
+       everything else, and a filter follows the torn alpha instead. */
+    filter: drop-shadow(var(--shadow-hover-drop));
+    opacity: 0;
+    transition: opacity var(--dur-base) var(--ease-brand);
+    content: "";
+  }
+
+  &:hover::before,
+  &:focus-visible::before {
+    opacity: 1;
+  }
+
+  &:hover {
+    transform: rotate(-2.2deg);
+  }
+}
+
+/* The other way, every second link down the column. Two selectors because a
+   nav column wraps each link in an `li` and the address column does not. */
+.tape-column > li:nth-child(even) > .tape-hover:hover,
+.tape-column > .tape-hover:nth-child(even):hover {
+  transform: rotate(2.2deg);
+}
+
+/* The tape still appears; it just stops tilting. */
+@media (prefers-reduced-motion: reduce) {
+  .tape-hover,
+  .tape-hover::before {
+    transition: none;
+  }
+
+  .tape-hover:hover,
+  .tape-column > li:nth-child(even) > .tape-hover:hover,
+  .tape-column > .tape-hover:nth-child(even):hover {
+    transform: none;
+  }
+}
+
+/*
  * The sheet of paper BEHIND a card, cut from the photograph in `public/frames/`.
  *
  * The card in front keeps the site's one radius, the same as every button. Only
@@ -838,15 +994,12 @@
  * The offsets are the sheet's own inset, not the viewport's. `--frame`, the sage
  * ring and the frame line stack up to the sheet's inner edge, and the button
  * clears that by a further 1.25rem, so it rests ON the page rather than against
- * its border. The `max()` is the same expression `frame-cap` uses: past
- * `--sheet-max` the sheet stops growing and centres, and without it the button
- * would drift out onto the sage on a wide monitor.
+ * its border.
  */
 .whatsapp-dock {
   position: fixed;
   right: calc(
-    max(var(--frame), (100% - var(--sheet-max)) / 2) + var(--ring) + var(--frame-line) + 1.25rem +
-      env(safe-area-inset-right, 0px)
+    var(--frame) + var(--ring) + var(--frame-line) + 1.25rem + env(safe-area-inset-right, 0px)
   );
   bottom: calc(
     var(--frame) + var(--ring) + var(--frame-line) + 1.25rem + env(safe-area-inset-bottom, 0px)
@@ -857,16 +1010,16 @@
   width: 3.5rem;
   height: 3.5rem;
   border-radius: 999px;
-  background: var(--action);
-  color: var(--on-action);
+  background: var(--whatsapp);
+  color: var(--on-whatsapp);
   /*
    * Two shadows, and the second one is an edge rather than depth.
    *
    * A fixed button passes over everything the page has, and on a phone the thing
-   * it spends most of its time over is the footer's own artwork, which is dark.
-   * Black on that is a black shape on a black shape. The ring in the sheet's
-   * colour is invisible against the paper, where it is not needed, and cuts the
-   * button out against anything darker, where it is.
+   * it spends most of its time over is the footer's own artwork, which is dark
+   * and green. The ring in the sheet's colour is invisible against the paper,
+   * where it is not needed, and cuts the button out against anything darker or
+   * anything close to the mark's own green, where it is.
    *
    * An `outline` would have been the tidier way to draw it and is not available:
    * the focus ring is an outline, and the two would fight.
@@ -874,13 +1027,38 @@
   box-shadow:
     var(--shadow-lift),
     0 0 0 3px var(--sheet);
+
+  /*
+   * It arrives, rather than being there from the first paint.
+   *
+   * A fixed button that is simply present reads as part of the browser rather
+   * than as part of the page, and a visitor's eye files it with the scrollbar.
+   * Coming up into place once, on load, is what says it belongs to the site.
+   *
+   * `both`, so it holds the `from` state through the delay and is not visible
+   * before it plays. The delay lets the hero settle first: this is not the thing
+   * to look at on arrival, it is the thing to find afterwards.
+   */
+  animation: whatsapp-dock-in var(--dur-slow) var(--ease-travel) 900ms both;
+}
+
+@keyframes whatsapp-dock-in {
+  from {
+    opacity: 0;
+    /* Up from below and small, the way it would be if it were dropped in. */
+    transform: translateY(1.25rem) scale(0.6);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
 }
 
 /*
- * The black does NOT lift to `--action-hover` on hover, which every other button
- * on this site does. At this size the lighter black reads as a grey wash coming
- * over the disc rather than as a button responding, so the colour holds and the
- * turn is the whole of the feedback.
+ * The green does NOT shift on hover, which every other button on this site does.
+ * At this size a lighter fill reads as a wash coming over the disc rather than
+ * as a button responding, and this is a brand colour people recognise, so the
+ * colour holds and the turn is the whole of the feedback.
  */
 
 /*
@@ -917,6 +1095,12 @@
   .whatsapp-dock,
   .whatsapp-dock-mark {
     transition: none;
+  }
+
+  /* It is simply there, and `animation: none` is enough because the button's
+     resting state is the animation's last frame. */
+  .whatsapp-dock {
+    animation: none;
   }
 
   .whatsapp-dock:hover .whatsapp-dock-mark,
@@ -971,30 +1155,6 @@
 /* The map's frame, and the only styling a third-party document allows. */
 .map-frame iframe {
   filter: saturate(0.62) contrast(1.06);
-}
-
-/*
- * The Feedspace avatar badge in the hero. The widget's own stylesheet sets
- * `div.feedspace-embed { width: 100% }` and centres the avatars inside a shadow
- * root, which nothing outside can reach. Two class selectors outrank its one,
- * and a host sized to its content leaves the centring nowhere to go, so the
- * avatars land on the column's left edge. On a phone the wrapper centres it.
- */
-.hero-badge {
-  /* Exactly the avatar row. The widget's host is 90px with 42px of nothing under the faces, so a fixed height keeps the button close and still from the first paint. */
-  height: 3rem;
-}
-
-.hero-badge div.feedspace-embed {
-  width: fit-content;
-  max-width: 100%;
-}
-
-@media (min-width: 64rem) {
-  /* The widget pads its avatars 12px in from its host; pull the host out by the same so the first face sits on the heading's edge. */
-  .hero-badge div.feedspace-embed {
-    margin-inline-start: -12px;
-  }
 }
 
 /* The seek bar. */

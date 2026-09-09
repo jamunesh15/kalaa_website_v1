@@ -6,6 +6,8 @@ import { motion } from "motion/react";
 import { useNarrowViewport } from "@/motion/useNarrowViewport";
 import { useReplayOnScrollDown } from "@/motion/useReplayOnScrollDown";
 import { Card, type CardFill } from "@/components/ui/Card";
+import { ProofPeek } from "@/components/ui/ProofPeek";
+import { proofForService } from "@/content/proof";
 import type { Service } from "@/content/types";
 
 const portfolioImages = [
@@ -120,6 +122,15 @@ function ServiceCard({ service, index }: { service: Service; index: number }) {
   const narrow = useNarrowViewport();
   const { shown, handlers } = useReplayOnScrollDown();
 
+  /*
+   * The client's message about this service, where one exists.
+   *
+   * It opens INWARD, toward the middle of the band, because the section clips
+   * its own overflow and a panel opening outward from the left column would be
+   * cut in half by the page edge. Odd cards sit in the right column.
+   */
+  const proof = proofForService(service.slug);
+
   /* How far the card starts from home. */
   const travel = narrow ? "28%" : "52%";
   const offstage = { x: fromLeft ? `-${travel}` : travel, opacity: 0 };
@@ -137,7 +148,8 @@ function ServiceCard({ service, index }: { service: Service; index: number }) {
         ease: [0.45, 0, 0.2, 1],
         delay: fromLeft || narrow ? 0 : 0.12,
       }}
-      className={`relative mx-auto w-full max-w-[23rem] min-w-0 lg:mx-0 lg:max-w-[22.5rem] ${CARD_POSITIONS[index] ?? ""}`}
+      className={`group relative mx-auto w-full max-w-[23rem] min-w-0 lg:mx-0 lg:max-w-[22.5rem] ${CARD_POSITIONS[index] ?? ""}`}
+      tabIndex={proof ? 0 : undefined}
     >
       <Card
         fill={CARD_FILLS[index % CARD_FILLS.length]}
@@ -160,6 +172,8 @@ function ServiceCard({ service, index }: { service: Service; index: number }) {
           {service.tagline}
         </p>
       </Card>
+
+      {proof ? <ProofPeek proof={proof} side={index % 2 === 0 ? "right" : "left"} /> : null}
     </motion.article>
   );
 }

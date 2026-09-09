@@ -5,9 +5,12 @@ import { getChannels } from "@/content";
 /*
  * WhatsApp, docked inside the bottom right of the sheet.
  *
- * The mark in white on the site's own black, and nothing else: no label, and
+ * The mark in white on WhatsApp's own green, and nothing else: no label, and
  * nothing that changes shape. The one thing it does is turn the mark through a
  * full circle while a pointer is on it.
+ *
+ * This is the one button on the site that is not black, at the client's ask. In
+ * black it read as a dark dot over a pale sheet and got skipped.
  *
  * The number is never typed here. It comes from the same channel the contact
  * page and the footer use, so there is one WhatsApp link on the site.

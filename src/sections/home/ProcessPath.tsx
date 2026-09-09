@@ -1,6 +1,6 @@
 "use client";
 
-import type { CSSProperties } from "react";
+import { useEffect, useRef, useState, type CSSProperties } from "react";
 import { motion, type Variants } from "motion/react";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { HandAccent } from "@/components/ui/HandAccent";
@@ -9,38 +9,91 @@ import type { ProcessStep } from "@/content/types";
 
 /* Five steps, five cards, one row, one screen. */
 
-/* How much taller each card is than the shortest, in `--process-rise` units. */
-const LIFT_STEPS = [0, 0.9, 2.2, 3.6, 4.5] as const;
-
-/** The tallest card, so a node can be measured down from it. */
+/*
+ * The climb, in `--process-rise` units, evenly spaced so every step is the same
+ * size. The card reads its DROP, how far it hangs below the highest one, so the
+ * last card sits at zero and the first hangs the full climb.
+ */
+const LIFT_STEPS = [0, 1.2, 2.4, 3.6, 4.8] as const;
 const MAX_LIFT = LIFT_STEPS[LIFT_STEPS.length - 1];
 
-/* All in rise units. */
-const TOP_PAD = 0.9;
-const BAND = MAX_LIFT + 1.8;
+/*
+ * The line is MEASURED off the labels, not predicted from them.
+ *
+ * It used to be arithmetic: a column pitch as a percentage, a band height in
+ * rise units, and each node's y derived from how far its card was lifted. That
+ * carried two assumptions and both broke. The pitch assumed the row's gap, so
+ * the line stopped landing on the nodes the moment the gap grew to make room
+ * for the torn sheets. The y assumed all five cards were the same height, and
+ * the third card's heading runs to three lines, so the line passed 26px under
+ * its label.
+ *
+ * Reading the labels' own boxes has neither assumption, and it costs one
+ * observer on a section that is already a client component.
+ */
+/** The vertical part of an element's OWN transform, in pixels. */
+function labelShift(element: HTMLElement) {
+  const { transform } = getComputedStyle(element);
+  if (!transform || transform === "none") return 0;
+  const matrix = new DOMMatrixReadOnly(transform);
+  return matrix.f;
+}
 
-/* The x of each node is the LEFT edge of its label, not a tenth mark. */
-const COLUMN_PITCH = 20.34;
-const LABEL_INSET = 1.36;
+function offsetWithin(element: HTMLElement, root: HTMLElement) {
+  let x = 0;
+  let y = 0;
+  let node: HTMLElement | null = element;
+  while (node && node !== root) {
+    x += node.offsetLeft;
+    y += node.offsetTop;
+    node = node.offsetParent as HTMLElement | null;
+  }
+  /* `offsetParent` is null inside a `display: none` subtree, which this row is
+     below `xl`, so a walk that never reaches the stage has measured nothing. */
+  return node === root ? { x, y } : null;
+}
 
-const nodeY = (lift: number) => ((TOP_PAD + MAX_LIFT - lift) / BAND) * 100;
+/*
+ * One curve per gap: out of the right edge of a label and into the left edge of
+ * the next, at the client's drawing.
+ *
+ * **The line never crosses a card.** That is the whole constraint and it took
+ * three goes. Through the label CENTRES it cut deep into each card. Curving
+ * straight to the label's left EDGE still cut 23.8px in, because the label
+ * starts 1rem inside its card, so the curve was still climbing when it crossed
+ * the card's left edge.
+ *
+ * The curve therefore finishes at the CARD's left edge, where it has reached the
+ * card's own top, and a straight run carries it the last 1rem into the label
+ * along that top edge. Every point is then on or above a card, never in one.
+ *
+ * It still reads as one line rather than four marks, because the labels are
+ * opaque and sit above it: each segment disappears under one label and comes out
+ * of the next.
+ */
+type Step = {
+  readonly labelLeft: number;
+  readonly labelRight: number;
+  readonly cardLeft: number;
+  readonly y: number;
+};
 
-/* Five points, one per node, and nothing beyond them. */
-/* How far the first point is tucked in behind its own label. */
-const START_TUCK = 2.2;
-
-const POINTS = LIFT_STEPS.map((lift, index) => ({
-  x: index * COLUMN_PITCH + LABEL_INSET + (index === 0 ? START_TUCK : 0),
-  y: nodeY(lift),
-}));
-
-/* Cubic segments with both control points on the midpoint x, so the line leaves each node horizontally and arrives at the. */
-const CURVE = POINTS.reduce((path, point, index) => {
-  if (index === 0) return `M ${point.x} ${point.y}`;
-  const previous = POINTS[index - 1];
-  const middle = (previous.x + point.x) / 2;
-  return `${path} C ${middle} ${previous.y}, ${middle} ${point.y}, ${point.x} ${point.y}`;
-}, "");
+function curveBetween(steps: readonly Step[]) {
+  const segments: string[] = [];
+  for (let index = 1; index < steps.length; index += 1) {
+    const from = steps[index - 1];
+    const to = steps[index];
+    /* Both control points on the midpoint x, so the line leaves one label
+       horizontally and arrives at the next card's edge horizontally. */
+    const middle = (from.labelRight + to.cardLeft) / 2;
+    segments.push(
+      `M ${from.labelRight} ${from.y}` +
+        ` C ${middle} ${from.y}, ${middle} ${to.y}, ${to.cardLeft} ${to.y}` +
+        ` L ${to.labelLeft} ${to.y}`,
+    );
+  }
+  return segments.join(" ");
+}
 
 /* The fill is rhythm, not meaning, as everywhere else on this site: nothing is encoded in which colour a card happens to. */
 const CARD_TINTS = [
@@ -102,7 +155,11 @@ export function ProcessPath({ steps }: { steps: readonly ProcessStep[] }) {
       <motion.div variants={HEAD}>
         <SectionHeading
           align="center"
-          title={<>How we <HandAccent>grow your business</HandAccent></>}
+          title={
+            <>
+              How we <HandAccent>grow your business</HandAccent>
+            </>
+          }
           lead="The same five steps every month, from learning your business to reporting what it returned. Websites and software run alongside them."
         />
       </motion.div>
@@ -115,34 +172,112 @@ export function ProcessPath({ steps }: { steps: readonly ProcessStep[] }) {
 
 /* No trigger of its own. */
 function DesktopFlow({ steps }: { steps: readonly ProcessStep[] }) {
+  const stage = useRef<HTMLDivElement>(null);
+  const [line, setLine] = useState({ d: "", w: 0, h: 0 });
+
+  /* `useEffect`, not `useLayoutEffect`: this is a client component that is still
+     server rendered, and the line is decorative and below the fold. */
+  useEffect(() => {
+    const node = stage.current;
+    if (!node) return;
+
+    const measure = () => {
+      const box = node.getBoundingClientRect();
+      const labels = [...node.querySelectorAll(".process-node")];
+      if (labels.length < 2 || box.width === 0) return;
+
+      /*
+       * Layout offsets, NOT bounding rects.
+       *
+       * Each card enters on a transform, `x: -18, y: 26`, and a rect read while
+       * that is in flight bakes the offset into the path: the line then sits 18
+       * left and 26 low of every label for good. `offsetLeft` and `offsetTop`
+       * are the laid-out position and no transform touches them.
+       */
+      const cards = [...node.querySelectorAll(".process-flow-card")];
+      if (cards.length !== labels.length) return;
+
+      const measured: Step[] = [];
+      for (const [index, label] of labels.entries()) {
+        const element = label as HTMLElement;
+        const at = offsetWithin(element, node);
+        const card = offsetWithin(cards[index] as HTMLElement, node);
+        if (!at || !card) return;
+        measured.push({
+          labelLeft: at.x,
+          labelRight: at.x + element.offsetWidth,
+          cardLeft: card.x,
+          /*
+           * The label's VISUAL centre: its layout top, plus its own transform,
+           * plus half its height.
+           *
+           * `process-node` is laid out at `top: 0`, the card's top edge, and then
+           * raised by a `translateY`. `offsetTop` reports the layout box and
+           * cannot see a transform, and taking it at face value once put the
+           * whole line 23px below where the labels are drawn, which is precisely
+           * how far it then cut into every card. Reading the element's own
+           * matrix means changing that `translateY` cannot break the line again.
+           */
+          y: at.y + labelShift(element) + element.offsetHeight / 2,
+        });
+      }
+      setLine({ d: curveBetween(measured), w: box.width, h: box.height });
+    };
+
+    measure();
+    /* The headings wrap differently once the real face has loaded, and a wrapped
+       heading changes the card height the label is measured off. */
+    void document.fonts?.ready.then(measure);
+
+    const observer = new ResizeObserver(measure);
+    observer.observe(node);
+    return () => observer.disconnect();
+  }, [steps]);
+
   return (
     <motion.div
+      ref={stage}
       className="process-flow-stage relative mt-8 hidden xl:block"
       variants={STAGE}
     >
-      {/* The band is `BAND` rises tall, the same box the card tops are measured in, so the line lands on their corners. */}
+      {/* Drawn in the stage's own pixels, over the whole stage, so a point is a
+          label's measured centre rather than a percentage of a guessed box. */}
       <motion.svg
         aria-hidden="true"
-        viewBox="0 0 100 100"
+        viewBox={`0 0 ${line.w} ${line.h}`}
         preserveAspectRatio="none"
         variants={LINE}
-        className="pointer-events-none absolute inset-x-0 top-0 z-0 h-[calc(var(--process-rise)*6.3)] w-full text-page"
+        /*
+         * ABOVE the row, not under it.
+         *
+         * Each card stands higher than the one before, so a segment climbing to
+         * the next label crosses that card's torn top corner. Underneath, the
+         * paper cut every segment in half and the line read as broken, which is
+         * what the client saw. On top it lies across the corner like a thread
+         * laid on the sheets. It starts and ends exactly on a label's edge, so
+         * it never covers a word.
+         */
+        className="pointer-events-none absolute inset-0 z-20 h-full w-full text-page"
       >
-        <path
-          d={CURVE}
-          fill="none"
-          stroke="currentColor"
-          strokeLinecap="round"
-          strokeWidth="4"
-          vectorEffect="non-scaling-stroke"
-        />
+        {line.d ? (
+          <path
+            d={line.d}
+            fill="none"
+            stroke="currentColor"
+            strokeLinecap="round"
+            strokeWidth="4"
+            vectorEffect="non-scaling-stroke"
+          />
+        ) : null}
       </motion.svg>
 
-      <motion.ol className="process-flow-grid relative z-10" variants={ROW}>
+      {/* No `z-index` here. It would open a stacking context and cap the labels
+          inside it, and they have to sit above the line at z-20. */}
+      <motion.ol className="process-flow-grid relative" variants={ROW}>
         {steps.map((step, index) => (
           <motion.li
             key={step.number}
-            style={{ "--step-lift": LIFT_STEPS[index] } as CSSProperties}
+            style={{ "--step-drop": MAX_LIFT - LIFT_STEPS[index] } as CSSProperties}
             variants={CARD}
           >
             <span className="process-node">
@@ -160,7 +295,8 @@ function DesktopFlow({ steps }: { steps: readonly ProcessStep[] }) {
 /* The same five steps stacked. */
 function MobileFlow({ steps }: { steps: readonly ProcessStep[] }) {
   return (
-    <ol className="mt-8 grid gap-4 xl:hidden">
+    /* `gap-12`, not `gap-4`: the sheet under each card stands 1rem out of it. */
+    <ol className="mt-8 grid gap-12 xl:hidden">
       {steps.map((step, index) => (
         <MobileStep key={step.number} step={step} index={index} />
       ))}
@@ -196,35 +332,49 @@ function ProcessCard({
   showBadge?: boolean;
 }) {
   return (
-    <article
-      className={`process-flow-card ${CARD_TINTS[index] ?? CARD_TINTS[0]}`}
-    >
-      <div>
-        {showBadge ? (
-          <div className="mb-3 flex items-center gap-2.5">
-            <span className="process-flow-number">{step.number}</span>
-            <p className="font-display text-label font-bold text-ink/50">
-              {step.tag}
-            </p>
-          </div>
-        ) : null}
-        <h3 className="font-display text-display-m font-bold text-ink">
-          {step.title}
-        </h3>
-      </div>
+    /*
+     * The card is mounted on a torn sheet, the same device the blog cards, the
+     * capability deck and the service list use. The sheet is the photograph in
+     * `public/frames/`, used as a mask, so the colour is still a token.
+     *
+     * Kraft rather than sage: these five cards are already tinted butter,
+     * violet, sage, peach and sky, and a sage sheet behind a sage card loses its
+     * edge while a sage sheet behind a peach one goes muddy. The kraft sits
+     * under all five as paper rather than as another colour in the set.
+     */
+    <div className="relative">
+      <div aria-hidden className="paper-mat absolute -inset-4 bg-mat-kraft" />
 
-      <div className="process-detail">
-        <ul className="flex flex-1 flex-col">
-          {step.deliverables.map((item) => (
-            <li key={item} className="process-detail-line">
-              {item}
-            </li>
-          ))}
-        </ul>
-        <p className="mt-auto border-t-token border-line pt-3 text-small font-bold text-ink-body">
-          {step.outcome}
-        </p>
-      </div>
-    </article>
+      <article
+        className={`process-flow-card relative ${CARD_TINTS[index] ?? CARD_TINTS[0]}`}
+      >
+        <div>
+          {showBadge ? (
+            <div className="mb-3 flex items-center gap-2.5">
+              <span className="process-flow-number">{step.number}</span>
+              <p className="font-display text-label font-bold text-ink/50">
+                {step.tag}
+              </p>
+            </div>
+          ) : null}
+          <h3 className="font-display text-display-m font-bold text-ink">
+            {step.title}
+          </h3>
+        </div>
+
+        <div className="process-detail">
+          <ul className="flex flex-1 flex-col">
+            {step.deliverables.map((item) => (
+              <li key={item} className="process-detail-line">
+                {item}
+              </li>
+            ))}
+          </ul>
+          <p className="mt-auto border-t-token border-line pt-3 text-small font-bold text-ink-body">
+            {step.outcome}
+          </p>
+        </div>
+      </article>
+    </div>
   );
 }

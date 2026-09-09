@@ -85,6 +85,18 @@
 
   /* CONTRAST RULES THAT ARE NOT SUGGESTIONS On the sheet: ink 18.5:1, body 12.8:1, muted 7.4:1. */
 
+  /*
+   * WhatsApp's own green, and the one place on this site a button is not black.
+   *
+   * The dock is a floating mark with no label, sitting over a pale sheet, and in
+   * black it read as a dark dot a visitor's eye skipped. This is the published
+   * brand colour rather than a green picked to match: a WhatsApp button is a
+   * thing people recognise before they read it, and that recognition IS the
+   * affordance. `--action` stays black everywhere else.
+   */
+  --whatsapp: #25d366;
+  --on-whatsapp: #ffffff;
+
   /* -------------------------------------------------------------------- Corner ONE value. */
   --radius: 0.625rem;
 
@@ -94,6 +106,10 @@
 
   /* The lift under a hovered link's plate. */
   --shadow-hover: 0 3px 8px -2px rgb(20 19 26 / 0.18);
+
+  /* The same lift as a filter, for a plate whose edge is torn rather than
+   * rectangular. `drop-shadow` takes no spread, so the blur carries it. */
+  --shadow-hover-drop: 0 3px 6px rgb(20 19 26 / 0.18);
   --shadow-lift: 0 18px 44px -16px rgb(20 19 26 / 0.24);
 
   /* -------------------------------------------------------------------- The frame width How much sage shows around the. */
@@ -105,8 +121,22 @@
   /* The second line of the frame, and its colour. */
   --frame-line: 0.375rem;
   --frame-inner: #bfccc7;
-  /* The sheet's widest. */
-  --sheet-max: 110rem;
+
+  /*
+   * The frame's corners are concentric, and this is arithmetic on `--radius`
+   * rather than a second corner token.
+   *
+   * Give two nested boxes the same radius and the band between them is the gap
+   * down the straight edges and 1.41 times the gap round the curve, because the
+   * two arcs are the same size with their centres a diagonal apart. The sage
+   * then looks thicker at the corners than at the sides, which is what it was.
+   *
+   * Each layer is therefore the radius of the layer inside it plus the padding
+   * that separates them. One value still decides all three.
+   */
+  --frame-line-radius: calc(var(--radius) + var(--frame-line));
+  --frame-radius: calc(var(--radius) + var(--frame-line) + var(--ring));
+
 
   /* The masthead's height, declared rather than left to its contents. */
   --masthead: 4rem;

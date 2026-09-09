@@ -4,7 +4,7 @@ import { BrandMark } from "@/components/layout/BrandMark";
 import { FooterArtifacts } from "@/components/layout/FooterArtifacts";
 import { ArrowButton } from "@/components/ui/ArrowButton";
 import { ChannelGlyph, PinGlyph, SocialGlyph } from "@/components/ui/Glyph";
-import { FOCUS_RING, HOVER_PLATE, HOVER_PLATE_BARE } from "@/components/ui/surface";
+import { FOCUS_RING, HOVER_PLATE, HOVER_TAPE, HOVER_TAPE_BARE } from "@/components/ui/surface";
 import { getChannels, getServices, getSocials, getStudio } from "@/content";
 import { LEGAL_LINKS, QUICK_LINKS } from "@/nav";
 import { routeFor } from "@/routes";
@@ -20,8 +20,8 @@ const TORN_TOP =
 const TORN_BACK =
   "M0,0.0324 L0.0071,0.0306 L0.0143,0.0375 L0.0214,0.0422 L0.0286,0.0562 L0.0357,0.0743 L0.0429,0.0834 L0.0500,0.1012 L0.0571,0.1025 L0.0643,0.1011 L0.0714,0.1026 L0.0786,0.1192 L0.0857,0.1362 L0.0929,0.1593 L0.1000,0.1813 L0.1071,0.2076 L0.1143,0.2175 L0.1214,0.2177 L0.1286,0.2251 L0.1357,0.2464 L0.1429,0.2709 L0.1500,0.2953 L0.1571,0.3275 L0.1643,0.3559 L0.1714,0.3860 L0.1786,0.4021 L0.1857,0.4265 L0.1929,0.4404 L0.2000,0.4459 L0.2071,0.4483 L0.2143,0.4564 L0.2214,0.4685 L0.2286,0.4875 L0.2357,0.5078 L0.2429,0.5262 L0.2500,0.5426 L0.2571,0.5606 L0.2643,0.5848 L0.2714,0.6054 L0.2786,0.6108 L0.2857,0.6073 L0.2929,0.6042 L0.3000,0.6176 L0.3071,0.6270 L0.3143,0.6418 L0.3214,0.6565 L0.3286,0.6697 L0.3357,0.6855 L0.3429,0.6845 L0.3500,0.6856 L0.3571,0.6944 L0.3643,0.6973 L0.3714,0.7054 L0.3786,0.7021 L0.3857,0.6940 L0.3929,0.6881 L0.4000,0.6945 L0.4071,0.6941 L0.4143,0.6899 L0.4214,0.6856 L0.4286,0.6898 L0.4357,0.6892 L0.4429,0.6904 L0.4500,0.6920 L0.4571,0.6893 L0.4643,0.6904 L0.4714,0.6911 L0.4786,0.6906 L0.4857,0.6934 L0.4929,0.6871 L0.5000,0.6861 L0.5071,0.6813 L0.5143,0.6842 L0.5214,0.6858 L0.5286,0.6836 L0.5357,0.6777 L0.5429,0.6737 L0.5500,0.6652 L0.5571,0.6649 L0.5643,0.6647 L0.5714,0.6644 L0.5786,0.6687 L0.5857,0.6645 L0.5929,0.6716 L0.6000,0.6783 L0.6071,0.6733 L0.6143,0.6655 L0.6214,0.6658 L0.6286,0.6706 L0.6357,0.6631 L0.6429,0.6583 L0.6500,0.6621 L0.6571,0.6672 L0.6643,0.6668 L0.6714,0.6701 L0.6786,0.6651 L0.6857,0.6629 L0.6929,0.6660 L0.7000,0.6720 L0.7071,0.6642 L0.7143,0.6660 L0.7214,0.6726 L0.7286,0.6634 L0.7357,0.6644 L0.7429,0.6613 L0.7500,0.6599 L0.7571,0.6594 L0.7643,0.6616 L0.7714,0.6500 L0.7786,0.6360 L0.7857,0.6275 L0.7929,0.6186 L0.8000,0.6174 L0.8071,0.6060 L0.8143,0.5972 L0.8214,0.5876 L0.8286,0.5829 L0.8357,0.5835 L0.8429,0.5741 L0.8500,0.5711 L0.8571,0.5574 L0.8643,0.5410 L0.8714,0.5156 L0.8786,0.4945 L0.8857,0.4738 L0.8929,0.4505 L0.9000,0.4479 L0.9071,0.4407 L0.9143,0.4086 L0.9214,0.3615 L0.9286,0.3032 L0.9357,0.2549 L0.9429,0.2121 L0.9500,0.2003 L0.9571,0.1943 L0.9643,0.1707 L0.9714,0.1434 L0.9786,0.1080 L0.9857,0.0753 L0.9929,0.0448 L1.0000,0.0302 L1,1 L0,1 Z";
 
-/* One link in a footer column. */
-const COLUMN_LINK = `${FOCUS_RING} ${HOVER_PLATE} block text-body text-ink-body hover:text-ink`;
+/* One link in a footer column. Its hover plate is the column's own tape. */
+const COLUMN_LINK = `${FOCUS_RING} ${HOVER_TAPE} text-body text-ink-body hover:text-ink`;
 
 export function SiteFooter() {
   const channels = getChannels();
@@ -109,7 +109,7 @@ export function SiteFooter() {
             <TapeLabel id="footer-quick-links" tape="tape-1" tint="bg-tint-sage">
               Quick links
             </TapeLabel>
-            <ul className="mt-5 space-y-1 md:-mx-3">
+            <ul className="tape-column mt-5 space-y-1 md:-mx-3">
               {QUICK_LINKS.map((link) => (
                 <li key={link.href}>
                   <Link href={link.href} className={COLUMN_LINK}>
@@ -125,7 +125,7 @@ export function SiteFooter() {
             <TapeLabel id="footer-services" tape="tape-2" tint="bg-tint-violet">
               Services we provide
             </TapeLabel>
-            <ul className="mt-5 space-y-1 md:-mx-3">
+            <ul className="tape-column mt-5 space-y-1 md:-mx-3">
               {services.map((service) => (
                 <li key={service.slug}>
                   <Link href="/#services" className={COLUMN_LINK}>
@@ -143,7 +143,7 @@ export function SiteFooter() {
 
             {/* Each channel is a glyph and the thing it does. */}
             {/* A column, so each channel is a row of its own. */}
-            <address className="mt-5 flex flex-col items-center space-y-2 not-italic md:items-start">
+            <address className="tape-column mt-5 flex flex-col items-center space-y-2 not-italic md:items-start">
               {channels.map((channel) => (
                 <ChannelRow
                   key={channel.label}
@@ -263,7 +263,7 @@ function ChannelRow({
       /* Both tokens, not just `noreferrer`. */
       {...(external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
       aria-label={`${label}, ${name}`}
-      className={`${FOCUS_RING} ${HOVER_PLATE_BARE} inline-flex items-start gap-3 text-body text-ink-body hover:text-ink md:-ml-3`}
+      className={`${FOCUS_RING} ${HOVER_TAPE_BARE} inline-flex items-start gap-3 text-body text-ink-body hover:text-ink md:-ml-3`}
     >
       <span aria-hidden className="flex h-7 shrink-0 items-center text-ink-sage">
         {icon}

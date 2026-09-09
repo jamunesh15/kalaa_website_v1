@@ -1,5 +1,4 @@
 import type { Metadata, Viewport } from "next";
-import Script from "next/script";
 import { MotionProvider } from "@/components/layout/MotionProvider";
 import { PageFrame } from "@/components/layout/PageFrame";
 import { SiteFooter } from "@/components/layout/SiteFooter";
@@ -39,18 +38,16 @@ export const viewport: Viewport = {
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang={SITE.locale} className={`${fontVariables} h-full antialiased`}>
-      {/* The Feedspace badge in the hero: warm its three hosts early, but run its loader only after hydration, since it writes into the badge's div and React must own that DOM first. */}
-      <head>
-        <link rel="preconnect" href="https://js.feedspace.io" />
-        <link rel="preconnect" href="https://embed.feedspace.io" />
-        <link rel="preconnect" href="https://api.feedspace.io" />
-      </head>
       {/* The document is sage. */}
       <body className="frame-inset flex min-h-full flex-col bg-page font-sans text-body text-ink-body">
         {/* The sage strip above the masthead. */}
         <div aria-hidden className="frame-strip-outer fixed z-50 bg-page" />
-        <div aria-hidden className="frame-cap fixed rounded-t-token bg-page">
-          <span className="frame-cap-line absolute rounded-t-token bg-frame-inner">
+        {/* Square, and that is not an oversight. The sage is drawn on sage, so
+            rounding it shows nothing; it only cuts a bite out of the cap, and at
+            the frame's 30px corner that bite is wide enough to expose the sheet
+            scrolling underneath. The two layers inside it carry the corners. */}
+        <div aria-hidden className="frame-cap fixed bg-page">
+          <span className="frame-cap-line absolute rounded-t-frame-line bg-frame-inner">
             <span className="frame-cap-sheet absolute rounded-t-token bg-sheet" />
           </span>
         </div>
@@ -65,7 +62,6 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           <WhatsappDock />
         </PageFrame>
         </MotionProvider>
-        <Script src="https://js.feedspace.io/v1/embed/embed.min.js" strategy="afterInteractive" />
       </body>
     </html>
   );
