@@ -12,7 +12,15 @@ export function Pricing() {
   const offer = getPlanOffer();
 
   return (
-    <Section id="pricing" fill="bg-tint-sage">
+    /*
+     * Less air above the cards than the standard band.
+     *
+     * At 1040 the row is 941px tall and the screen is 830, so every pixel spent
+     * on the approach is a pixel of card a reader never sees. Measured before:
+     * 96px of section padding, then 40 to the switch and 64 to the cards, so the
+     * first card began 566px down and showed as an empty band under a heading.
+     */
+    <Section id="pricing" fill="bg-tint-sage" padding="py-12 sm:py-14 lg:py-16">
       <SectionHeading
         align="center"
         title={<>Plans that fit how you <HandAccent wrap>want to grow</HandAccent></>}

@@ -11,7 +11,6 @@ import { FOCUS_RING } from "@/components/ui/surface";
 import { Card } from "@/components/ui/Card";
 import { CheckGlyph, PlanGlyph } from "@/components/ui/Glyph";
 import { MarkerUnderline } from "@/components/ui/MarkerUnderline";
-import { useNarrowViewport } from "@/motion/useNarrowViewport";
 import { useReplayOnScrollDown } from "@/motion/useReplayOnScrollDown";
 import { formatRupees, priceFor } from "@/content/pricing";
 import { BillingToggle } from "@/sections/home/BillingToggle";
@@ -23,31 +22,33 @@ const ROW: Variants = {
   shown: {},
 };
 
-/* Two curves, because the two jobs are different. */
 /** The offer is Feedspace's, so the line that states it goes there. */
 const FEEDSPACE_URL = "https://www.feedspace.io/";
 
 const EASE_ARRIVE = [0.16, 1, 0.3, 1] as const;
-const EASE_DRIFT = [0.33, 0, 0.2, 1] as const;
 
-/* `order` is the position in the run, not in the row: 1 for the card left of the featured one, 2 for the card right of it. */
+/*
+ * ONE curve for all three, and they arrive together.
+ *
+ * It used to be two: the featured card on a fast curve with no delay and the
+ * other two drifting in behind it over 1.15s, so the row assembled around the
+ * middle card. Measured at 1040, that read as broken rather than as emphasis.
+ * At 1.5 seconds the featured card was at 0.89 and the other two were still at
+ * ZERO; they did not finish until 3.0. A reader scrolling to the section saw
+ * one card and a gap where two should be, which is exactly how it was reported,
+ * three times.
+ *
+ * 80ms apart now, so the last card is fully in at about 0.66s. The emphasis is
+ * the featured card standing proud of the row, which is a static fact a reader
+ * can see at any moment, rather than a head start nobody stays still to watch.
+ */
 const CARD: Variants = {
-  hidden: { opacity: 0, y: 40 },
+  hidden: { opacity: 0, y: 32 },
   shown: (order: number) => ({
     opacity: 1,
     y: 0,
-    transition: { duration: 1.15, delay: 0.14 + order * 0.1, ease: EASE_DRIFT },
+    transition: { duration: 0.5, delay: order * 0.08, ease: EASE_ARRIVE },
   }),
-};
-
-/** First away, first to land, and the shortest time in the air. */
-const FEATURED_CARD: Variants = {
-  hidden: { opacity: 0, y: 56 },
-  shown: {
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.62, ease: EASE_ARRIVE },
-  },
 };
 
 /*
@@ -140,16 +141,6 @@ export function PricingPlans({
   const [termKey, setTermKey] = useState<BillingKey>("monthly");
   const term = terms.find((entry) => entry.key === termKey) ?? terms[0];
 
-  /*
-   * Below `lg` the three cards are a column, not a row, and the order they
-   * arrive in has to be the order they are read in.
-   *
-   * Side by side, the featured card landing first into an empty row is the
-   * composition: it arrives, then the other two settle either side of it. Stack
-   * that same run and the middle card jumps the queue, which reads as a glitch
-   * rather than as emphasis, and the reader learns nothing from it.
-   */
-  const stacked = useNarrowViewport();
 
   return (
     <>
@@ -159,17 +150,48 @@ export function PricingPlans({
       terms={terms}
       value={termKey}
       onChange={setTermKey}
-      className="mx-auto mt-10 hidden w-fit lg:block"
+      className="mx-auto mt-7 hidden w-fit min-[56.25rem]:block"
     />
 
     <motion.ul
       initial="hidden"
       {...handlers}
       animate={shown ? "shown" : "hidden"}
-      viewport={{ amount: 0.25 }}
+      /*
+       * `some`, never a fraction, and this row is why.
+       *
+       * A fraction is a fraction of the ELEMENT, so it only works while the
+       * element is shorter than the screen. Side by side this row is about
+       * 800px and a quarter of it is 200: trivially met. Stacked on a phone it
+       * is 2,700px, a quarter of it is 675, and with the section heading above
+       * it only about 300px is ever on screen at the moment a reader arrives.
+       * The threshold was never reached and all three cards sat at opacity 0
+       * under the switch, which is exactly what a reader reported: a control
+       * and an empty band.
+       *
+       * The same 80px margin `SlideIn` uses, so a card reveals when it arrives
+       * rather than when enough of its siblings do.
+       */
+      viewport={{ amount: "some", margin: "0px 0px -80px 0px" }}
       variants={ROW}
       /* `items-stretch` and `h-full` on the card together are what keep the three the same height when one plan's sentence runs longer. */
-      className="mt-12 grid gap-6 sm:gap-7 lg:mt-16 lg:grid-cols-3 lg:items-stretch"
+      /*
+       * Three across from 60rem, not from `lg`.
+       *
+       * At 960px the content column is about 900, so a card is 283px: enough for
+       * the price, the three cell stat strip and the tick list. Below that a card
+       * is under 250 and the strip's three figures collide, which is why this is
+       * not `md`.
+       */
+      /*
+       * Three across from 56.25rem, and that number is measured rather than
+       * chosen. The card carries a torn strip down its right edge that the copy
+       * has to clear, so the usable width is the card minus about 48px. Walking
+       * the widths: at 768 nine pieces of text run under the tear, the button
+       * label by 27px; at 854 two still do by 3 and 4px; at 900 none do. Below
+       * 900 the row is a column.
+       */
+      className="mt-8 grid gap-6 sm:gap-4 lg:mt-10 min-[56.25rem]:grid-cols-3 min-[56.25rem]:items-stretch lg:gap-7"
     >
       {plans.map((plan, index) => (
         <PlanCard
@@ -181,8 +203,7 @@ export function PricingPlans({
           onTerm={setTermKey}
           offer={offer}
           tone={TONES[index % TONES.length]}
-          order={stacked ? index : plan.featured ? 0 : index === 0 ? 1 : 2}
-          stacked={stacked}
+          order={index}
         />
       ))}
     </motion.ul>
@@ -238,20 +259,17 @@ function PlanCard({
   offer,
   tone,
   order,
-  stacked,
 }: {
   plan: Plan;
   term: BillingTerm;
   offer: string;
   tone: PlanTone;
-  /** The whole set of terms, so a stacked card can carry its own switch. */
+  /** The whole set of terms, so a card can carry its own switch. */
   terms: readonly BillingTerm[];
   termKey: BillingKey;
   onTerm: (key: BillingKey) => void;
   /** Position in the run. The featured card is 0, so it lands into an empty row. */
   order: number;
-  /** One column rather than a row, so every card uses the same curve. */
-  stacked: boolean;
 }) {
   const featured = plan.featured;
   const { pay, usual } = priceFor(plan, term);
@@ -259,42 +277,65 @@ function PlanCard({
   const saves = usual > pay;
 
   return (
-    <motion.li
-      custom={order}
-      variants={featured && !stacked ? FEATURED_CARD : CARD}
-      /*
-       * The featured card stands a little proud of the other two rather than
-       * being filled in a different colour. Two rem, not the six it was: at six
-       * the row read as a chart with one bar taller than the rest.
-       */
-      className={`relative min-w-0 ${featured ? "lg:-my-2" : ""}`}
-    >
+    <li className="relative min-w-0">
       {/*
-       * The switch, on every card, below `lg` only.
+       * The switch, on every card, and OUTSIDE the animated element.
        *
        * Stacked, a card is about 700px tall, so a control above the FIRST one is
        * two screens away by the time the third is on screen, and a reader has to
        * scroll back to change a price they are looking at. Every copy writes the
        * same state, so the three can never show different terms.
        *
-       * ABOVE the card rather than inside it. Inside, it has to clear the torn
-       * strip down the card's right edge, which leaves 198px for three labels at
-       * 375 and wraps "Annual" onto a second row. Above, it has the card's full
-       * width and reads as a control for the card it sits on.
+       * Outside, because inside it inherits the card's reveal: until the card
+       * arrives the switch is at opacity 0 with it, so a reader who has scrolled
+       * to the heading sees a heading and an empty band with no control at all.
+       * It shipped that way for one commit.
+       *
+       * Above the card rather than within it, because within it has to clear the
+       * torn strip down the card's right edge, which leaves 198px for three
+       * labels at 375 and wraps "Annual" onto a second row.
        */}
       <BillingToggle
         terms={terms}
         value={termKey}
         onChange={onTerm}
         name={`billing-${plan.slug}`}
-        className="mb-3 flex w-full lg:hidden"
+        className="mb-3 flex w-full min-[56.25rem]:hidden"
       />
+
+      <motion.div
+        custom={order}
+        variants={CARD}
+        /*
+         * The featured card stands a little proud of the other two rather than
+         * being filled in a different colour. Two rem, not the six it was: at
+         * six the row read as a chart with one bar taller than the rest.
+         */
+        /*
+         * `h-full`, and it is load bearing.
+         *
+         * The row is `items-stretch`, so every `li` is the height of the tallest
+         * and the card inside asks for `h-full`. This wrapper sits between them:
+         * without a height of its own it collapses to its content, `h-full` on
+         * the card then resolves against THAT, and the three cards came out 758,
+         * 786 and 798 inside three identical 798px cells.
+         *
+         * ONLY where the row is a row. Stacked, an `li` has no definite height,
+         * so `height: 100%` on its child is circular: the browser sized the
+         * child from a height the child was supposed to define, and the offer
+         * line under the button ended up 32px BELOW its own `li`, sitting on
+         * the next card's switch.
+         */
+        className={`relative min-[56.25rem]:h-full ${featured ? "lg:-my-2" : ""}`}
+      >
 
       <Card fill="surface" padding="" className={`h-full ${featured ? "shadow-lift" : ""}`}>
         <div
           className={`flex h-full flex-col py-6 pl-6 pb-7 sm:py-7 sm:pl-7 sm:pb-8 lg:pl-8 ${CLEAR_OF_TEAR}`}
         >
-          <div className="flex items-center gap-4">
+          {/* `min-h`, so a one line plan name and a two line one push the price,
+              the stat strip and the ticks to the same height across the row. */}
+          <div className="flex min-h-[3.75rem] items-center gap-4">
             <span
               className={`grid size-12 shrink-0 place-items-center rounded-full text-ink ${tone.tint}`}
             >
@@ -355,7 +396,21 @@ function PlanCard({
 
           {/* The marker under the price hangs 0.75rem below its box, so the
               clear space here is 0.75rem less than the margin says. */}
-          <p className={`text-body text-ink-body ${saves ? "mt-3" : "mt-8"}`}>{plan.summary}</p>
+          {/*
+           * Three lines reserved, but only once the cards are a row.
+           *
+           * The three summaries run to two, three and two lines depending on
+           * width, which put the stat strip and everything under it at different
+           * heights across the row. Reserving the tallest keeps them level.
+           * Stacked, there is nothing to line up with, so the air is not spent.
+           */}
+          <p
+            className={`text-body text-ink-body min-[56.25rem]:min-h-[5.25rem] ${
+              saves ? "mt-3" : "mt-8"
+            }`}
+          >
+            {plan.summary}
+          </p>
 
           <PlanStats plan={plan} term={term} tint={tone.tint} />
 
@@ -422,6 +477,7 @@ function PlanCard({
       >
         <Image src={tone.strip} alt="" fill sizes="6rem" className="object-cover object-left" />
       </div>
-    </motion.li>
+      </motion.div>
+    </li>
   );
 }

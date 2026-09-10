@@ -237,7 +237,7 @@ function DesktopFlow({ steps }: { steps: readonly ProcessStep[] }) {
   return (
     <motion.div
       ref={stage}
-      className="process-flow-stage relative mt-8 hidden xl:block"
+      className="process-flow-stage relative mt-8 hidden min-[70rem]:block"
       variants={STAGE}
     >
       {/* Drawn in the stage's own pixels, over the whole stage, so a point is a
@@ -306,7 +306,7 @@ function MobileFlow({ steps }: { steps: readonly ProcessStep[] }) {
      * `gap-12`, not `gap-4`: the sheet under each card stands 1rem out of it, so
      * the gap is the one you want plus the overhang on both sides.
      */
-    <ol className="mt-8 grid gap-12 sm:grid-cols-2 lg:grid-cols-3 xl:hidden">
+    <ol className="mt-8 grid gap-12 sm:grid-cols-2 lg:grid-cols-3 min-[70rem]:hidden">
       {steps.map((step, index) => (
         <MobileStep key={step.number} step={step} index={index} />
       ))}

@@ -4,6 +4,7 @@ import Image from "next/image";
 import type { ReactNode, SVGProps } from "react";
 import { motion } from "motion/react";
 import { useNarrowViewport } from "@/motion/useNarrowViewport";
+import { OffscreenPause } from "@/motion/OffscreenPause";
 import { useReplayOnScrollDown } from "@/motion/useReplayOnScrollDown";
 import { Card, type CardFill } from "@/components/ui/Card";
 import { ProofPeek } from "@/components/ui/ProofPeek";
@@ -216,10 +217,11 @@ function PortfolioStack() {
     >
       <div className="pointer-events-none absolute inset-x-0 top-0 z-10 h-14 bg-linear-to-b from-tint-cloud to-transparent" />
       <div className="pointer-events-none absolute inset-x-0 bottom-0 z-10 h-14 bg-linear-to-t from-tint-cloud to-transparent" />
-      <div className="absolute inset-0 grid grid-cols-2 gap-3 overflow-hidden px-1 py-1">
+      {/* Both rails run `infinite`. Off screen they should not run at all. */}
+      <OffscreenPause className="absolute inset-0 grid grid-cols-2 gap-3 overflow-hidden px-1 py-1">
         <ImageRail images={topRow} className="portfolio-rail-up" />
         <ImageRail images={bottomRow} className="portfolio-rail-down" />
-      </div>
+      </OffscreenPause>
     </motion.div>
   );
 }

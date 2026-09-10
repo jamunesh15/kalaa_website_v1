@@ -54,11 +54,13 @@ export function ContactWays() {
 
       {/* Divided by rules rather than boxed as cards. */}
       {/* No rules between the columns. */}
-      <ul className="mt-10 grid gap-10 sm:grid-cols-3 sm:gap-8">
+      {/* `items-stretch` so every column is the height of the tallest, which is
+          what lets each button sit on one line at the foot of its own column. */}
+      <ul className="mt-10 grid items-stretch gap-10 sm:grid-cols-3 sm:gap-8">
         {ordered.map((channel, index) => (
           /* The `li` stays and the arrival goes inside it. */
           <li key={channel.label} className="min-w-0">
-            <SlideIn from={index === 2 ? "right" : "left"} delay={index * 0.08}>
+            <SlideIn from={index === 2 ? "right" : "left"} delay={index * 0.08} className="flex h-full flex-col">
             <span
               aria-hidden
               className={`flex h-[4.5rem] w-[4.5rem] items-center justify-center rounded-full text-ink ${
@@ -72,8 +74,15 @@ export function ContactWays() {
             <h3 className="mt-6 font-display text-display-m font-bold text-ink">{channel.label}</h3>
             <p className="mt-2 max-w-[30ch] text-body text-ink-body">{channel.blurb}</p>
 
+            {/*
+             * `mt-auto`, so the three buttons line up.
+             *
+             * They used to sit `mt-6` under their own paragraph, and the three
+             * blurbs run to two, three and two lines, so the buttons landed at
+             * three different heights and the row read as broken.
+             */}
             {/* `ArrowButton`, the site's own control: a black pill with the arrow in a white badge that swipes across on hover. */}
-            <div className="mt-6">
+            <div className="mt-auto pt-6">
               <ArrowButton href={channel.href} width="fit" external={channel.external}>
                 {channel.action}
               </ArrowButton>

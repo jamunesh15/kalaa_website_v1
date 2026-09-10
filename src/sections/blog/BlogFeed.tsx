@@ -50,7 +50,17 @@ export function BlogFeed({ articles }: { articles: readonly Article[] }) {
     <Section fill="overflow-x-clip bg-tint-sky" padding="pb-16 pt-10 lg:pb-24 lg:pt-14" className="px-3 md:px-6">
       {/* The row was floating: a bare control under the opening with nothing holding it to the page. The written line anchors it, and it is the site's own voice. */}
       <div className="flex flex-wrap items-center gap-x-6 gap-y-3">
-        <p className="font-hand text-[1.3rem] leading-none text-ink">Read by topic</p>
+        {/*
+         * Hidden below `sm`.
+         *
+         * The label and the chips share one row, and on a phone the chips scroll
+         * horizontally: the label then sits over the first chip as it passes
+         * under it. The chips say what they are without it, so on a phone the
+         * label goes rather than the row growing a second line for it.
+         */}
+        <p className="hidden font-hand text-[1.3rem] leading-none text-ink sm:block">
+          Read by topic
+        </p>
 
         <div className="min-w-0 flex-1">
           <TopicFilter topics={topics} active={topic} onSelect={setTopic} />

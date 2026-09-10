@@ -202,7 +202,9 @@ export function SiteFooter() {
                 <li key={link.href}>
                   <Link
                     href={link.href}
-                    className={`${FOCUS_RING} ${HOVER_PLATE} block text-small text-ink hover:opacity-100`}
+                    /* `whitespace-nowrap`: the legal column is narrow at some
+                       widths and "Privacy policy" was breaking across two lines. */
+                    className={`${FOCUS_RING} ${HOVER_PLATE} block whitespace-nowrap text-small text-ink hover:opacity-100`}
                   >
                     {link.label}
                   </Link>

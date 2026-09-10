@@ -11,6 +11,11 @@ import { FOCUS_RING, SURFACE_FLAT } from "@/components/ui/surface";
  * chosen, so choosing a topic looks like picking up a card.
  *
  * Buttons rather than links: nothing here changes the address.
+ *
+ * They WRAP, they do not scroll. A horizontal scroller here hides topics off
+ * the right edge of a phone with nothing to say they are there, and it needs a
+ * second gesture to reach a control that costs one tap. Six chips over two
+ * rows is a set a reader can see all of.
  */
 export function TopicFilter({
   topics,
@@ -22,8 +27,8 @@ export function TopicFilter({
   onSelect: (topic: string) => void;
 }) {
   return (
-    <div className="-mx-3 overflow-x-auto px-3 py-1 md:-mx-6 md:px-6">
-      <ul className="flex w-max min-w-full items-center gap-2">
+    <div className="py-1">
+      <ul className="flex flex-wrap items-center gap-2">
         {topics.map((topic) => {
           const selected = topic === active;
 

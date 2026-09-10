@@ -225,19 +225,43 @@
   }
 }
 
+/*
+ * Nothing animates off screen.
+ *
+ * `OffscreenPause` sets `data-paused` from an IntersectionObserver. The
+ * marquees below are `infinite`, so without this the browser composites all
+ * four of them for the whole life of the page while at most one is visible.
+ */
+[data-paused="true"],
+[data-paused="true"] * {
+  animation-play-state: paused;
+}
+
 /* The client logo rows. */
+/*
+ * `-50%`, because the track is TWO copies of the row.
+ *
+ * Two is the minimum for a seamless marquee: travel exactly one copy's width
+ * and the second has taken the first's place, so the jump back is invisible. It
+ * was three copies at -33.3333%, which loops just as well and costs a third
+ * more markup for nothing. Nineteen logos became fifty seven images and 88KB of
+ * HTML in one section.
+ *
+ * The copy count and this percentage are one decision. Change one and the loop
+ * jumps.
+ */
 @keyframes logo-row-track-left {
   from {
     transform: translate3d(0, 0, 0);
   }
   to {
-    transform: translate3d(-33.3333%, 0, 0);
+    transform: translate3d(-50%, 0, 0);
   }
 }
 
 @keyframes logo-row-track-right {
   from {
-    transform: translate3d(-33.3333%, 0, 0);
+    transform: translate3d(-50%, 0, 0);
   }
   to {
     transform: translate3d(0, 0, 0);
@@ -327,8 +351,15 @@
 }
 
 /* The node: the step's number and stage, on the line, with a stem to its card. */
-/* The growing height belongs to the row, and only to the row. */
-@media (min-width: 80rem) {
+/*
+ * The growing height belongs to the row, and only to the row.
+ *
+ * 70rem, and it has to be the SAME number as the flow stage's own breakpoint in
+ * `ProcessPath.tsx`. The staircase is these two rules: without them the row
+ * renders flat and the measured connecting line runs along a row of level cards
+ * instead of climbing. Change one and change the other.
+ */
+@media (min-width: 70rem) {
   /* The climb is where a card SITS, not how tall it is. */
   .process-flow-card {
     min-height: 21.5rem;
@@ -1130,6 +1161,37 @@
 /** A piece the phone arrangement leaves out. Not drawn smaller, not drawn. */
 .footer-piece-wide-only {
   display: none;
+}
+
+/**
+ * A piece that only the widest layouts have room for.
+ *
+ * The contact column grows into the footer's right edge as the page narrows:
+ * its button reaches 84.5% of the footer's width at 1728, 91.7% at 1440 and
+ * 96.7% by 1245, so between 64rem and 87.5rem the artwork on that edge has
+ * nowhere to be, and not drawn beats drawn behind a button.
+ *
+ * A PHONE is not in that range. There the footer is one column and the piece
+ * has its own placement well clear of the button, so it is drawn. Suppressing
+ * it everywhere below 87.5rem took it off phones too, which is not what this
+ * rule is for.
+ */
+.footer-piece-extra-wide-only {
+  /* The phone arrangement has its own place for it, clear of everything. */
+  display: block;
+}
+
+/* The middle range is the only place it has nowhere to be. */
+@media (min-width: 64rem) {
+  .footer-piece-extra-wide-only {
+    display: none;
+  }
+}
+
+@media (min-width: 87.5rem) {
+  .footer-piece-extra-wide-only {
+    display: block;
+  }
 }
 
 /* `64rem`, not the `40rem` the about board switches at. */

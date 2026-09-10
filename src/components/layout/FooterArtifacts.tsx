@@ -68,7 +68,7 @@ export function FooterArtifacts() {
           <motion.div
             key={item.id}
             /* Coordinates go in as custom properties rather than as `left`, `bottom` and `width` directly, because an inline style. */
-            className={`footer-piece absolute${item.phone === null ? " footer-piece-wide-only" : ""}`}
+            className={`footer-piece absolute${item.phone === null ? " footer-piece-wide-only" : ""}${item.extraWideOnly ? " footer-piece-extra-wide-only" : ""}`}
             style={
               {
                 "--piece-left": `${item.left}%`,

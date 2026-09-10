@@ -3,7 +3,7 @@ import { BrandMark } from "@/components/layout/BrandMark";
 import { MobileNav } from "@/components/layout/MobileNav";
 import { NavLink } from "@/components/layout/NavLink";
 import { ArrowButton } from "@/components/ui/ArrowButton";
-import { FOCUS_RING, HOVER_PLATE } from "@/components/ui/surface";
+import { FOCUS_RING, HOVER_TAPE } from "@/components/ui/surface";
 import { CONTACT_LINK, PRIMARY_LINKS } from "@/nav";
 
 /* The masthead. */
@@ -17,12 +17,18 @@ export function SiteHeader() {
 
         {/* Named, because a page can hold more than one navigation landmark and an unnamed one gives a screen reader user no way. */}
         {/* `gap-3`, down from `gap-7`. */}
-        <nav aria-label="Primary" className="hidden items-center gap-3 md:flex">
+        {/* `tape-column` is what makes the tilt alternate along the row: the
+            rule tilts every link one way and every second child the other. The
+            class carries no layout of its own, only that selector. */}
+        <nav
+          aria-label="Primary"
+          className="tape-column hidden items-center gap-3 md:flex"
+        >
           {PRIMARY_LINKS.map((link) => (
             <NavLink
               key={link.href}
               href={link.href}
-              className={`${HOVER_PLATE} text-small font-medium text-ink`}
+              className={`${HOVER_TAPE} text-small font-medium text-ink`}
             >
               {link.label}
             </NavLink>

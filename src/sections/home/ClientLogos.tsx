@@ -3,6 +3,7 @@ import { Section } from "@/components/ui/Section";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { HandAccent } from "@/components/ui/HandAccent";
 import { getClientLogos } from "@/content";
+import { OffscreenPause } from "@/motion/OffscreenPause";
 import type { ClientLogo } from "@/content/types";
 
 /* Client proof: three rows of logo cards, each moving against the one above it. */
@@ -25,11 +26,11 @@ export function ClientLogos() {
       />
 
       {/* On the rail, the same one the heading starts from. */}
-      <div className="logo-row-mask mt-9 grid gap-4 overflow-hidden sm:mt-12 sm:gap-5">
+      <OffscreenPause className="logo-row-mask mt-9 grid gap-4 overflow-hidden sm:mt-12 sm:gap-5">
         {rows.map((rowLogos, row) => (
           <LogoRow key={row} logos={rowLogos} direction={row % 2 === 0 ? "left" : "right"} />
         ))}
-      </div>
+      </OffscreenPause>
     </Section>
   );
 }
@@ -50,7 +51,8 @@ function LogoRow({
     <div
       className={`flex w-max ${direction === "left" ? "logo-row-left" : "logo-row-right"}`}
     >
-      {[0, 1, 2].map((copy) => (
+      {/* Two copies, paired with `-50%` in the keyframe. See the note there. */}
+      {[0, 1].map((copy) => (
         <ul
           key={copy}
           aria-hidden={copy > 0 || undefined}
