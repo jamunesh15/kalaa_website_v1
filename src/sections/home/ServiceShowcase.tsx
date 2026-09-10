@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import type { ReactNode, SVGProps } from "react";
+import { useCallback, useRef, useState, type ReactNode, type SVGProps } from "react";
 import { motion } from "motion/react";
 import { useNarrowViewport } from "@/motion/useNarrowViewport";
 import { OffscreenPause } from "@/motion/OffscreenPause";
@@ -140,13 +140,78 @@ function ServiceCard({ service, index }: { service: Service; index: number }) {
   const { shown, handlers } = useReplayOnScrollDown();
 
   /*
-   * The client's message about this service, where one exists.
+   * The client's message, held above the card until a reader asks for it.
    *
-   * It opens INWARD, toward the middle of the band, because the section clips
-   * its own overflow and a panel opening outward from the left column would be
-   * cut in half by the page edge. Odd cards sit in the right column.
+   * Every card has one. Four of the six chats were sent about a different piece
+   * of work than the service they sit beside, which the panel says out loud
+   * rather than papering over: read the note at the top of `content/proof.ts`
+   * before moving one.
    */
   const proof = proofForService(service.slug);
+  const card = useRef<HTMLElement>(null);
+  const [side, setSide] = useState<"up" | "down">("up");
+  const [shift, setShift] = useState(0);
+
+  /*
+   * Where the panel goes, measured at the moment it is asked for.
+   *
+   * Two things can cut it and neither is knowable when the page renders. The
+   * masthead is sticky, so a card near the top of the screen has a bar over the
+   * space above it, and the section clips its own overflow, so the bottom row
+   * has less room below it than the viewport suggests. The band the panel has
+   * to live inside runs from whichever is lower, the bar or the section top, to
+   * whichever is higher, the section bottom or the fold.
+   *
+   * **Choosing a side is not enough, and that is the bug this fixes.** Hover a
+   * card in the bottom row while the section's foot is on screen and its top is
+   * under the masthead, and BOTH gaps are smaller than the panel: it opened
+   * downward because down was the roomier of two rooms it did not fit in, and
+   * the section clipped it halfway through the message.
+   *
+   * So it also SHIFTS. The side is decided by which gap can hold the whole
+   * panel, falling back to the larger; then the panel is pulled back by however
+   * far it would overhang the band, clamped so pulling it back never pushes the
+   * other end out. It ends up overlapping its own card in that case, which is
+   * the right trade: a message on top of the card a reader is already pointing
+   * at beats half a message.
+   */
+  const place = useCallback(() => {
+    const element = card.current;
+    if (!element) return;
+
+    const box = element.getBoundingClientRect();
+    const section = element.closest("section")?.getBoundingClientRect();
+    const bar =
+      document.querySelector("header")?.getBoundingClientRect().bottom ?? 0;
+    /* The panel is rendered at `opacity: 0` rather than hidden, so it has a
+       real height before anybody has seen it. Below `xl` it is `display: none`
+       and this reads 0, which is correct: there is no panel to place. */
+    const panel =
+      element.querySelector<HTMLElement>("[data-proof-peek]")?.offsetHeight ?? 0;
+
+    const ceiling = Math.max(bar, section?.top ?? 0);
+    const floor = Math.min(
+      window.innerHeight,
+      section?.bottom ?? window.innerHeight,
+    );
+
+    /* `GAP` is the panel's own margin off the card, in `ProofPeek`. */
+    const GAP = 16;
+    const above = box.top - GAP - ceiling;
+    const below = floor - (box.bottom + GAP);
+
+    const opensUp = above >= panel || (below < panel && above >= below);
+    const room = opensUp ? above : below;
+    /* How far it overhangs the band, and how far it can be pulled back before
+       its other end leaves the band at the opposite edge. */
+    const overhang = Math.max(0, panel - room);
+    const headroom = opensUp
+      ? Math.max(0, floor - (box.top - GAP))
+      : Math.max(0, box.bottom + GAP - ceiling);
+
+    setSide(opensUp ? "up" : "down");
+    setShift(Math.min(overhang, headroom));
+  }, []);
 
   /* How far the card starts from home. */
   const travel = narrow ? "28%" : "52%";
@@ -154,6 +219,9 @@ function ServiceCard({ service, index }: { service: Service; index: number }) {
 
   return (
     <motion.article
+      ref={card}
+      onPointerEnter={proof ? place : undefined}
+      onFocus={proof ? place : undefined}
       {...handlers}
       /* A fifth of the card, not a third. */
       viewport={{ amount: 0.2 }}
@@ -168,29 +236,40 @@ function ServiceCard({ service, index }: { service: Service; index: number }) {
       className={`group relative mx-auto w-full max-w-[23rem] min-w-0 lg:mx-0 lg:max-w-[22.5rem] ${CARD_POSITIONS[index] ?? ""}`}
       tabIndex={proof ? 0 : undefined}
     >
-      <Card
-        fill={CARD_FILLS[index % CARD_FILLS.length]}
-        padding="p-5 sm:p-6"
-        className="service-reference-card flex min-h-[13.5rem] flex-col"
-      >
-        <div className="flex min-w-0 items-start gap-4">
-          <span
-            className={`grid size-12 shrink-0 place-items-center rounded-token ${ICON_BADGES[index % ICON_BADGES.length]} text-ink shadow-soft`}
-          >
-            <Icon aria-hidden="true" className="size-6" />
-          </span>
-          <h3 className="min-w-0 font-display text-[1.45rem] font-bold leading-tight text-ink sm:text-display-m">
-            {service.title}
-          </h3>
-        </div>
-        <p className="mt-4 text-body text-ink-body">{service.summary}</p>
-        {/* One line, and written to be one rather than trimmed into one. */}
-        <p className="mt-auto pt-5 text-small font-semibold text-ink-body">
-          {service.tagline}
-        </p>
-      </Card>
+      {/*
+       * The panel hangs off THIS box, not off the article.
+       *
+       * The article is a grid item and the row stretches it to the tallest card
+       * in that row, so on a short card its bottom edge is 20px below the card's
+       * own. Anchored to the article, the panel started 36px off a card it was
+       * supposed to be pointing at, and no tail can bridge a gap it cannot
+       * measure. This wrapper takes its height from the card and nothing else.
+       */}
+      <div className="relative">
+        <Card
+          fill={CARD_FILLS[index % CARD_FILLS.length]}
+          padding="p-5 sm:p-6"
+          className="service-reference-card flex min-h-[13.5rem] flex-col"
+        >
+          <div className="flex min-w-0 items-start gap-4">
+            <span
+              className={`grid size-12 shrink-0 place-items-center rounded-token ${ICON_BADGES[index % ICON_BADGES.length]} text-ink shadow-soft`}
+            >
+              <Icon aria-hidden="true" className="size-6" />
+            </span>
+            <h3 className="min-w-0 font-display text-[1.45rem] font-bold leading-tight text-ink sm:text-display-m">
+              {service.title}
+            </h3>
+          </div>
+          <p className="mt-4 text-body text-ink-body">{service.summary}</p>
+          {/* One line, and written to be one rather than trimmed into one. */}
+          <p className="mt-auto pt-5 text-small font-semibold text-ink-body">
+            {service.tagline}
+          </p>
+        </Card>
 
-      {proof ? <ProofPeek proof={proof} side={index % 2 === 0 ? "right" : "left"} /> : null}
+        {proof ? <ProofPeek proof={proof} side={side} shift={shift} /> : null}
+      </div>
     </motion.article>
   );
 }

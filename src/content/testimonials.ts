@@ -23,10 +23,15 @@ import type { Testimonial, WrittenReview } from "@/content/types";
  * `assets/testimonials/transcripts.json`.
  *
  * Nothing here is written for them. A translation is trimmed to its point and
- * never extended: every claim in a `spoken` line is a claim its speaker made,
- * and the card names the language it was made in, so a reader is never shown a
- * rendered sentence as if it were the original. The recording is on the same
- * card and remains the testimony.
+ * never extended: every claim in a `spoken` line is a claim its speaker made.
+ * The recording is on the same card and remains the testimony.
+ *
+ * **`spokenFrom` is NOT rendered, at the client's instruction on 2026-09-10.**
+ * The card carried "Spoken in Gujarati, carried over into English" under the
+ * quote for part of that day and he asked for it off. Keep the field: it is a
+ * fact about the recording and it is what stops somebody editing one of these
+ * sentences as though it were typed English. Do not put the line back on the
+ * card without asking him.
  */
 const PEOPLE = [
   {

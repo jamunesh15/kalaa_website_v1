@@ -305,11 +305,102 @@
   mask-image: linear-gradient(to right, transparent, black 12%, black 88%, transparent);
 }
 
+/* The written-review columns. */
+/*
+ * Staggered columns that drift vertically, alternating up and down.
+ *
+ * It was three horizontal rows and they were wrong for this content. A row
+ * carries a card past at a fixed height, so every message is read in the same
+ * place and the section is a ticker. Columns at different offsets put each
+ * message somewhere the eye has not just been, which is what makes a wall of
+ * short quotes look composed rather than queued.
+ *
+ * Same `-50%` pairing as every other track here, on Y rather than X: the list
+ * is TWO copies, so travelling exactly one copy's height puts the second where
+ * the first was. Change the copy count and this percentage together.
+ */
+@keyframes review-rail-up {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(-50%);
+  }
+}
+
+@keyframes review-rail-down {
+  from {
+    transform: translateY(-50%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+/*
+ * Quartered from the first pass, at the client's ask on 2026-09-10, in two
+ * steps: 64s to 84s a lap read as stalled, and 32s to 44s still did. These
+ * carry sentences rather than pictures, which is the argument for going slowly,
+ * but the answer to a reader needing time is the hover hold rather than the
+ * speed: pointing at a column stops it for as long as they want it.
+ */
+@utility review-rail-up {
+  animation: review-rail-up 16s linear infinite;
+  will-change: transform;
+}
+
+@utility review-rail-down {
+  animation: review-rail-down 21s linear infinite;
+  will-change: transform;
+}
+
+/* Every column travels at its own speed, or four columns at two speeds read as
+   two columns and a copy of each. The pairs that share a direction are the ones
+   that have to differ most, so the two odd columns are 16s and 15s and the two
+   even ones 24s and 19s. */
+.review-rails > :nth-child(2) .review-rail-up,
+.review-rails > :nth-child(2) .review-rail-down {
+  animation-duration: 24s;
+}
+
+.review-rails > :nth-child(3) .review-rail-up,
+.review-rails > :nth-child(3) .review-rail-down {
+  animation-duration: 15s;
+}
+
+.review-rails > :nth-child(4) .review-rail-up,
+.review-rails > :nth-child(4) .review-rail-down {
+  animation-duration: 19s;
+}
+
+/*
+ * Hover holds the column it is over, and only that one.
+ *
+ * The rule sits on the track itself rather than on a wrapper, so the columns a
+ * reader is not pointing at keep moving. `focus-within` is the keyboard half:
+ * every card here hides a screenshot behind a real button, and a target that is
+ * still travelling cannot be pressed or read.
+ */
+.review-rail-up:hover,
+.review-rail-down:hover,
+.review-rail-up:focus-within,
+.review-rail-down:focus-within {
+  animation-play-state: paused;
+}
+
+/* Top and bottom fade, so a card is never cut off square at the edge. */
+@utility review-rails-mask {
+  -webkit-mask-image: linear-gradient(to bottom, transparent, black 10%, black 90%, transparent);
+  mask-image: linear-gradient(to bottom, transparent, black 10%, black 90%, transparent);
+}
+
 /* Hand-written keyframes do not honour the preference on their own, unlike the framework-driven motion elsewhere on this. */
 @media (prefers-reduced-motion: reduce) {
   .marquee,
   .logo-row-left,
   .logo-row-right,
+  .review-rail-up,
+  .review-rail-down,
   .portfolio-rail-up,
   .portfolio-rail-down,
   .service-ticker-up,
@@ -950,13 +1041,15 @@
  * `clip-path` on the link would cut the words as well as the plate. `isolate`
  * keeps the `z-index: -1` inside the link, so the tape sits under its own text
  * and still above the footer's artwork.
+ *
+ * The tilt belongs to the PSEUDO ELEMENT, not to the link. Rotating the link
+ * rotated the words with it, which read as the label falling over rather than
+ * as paper stuck down at an angle. Type stays level; only the paper tilts.
  */
 @utility tape-hover {
   position: relative;
   isolation: isolate;
-  transition:
-    transform var(--dur-base) var(--ease-brand),
-    color var(--dur-base) var(--ease-brand);
+  transition: color var(--dur-base) var(--ease-brand);
 
   &::before {
     position: absolute;
@@ -973,24 +1066,25 @@
        everything else, and a filter follows the torn alpha instead. */
     filter: drop-shadow(var(--shadow-hover-drop));
     opacity: 0;
-    transition: opacity var(--dur-base) var(--ease-brand);
+    transition:
+      opacity var(--dur-base) var(--ease-brand),
+      transform var(--dur-base) var(--ease-brand);
     content: "";
   }
 
   &:hover::before,
   &:focus-visible::before {
     opacity: 1;
-  }
-
-  &:hover {
     transform: rotate(-2.2deg);
   }
 }
 
 /* The other way, every second link down the column. Two selectors because a
    nav column wraps each link in an `li` and the address column does not. */
-.tape-column > li:nth-child(even) > .tape-hover:hover,
-.tape-column > .tape-hover:nth-child(even):hover {
+.tape-column > li:nth-child(even) > .tape-hover:hover::before,
+.tape-column > li:nth-child(even) > .tape-hover:focus-visible::before,
+.tape-column > .tape-hover:nth-child(even):hover::before,
+.tape-column > .tape-hover:nth-child(even):focus-visible::before {
   transform: rotate(2.2deg);
 }
 
@@ -1001,9 +1095,12 @@
     transition: none;
   }
 
-  .tape-hover:hover,
-  .tape-column > li:nth-child(even) > .tape-hover:hover,
-  .tape-column > .tape-hover:nth-child(even):hover {
+  .tape-hover:hover::before,
+  .tape-hover:focus-visible::before,
+  .tape-column > li:nth-child(even) > .tape-hover:hover::before,
+  .tape-column > li:nth-child(even) > .tape-hover:focus-visible::before,
+  .tape-column > .tape-hover:nth-child(even):hover::before,
+  .tape-column > .tape-hover:nth-child(even):focus-visible::before {
     transform: none;
   }
 }

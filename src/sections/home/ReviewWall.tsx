@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { OffscreenPause } from "@/motion/OffscreenPause";
 import { SlideIn } from "@/components/ui/SlideIn";
 import { Stars } from "@/components/ui/Stars";
 import { FOCUS_RING } from "@/components/ui/surface";
@@ -13,20 +14,27 @@ import type { WrittenReview } from "@/content/types";
  * makes it believed. A wall of chat screenshots alone is unreadable at card size
  * and a wall of quotes alone is a wall of claims.
  *
- * It is not a slider. A message a reader has to press an arrow to reach is a
- * message most readers never see, and six fit on the page in two rows.
+ * THREE COLUMNS, each drifting on its own, the middle one against the other two.
  *
- * Three across, and the width is what sets the height: these are one line each,
- * so a card wide enough for two of them stands twice as tall as its words and
- * reads as a card somebody forgot to finish. At a third of the row the 16 by 9
- * the shot needs comes out at roughly the height the words need anyway.
+ * It was three horizontal rows first and they were wrong for this. A row carries
+ * every card past at the same height, so each message is read in the same place
+ * and the whole thing is a ticker. Columns at their own offsets put each message
+ * somewhere the eye has not just been, which is what makes a wall of one-line
+ * quotes look composed instead of queued.
  *
- * The tilt alternates and it is the RESTING state, never the entrance. Every
- * slip hanging at the same angle is a pattern, every slip at its own angle is a
- * mess, and one angle mirrored reads as paper put down by hand. It is set once
- * in CSS and never animated: each slip sits on a torn sheet cut with
- * `mask-image`, and rotating a masked element re-rasterises the mask on every
- * frame.
+ * There is no arrow to press, so no message sits behind a control a reader has
+ * to find. Thirteen of these do not fit on a page as a static grid, and a grid
+ * deep enough to hold them is a wall a reader scrolls past rather than reads.
+ *
+ * HOVER HOLDS THE COLUMN IT IS OVER, and only that one. A moving card cannot be
+ * read, and every card here also hides a screenshot behind it that a reader has
+ * to hover to see; without the hold the two gestures fight and the message
+ * arrives under a card already leaving. The rule is in `utilities.css`, on the
+ * track itself, so the other two columns keep going.
+ *
+ * The columns are STAGGERED at rest as well as moving: each starts part of a
+ * card lower than the one before it, so the three never line up into rows even
+ * for the instant they would otherwise pass through one.
  *
  * The pictures are cut and redacted by `scripts/whatsapp.mjs`. No phone number
  * survives into the files, rather than being covered up in the browser.
@@ -35,42 +43,105 @@ const TILTS = ["-rotate-[1.5deg]", "rotate-[1.5deg]"] as const;
 const MATS = ["bg-mat-kraft", "bg-mat-sage"] as const;
 
 /*
- * How far a slip rises. Small on purpose.
+ * How far the block rises. Small on purpose.
  *
- * An earlier version brought each one in from the corner it was nearest, up to
+ * An earlier version brought each card in from the corner it was nearest, up to
  * 56% of its own height away. At that distance a card spends its entrance
  * sitting on top of the row above it, half faded, and two cards show through
- * each other; scrolling re-arms the reveal, so they appear to wander. A rise
- * shorter than the gap between rows cannot overlap anything.
+ * each other; scrolling re-arms the reveal, so they appear to wander.
+ *
+ * It is now one rise on the whole block rather than one per card. A per-card
+ * entrance inside a marquee fires on a card that is already moving, so the two
+ * transforms compound and the slip arrives crabwise.
  */
 const RISE = 28;
+
+/*
+ * Four columns, dealt round-robin so no column is all screenshots or all badges.
+ *
+ * Two of the four show at every width below `lg`, at the client's ask: a phone
+ * gets two narrow columns rather than one wide one, which is what makes the
+ * band read as a wall instead of as a queue. The other two are simply not
+ * placed there, so nothing is lost, and each column still holds three or four
+ * slips, which is what keeps a copy taller than the window it travels in.
+ */
+const COLUMNS = 4;
+
+function dealIntoRows<T>(items: readonly T[], rows: number): T[][] {
+  const out: T[][] = Array.from({ length: rows }, () => []);
+  items.forEach((item, index) => out[index % rows].push(item));
+  return out.filter((row) => row.length > 0);
+}
 
 export function ReviewWall({ items }: { items: readonly WrittenReview[] }) {
   if (items.length === 0) return null;
 
+  const columns = dealIntoRows(items, COLUMNS);
+
   return (
     /*
-     * The list clips horizontally, and its negative margin is what makes that
-     * safe: the clip edge lands on the section's own gutter, so a slip travelling
-     * in from the side is cut off at the page margin instead of widening the
-     * document, while the torn sheets, which stand outside their cards, are
-     * still inside the clip and still show on all four sides.
+     * The height is FIXED and the columns are clipped to it. A vertical marquee
+     * needs a window to travel inside; without one the list simply makes the
+     * page taller and nothing appears to move.
      */
-    <div className="-mx-5 overflow-x-clip px-5">
-      <ul className="mt-16 grid gap-12 px-1 sm:grid-cols-2 sm:gap-14 lg:mt-20 lg:grid-cols-3 lg:gap-16">
-        {items.map((item, index) => (
-          <li key={item.slug} className="min-w-0">
-            <SlideIn from="up" travel={RISE} delay={(index % 3) * 0.05} className="h-full">
-              <div className={`relative h-full ${TILTS[index % TILTS.length]}`}>
-                {/* The torn sheet behind the slip. */}
-                <div
-                  aria-hidden
-                  className={`paper-mat absolute -inset-4 sm:-inset-6 ${MATS[index % MATS.length]}`}
-                />
+    <SlideIn from="up" travel={RISE}>
+      <OffscreenPause className="review-rails review-rails-mask mt-16 grid h-[28rem] grid-cols-2 gap-4 overflow-hidden sm:h-[36rem] sm:gap-10 lg:mt-20 lg:h-[34rem] lg:grid-cols-4 lg:gap-8">
+        {columns.map((columnItems, column) => (
+          <ReviewRail
+            key={column}
+            items={columnItems}
+            /* Up, down, up, down. Speeds differ per column in `utilities.css`,
+               or four columns at two speeds read as two columns and a copy. */
+            direction={column % 2 === 0 ? "up" : "down"}
+            column={column}
+          />
+        ))}
+      </OffscreenPause>
+    </SlideIn>
+  );
+}
 
-                <ReviewSlip item={item} />
-              </div>
-            </SlideIn>
+/* One drifting column. */
+function ReviewRail({
+  items,
+  direction,
+  column,
+}: {
+  items: readonly WrittenReview[];
+  direction: "up" | "down";
+  column: number;
+}) {
+  /* The resting stagger. Part of a card each, so no two columns share an edge
+     and the field never resolves into rows. */
+  const OFFSETS = ["", "sm:pt-14", "lg:pt-7", "lg:pt-20"] as const;
+
+  return (
+    <div className={`min-w-0 ${OFFSETS[column % OFFSETS.length]}`}>
+      <ul
+        className={`grid gap-8 sm:gap-10 ${
+          direction === "up" ? "review-rail-up" : "review-rail-down"
+        }`}
+      >
+        {/* Two copies, paired with `-50%` in the keyframe. See the note there. */}
+        {[...items, ...items].map((item, index) => (
+          <li
+            key={`${item.slug}-${index}`}
+            /* The duplicate is scenery. Without this a screen reader reads every
+               message twice and the section claims twice the clients it has. */
+            aria-hidden={index >= items.length || undefined}
+            className="min-w-0"
+          >
+            <div className={`relative ${TILTS[(index + column) % TILTS.length]}`}>
+              {/* The torn sheet behind the slip. */}
+              <div
+                aria-hidden
+                className={`paper-mat absolute -inset-3 sm:-inset-4 ${
+                  MATS[(index + column) % MATS.length]
+                }`}
+              />
+
+              <ReviewSlip item={item} />
+            </div>
           </li>
         ))}
       </ul>
@@ -83,9 +154,9 @@ function ReviewSlip({ item }: { item: WrittenReview }) {
   const who = [item.role, item.company].filter(Boolean).join(", ") || "Client";
 
   return (
-    <article className="group relative h-full min-h-[13rem] overflow-hidden rounded-token bg-surface shadow-soft sm:min-h-[11rem] lg:min-h-[13rem]">
+    <article className="group relative h-full min-h-[9rem] overflow-hidden rounded-token bg-surface shadow-soft sm:min-h-[10rem] lg:min-h-[11rem]">
       <div
-        className={`flex h-full flex-col justify-between gap-4 p-5 lg:p-6 ${
+        className={`flex h-full flex-col justify-between gap-3 p-3 sm:p-4 lg:p-5 ${
           item.shot ? "transition-token group-hover:opacity-0 group-focus-within:opacity-0" : ""
         }`}
       >
@@ -96,7 +167,10 @@ function ReviewSlip({ item }: { item: WrittenReview }) {
          * clients wrote them. Tidying one into English would be rewriting a
          * quote, and the screenshot underneath would then disagree with it.
          */}
-        <blockquote className="font-display text-display-m font-bold text-ink">
+        {/* `text-body` on a phone, where two columns leave a card 151px wide and
+            display type is four words a line. It steps up the moment there is
+            room for it. */}
+        <blockquote className="font-display text-body font-bold text-ink sm:text-display-m">
           &ldquo;{item.quote}&rdquo;
         </blockquote>
 
@@ -107,7 +181,7 @@ function ReviewSlip({ item }: { item: WrittenReview }) {
               alt=""
               width={40}
               height={40}
-              className="size-10 shrink-0 rounded-token object-cover"
+              className="size-8 shrink-0 rounded-token object-cover sm:size-10"
             />
           ) : null}
           <div className="min-w-0">

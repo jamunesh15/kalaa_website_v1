@@ -157,13 +157,13 @@ export type Testimonial = {
  * compliment being filed under advertising.
  */
 export type Proof = {
-  /** The tight cut of the message, from `scripts/whatsapp.mjs`. Null where the
-      review arrived as text with no chat behind it. */
-  readonly peek: StaticImageData | null;
-  /** Their words, for a review with no screenshot. Null where `peek` carries them. */
-  readonly quote: string | null;
+  /** The tight cut of the message, from `scripts/whatsapp.mjs`. */
+  readonly peek: StaticImageData;
+  /** The client's own photograph, from their Feedspace record. */
+  readonly avatar: string;
   readonly name: string;
   readonly company: string | null;
+  /** What the client was replying to, read off the screenshot. Never the service. */
   readonly about: string;
 };
 
