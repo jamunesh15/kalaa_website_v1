@@ -48,7 +48,7 @@ export function BillingToggle({
 
       {/* No wrapping: three labels are one control, and a label on its own
           second row reads as a fourth option. They share the width instead. */}
-      <div className="flex justify-center gap-1 rounded-token bg-surface p-1 shadow-soft">
+      <div className="rounded-token-outset-1 flex justify-center gap-1 bg-surface p-1 shadow-soft">
         {terms.map((term) => {
           const selected = term.key === value;
           return (

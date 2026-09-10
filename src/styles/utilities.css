@@ -42,6 +42,18 @@
   transition-timing-function: var(--ease-brand);
 }
 
+/**
+ * A box holding a `--radius` child across 0.25rem of padding.
+ *
+ * Outer radius = inner radius + padding. Give the two the same corner and the
+ * band between them is 4px on the straights and pinched at the corner, which is
+ * what reads as sloppy even when nobody can say why. The billing toggle's track
+ * holds its labels at exactly that inset.
+ */
+@utility rounded-token-outset-1 {
+  border-radius: calc(var(--radius) + 0.25rem);
+}
+
 /* The phone menu control: three bars that fold into a cross. */
 @utility hamburger {
   /* An SVG at 24px, one CSS pixel per unit, not three `div`s. */
@@ -417,15 +429,15 @@
  * the shell's own text colour, which read as a dimmed number rather than as a
  * counter on a plate.
  *
- * `calc(var(--radius) * 0.8)` is the badge corner, the same ratio `ArrowButton`
- * steps down by, because this plate is smaller than the shell it sits in.
+ * Concentric with the shell: outer radius = inner radius + padding, so this is
+ * the shell's `--radius` minus the 0.5rem it sits inside, which is 2px.
  */
 @utility process-node-number {
   display: grid;
   width: 1.9rem;
   aspect-ratio: 1;
   place-items: center;
-  border-radius: calc(var(--radius) * 0.8);
+  border-radius: max(0px, calc(var(--radius) - 0.5rem));
   background: var(--surface);
   color: var(--ink);
   font-size: 0.8125rem;
@@ -515,7 +527,17 @@
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  border-radius: calc(var(--radius) * 0.8);
+  /*
+   * Concentric with the card holding it: outer radius = inner radius + padding,
+   * so the inner is the card's radius MINUS the padding it sits behind.
+   *
+   * The card is `--radius` with 1rem of padding, so this comes out at zero and
+   * the panel is square. That is the honest answer rather than a defect: two
+   * nested boxes given the same corner leave a band that is thick on the
+   * straights and thin at the corner, which is what reads as sloppy. It was
+   * `--radius * 0.8`, which is neither the token nor concentric.
+   */
+  border-radius: max(0px, calc(var(--radius) - 1rem));
   background: color-mix(in srgb, var(--surface) 74%, transparent);
   padding: 0.85rem;
   box-shadow: inset 0 0 0 var(--border-w) color-mix(in srgb, var(--line) 82%, transparent);
