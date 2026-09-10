@@ -37,7 +37,7 @@ export function ContactBrief() {
         style={{ clipPath: "url(#brief-torn)" }}
       />
 
-      <div className="relative grid items-center gap-8 py-4 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] lg:gap-12 lg:py-6">
+      <div className="relative grid items-center gap-8 py-4 md:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] lg:gap-12 lg:py-6">
         <SlideIn from="left">
           <SectionHeading
             title={<>A little something helps.</>}

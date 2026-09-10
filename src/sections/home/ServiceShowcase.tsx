@@ -105,7 +105,23 @@ export function ServiceShowcase({
   services: readonly Service[];
 }) {
   return (
-    <div className="service-showcase relative isolate mt-10 grid gap-7 lg:mt-12 lg:grid-cols-[minmax(17rem,1fr)_minmax(23rem,28rem)_minmax(17rem,1fr)] lg:grid-rows-[auto_auto_auto] lg:items-stretch lg:gap-x-5 lg:gap-y-4">
+    /*
+     * Three bands, not two.
+     *
+     * At `lg` the composition is the real one: a column of cards, the work in
+     * the middle, a column of cards. It needs two 23rem cards plus a 23rem rail
+     * and does not fit below 1024.
+     *
+     * From `md` to `lg` the cards go TWO ACROSS with the work below them. A
+     * tablet is 758px of content and a single column spends all of it on one
+     * 758px card, so a reader met one service per screen and scrolled past a
+     * band of empty page between each. Two across is 365px a card, which is the
+     * width the card was drawn at.
+     *
+     * Below `md` it stacks, because two 340px columns on a phone is not two
+     * columns, it is two half-legible ones.
+     */
+    <div className="service-showcase relative isolate mt-10 grid gap-7 md:grid-cols-2 md:gap-6 lg:mt-12 lg:grid-cols-[minmax(17rem,1fr)_minmax(23rem,28rem)_minmax(17rem,1fr)] lg:grid-rows-[auto_auto_auto] lg:items-stretch lg:gap-x-5 lg:gap-y-4">
       <PortfolioStack />
 
       {services.map((service, index) => (
@@ -196,7 +212,7 @@ function PortfolioStack() {
           : { opacity: 0, y: 28, scale: 0.97 }
       }
       transition={{ duration: narrow ? 0.7 : 0.9, ease: [0.22, 1, 0.36, 1] }}
-      className="relative order-last h-[30rem] min-w-0 overflow-hidden sm:h-[36rem] lg:order-none lg:col-start-2 lg:row-span-3 lg:row-start-1 lg:my-6 lg:h-auto lg:min-h-0"
+      className="relative order-last h-[30rem] min-w-0 overflow-hidden sm:h-[36rem] md:col-span-2 lg:order-none lg:col-span-1 lg:col-start-2 lg:row-span-3 lg:row-start-1 lg:my-6 lg:h-auto lg:min-h-0"
     >
       <div className="pointer-events-none absolute inset-x-0 top-0 z-10 h-14 bg-linear-to-b from-tint-cloud to-transparent" />
       <div className="pointer-events-none absolute inset-x-0 bottom-0 z-10 h-14 bg-linear-to-t from-tint-cloud to-transparent" />

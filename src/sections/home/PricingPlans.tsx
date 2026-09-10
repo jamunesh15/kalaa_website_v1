@@ -11,6 +11,7 @@ import { FOCUS_RING } from "@/components/ui/surface";
 import { Card } from "@/components/ui/Card";
 import { CheckGlyph, PlanGlyph } from "@/components/ui/Glyph";
 import { MarkerUnderline } from "@/components/ui/MarkerUnderline";
+import { useNarrowViewport } from "@/motion/useNarrowViewport";
 import { useReplayOnScrollDown } from "@/motion/useReplayOnScrollDown";
 import { formatRupees, priceFor } from "@/content/pricing";
 import { BillingToggle } from "@/sections/home/BillingToggle";
@@ -139,9 +140,27 @@ export function PricingPlans({
   const [termKey, setTermKey] = useState<BillingKey>("monthly");
   const term = terms.find((entry) => entry.key === termKey) ?? terms[0];
 
+  /*
+   * Below `lg` the three cards are a column, not a row, and the order they
+   * arrive in has to be the order they are read in.
+   *
+   * Side by side, the featured card landing first into an empty row is the
+   * composition: it arrives, then the other two settle either side of it. Stack
+   * that same run and the middle card jumps the queue, which reads as a glitch
+   * rather than as emphasis, and the reader learns nothing from it.
+   */
+  const stacked = useNarrowViewport();
+
   return (
     <>
-    <BillingToggle terms={terms} value={termKey} onChange={setTermKey} />
+    {/* The row's control. Below `lg` the cards are a column and each one
+        carries its own copy instead, so this one steps aside. */}
+    <BillingToggle
+      terms={terms}
+      value={termKey}
+      onChange={setTermKey}
+      className="mx-auto mt-10 hidden w-fit lg:block"
+    />
 
     <motion.ul
       initial="hidden"
@@ -157,9 +176,13 @@ export function PricingPlans({
           key={plan.slug}
           plan={plan}
           term={term}
+          terms={terms}
+          termKey={termKey}
+          onTerm={setTermKey}
           offer={offer}
           tone={TONES[index % TONES.length]}
-          order={plan.featured ? 0 : index === 0 ? 1 : 2}
+          order={stacked ? index : plan.featured ? 0 : index === 0 ? 1 : 2}
+          stacked={stacked}
         />
       ))}
     </motion.ul>
@@ -209,16 +232,26 @@ function PlanStats({ plan, term, tint }: { plan: Plan; term: BillingTerm; tint: 
 function PlanCard({
   plan,
   term,
+  terms,
+  termKey,
+  onTerm,
   offer,
   tone,
   order,
+  stacked,
 }: {
   plan: Plan;
   term: BillingTerm;
   offer: string;
   tone: PlanTone;
+  /** The whole set of terms, so a stacked card can carry its own switch. */
+  terms: readonly BillingTerm[];
+  termKey: BillingKey;
+  onTerm: (key: BillingKey) => void;
   /** Position in the run. The featured card is 0, so it lands into an empty row. */
   order: number;
+  /** One column rather than a row, so every card uses the same curve. */
+  stacked: boolean;
 }) {
   const featured = plan.featured;
   const { pay, usual } = priceFor(plan, term);
@@ -228,7 +261,7 @@ function PlanCard({
   return (
     <motion.li
       custom={order}
-      variants={featured ? FEATURED_CARD : CARD}
+      variants={featured && !stacked ? FEATURED_CARD : CARD}
       /*
        * The featured card stands a little proud of the other two rather than
        * being filled in a different colour. Two rem, not the six it was: at six
@@ -236,6 +269,27 @@ function PlanCard({
        */
       className={`relative min-w-0 ${featured ? "lg:-my-2" : ""}`}
     >
+      {/*
+       * The switch, on every card, below `lg` only.
+       *
+       * Stacked, a card is about 700px tall, so a control above the FIRST one is
+       * two screens away by the time the third is on screen, and a reader has to
+       * scroll back to change a price they are looking at. Every copy writes the
+       * same state, so the three can never show different terms.
+       *
+       * ABOVE the card rather than inside it. Inside, it has to clear the torn
+       * strip down the card's right edge, which leaves 198px for three labels at
+       * 375 and wraps "Annual" onto a second row. Above, it has the card's full
+       * width and reads as a control for the card it sits on.
+       */}
+      <BillingToggle
+        terms={terms}
+        value={termKey}
+        onChange={onTerm}
+        name={`billing-${plan.slug}`}
+        className="mb-3 flex w-full lg:hidden"
+      />
+
       <Card fill="surface" padding="" className={`h-full ${featured ? "shadow-lift" : ""}`}>
         <div
           className={`flex h-full flex-col py-6 pl-6 pb-7 sm:py-7 sm:pl-7 sm:pb-8 lg:pl-8 ${CLEAR_OF_TEAR}`}

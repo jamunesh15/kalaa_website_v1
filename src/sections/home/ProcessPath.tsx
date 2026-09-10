@@ -295,8 +295,18 @@ function DesktopFlow({ steps }: { steps: readonly ProcessStep[] }) {
 /* The same five steps stacked. */
 function MobileFlow({ steps }: { steps: readonly ProcessStep[] }) {
   return (
-    /* `gap-12`, not `gap-4`: the sheet under each card stands 1rem out of it. */
-    <ol className="mt-8 grid gap-12 xl:hidden">
+    /*
+     * The same five steps, in as many columns as the width can carry.
+     *
+     * The flow row needs 1280px to give each of five steps 206px, so below `xl`
+     * this is the layout. One column was right on a phone and wrong on
+     * everything else: at 854 it spent all 758px on one card and a reader met
+     * one step per screen with a band of empty page between each.
+     *
+     * `gap-12`, not `gap-4`: the sheet under each card stands 1rem out of it, so
+     * the gap is the one you want plus the overhang on both sides.
+     */
+    <ol className="mt-8 grid gap-12 sm:grid-cols-2 lg:grid-cols-3 xl:hidden">
       {steps.map((step, index) => (
         <MobileStep key={step.number} step={step} index={index} />
       ))}

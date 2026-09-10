@@ -23,7 +23,7 @@ export function ContactStudio() {
 
   return (
     <Section id="studio" fill="overflow-hidden" padding="py-12 sm:py-16 lg:py-20">
-      <div className="grid items-center gap-10 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:gap-12">
+      <div className="grid items-center gap-10 md:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] lg:gap-12">
         <SlideIn from="left" className="min-w-0">
           <SectionHeading
             title={<>Visit our office.</>}

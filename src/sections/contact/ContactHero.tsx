@@ -16,7 +16,7 @@ export function ContactHero() {
 
   return (
     <Section fill="overflow-hidden bg-board" padding="pb-14 pt-12 lg:pb-20 lg:pt-16">
-      <div className="grid items-center gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.25fr)] lg:gap-10">
+      <div className="grid items-center gap-10 md:grid-cols-[minmax(0,1fr)_minmax(0,1.25fr)] md:gap-8 lg:gap-10">
         {/* The copy slides in from the left as the still life arrives from the right, at the client's ask: one side moving and the. */}
         <SlideIn from="left" className="min-w-0">
           <h1 className="max-w-[13ch] font-display text-display-xl font-black text-ink">
