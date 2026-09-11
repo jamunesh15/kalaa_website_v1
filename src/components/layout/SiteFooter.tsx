@@ -190,7 +190,7 @@ export function SiteFooter() {
       {/* The colophon, at the foot of the sheet rather than at the end of the words. */}
       <div className="relative z-10 mx-auto w-full max-w-7xl px-5 pb-36 pt-10 sm:pb-40 lg:mt-auto lg:pb-7 lg:pt-6">
         {/* No rule above it. */}
-        <div className="flex flex-col items-center gap-4 text-center lg:mx-auto lg:w-full lg:max-w-[56%] lg:flex-row lg:items-center lg:justify-between lg:text-left">
+        <div className="flex flex-col items-center gap-4 text-center lg:mx-auto lg:w-full lg:max-w-[56%] lg:flex-row lg:items-baseline lg:justify-between lg:text-left">
           {/* The business model line, the CEO's own words, given 2026-09-08. It sits in the colophon rather than in the brand block because it describes what the company IS to a partner, not what it sells to a visitor. */}
           <p className="text-small text-ink">
             &copy; {year} {SITE.name}, a Distribution Operating Company. All rights reserved.

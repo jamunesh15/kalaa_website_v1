@@ -29,90 +29,99 @@ import { ArticleContents } from "@/sections/article/ArticleContents";
 export function ArticleBody({ article }: { article: FullArticle }) {
   return (
     <Section fill="bg-tint-sky" padding="py-14 lg:py-20" className="px-3 md:px-6">
-      <div className="grid gap-12 lg:grid-cols-[minmax(0,14rem)_minmax(0,1fr)] lg:gap-14 xl:grid-cols-[minmax(0,14rem)_minmax(0,1fr)_minmax(0,17rem)]">
-        <div className="min-w-0 lg:sticky lg:top-[calc(var(--masthead)+4.5rem)] lg:self-start">
-          {/* The questions get a line in the contents when there are any. */}
-          <ArticleContents
-            sections={
-              article.faq?.length
-                ? [...article.sections, { id: "faq", heading: "Frequently asked questions", body: [] }]
-                : article.sections
-            }
-          />
+      <div className="grid gap-12 lg:gap-14 xl:grid-cols-[minmax(0,1fr)_minmax(0,17rem)]">
+        {/*
+         * The contents and the article share a grid of their own, and that is
+         * what stops the contents at the article's last line. A sticky item
+         * travels the whole of its containing block, not its row: with the ask
+         * as a second row of the same grid below `xl`, the list slid on into
+         * that row and the card was painted over it.
+         */}
+        <div className="grid min-w-0 gap-12 lg:grid-cols-[minmax(0,14rem)_minmax(0,1fr)] lg:gap-14">
+          <div className="min-w-0 lg:sticky lg:top-[calc(var(--masthead)+4.5rem)] lg:self-start">
+            {/* The questions get a line in the contents when there are any. */}
+            <ArticleContents
+              sections={
+                article.faq?.length
+                  ? [...article.sections, { id: "faq", heading: "Frequently asked questions", body: [] }]
+                  : article.sections
+              }
+            />
+          </div>
+
+          <article className="min-w-0">
+            {article.intro.map((paragraph) => (
+              <p key={paragraph} className="mt-5 max-w-[64ch] text-lead text-ink-body first:mt-0">
+                <Inline text={paragraph} />
+              </p>
+            ))}
+
+            {/*
+             * No reveal on the body. Four sections arriving identically is the
+             * repeated-reveal tell, and animating a paragraph somebody is already
+             * reading is worse than not animating it at all. The motion on this
+             * page is at the top and at the foot, where a reader is arriving.
+             */}
+            {article.sections.map((section) => (
+              <section key={section.id}>
+                <h2
+                  id={section.id}
+                  className="mt-14 scroll-mt-28 font-display text-display-l font-bold text-ink"
+                >
+                  {section.heading}
+                </h2>
+
+                <Blocks part={section} />
+
+                {/* `h3` under the section's `h2`, so the outline never skips a level. */}
+                {section.subsections?.map((part) => (
+                  <div key={part.id}>
+                    <h3
+                      id={part.id}
+                      className="mt-10 scroll-mt-28 font-display text-display-m font-bold text-ink"
+                    >
+                      {part.heading}
+                    </h3>
+                    <Blocks part={part} />
+                  </div>
+                ))}
+              </section>
+            ))}
+
+            {/*
+             * The questions, as the same accordion the home page uses, and as
+             * `FAQPage` in the page's JSON-LD. The answers sit inside closed
+             * `details`, which is still in the document: a crawler reads them and
+             * a screen reader reaches them, so marking them up is marking up what
+             * is on the page.
+             */}
+            {article.faq?.length ? (
+              <section>
+                <h2 id="faq" className="mt-14 scroll-mt-28 font-display text-display-l font-bold text-ink">
+                  Frequently asked questions
+                </h2>
+                <ul className="mt-4 max-w-[64ch]">
+                  {article.faq.map((item) => (
+                    <li key={item.question} className="min-w-0">
+                      <details className="faq-row group" name="article-faq">
+                        <summary className="flex items-start justify-between gap-6 py-5 text-ink">
+                          <span className="min-w-0 font-display text-display-m font-bold">
+                            {item.question}
+                          </span>
+                          <span aria-hidden className="faq-mark mt-2" />
+                        </summary>
+                        <p className="pb-5 text-body text-ink-body">{item.answer}</p>
+                      </details>
+                    </li>
+                  ))}
+                </ul>
+              </section>
+            ) : null}
+          </article>
         </div>
 
-        <article className="min-w-0">
-          {article.intro.map((paragraph) => (
-            <p key={paragraph} className="mt-5 max-w-[64ch] text-lead text-ink-body first:mt-0">
-              <Inline text={paragraph} />
-            </p>
-          ))}
-
-          {/*
-           * No reveal on the body. Four sections arriving identically is the
-           * repeated-reveal tell, and animating a paragraph somebody is already
-           * reading is worse than not animating it at all. The motion on this
-           * page is at the top and at the foot, where a reader is arriving.
-           */}
-          {article.sections.map((section) => (
-            <section key={section.id}>
-              <h2
-                id={section.id}
-                className="mt-14 scroll-mt-28 font-display text-display-l font-bold text-ink"
-              >
-                {section.heading}
-              </h2>
-
-              <Blocks part={section} />
-
-              {/* `h3` under the section's `h2`, so the outline never skips a level. */}
-              {section.subsections?.map((part) => (
-                <div key={part.id}>
-                  <h3
-                    id={part.id}
-                    className="mt-10 scroll-mt-28 font-display text-display-m font-bold text-ink"
-                  >
-                    {part.heading}
-                  </h3>
-                  <Blocks part={part} />
-                </div>
-              ))}
-            </section>
-          ))}
-
-          {/*
-           * The questions, as the same accordion the home page uses, and as
-           * `FAQPage` in the page's JSON-LD. The answers sit inside closed
-           * `details`, which is still in the document: a crawler reads them and
-           * a screen reader reaches them, so marking them up is marking up what
-           * is on the page.
-           */}
-          {article.faq?.length ? (
-            <section>
-              <h2 id="faq" className="mt-14 scroll-mt-28 font-display text-display-l font-bold text-ink">
-                Frequently asked questions
-              </h2>
-              <ul className="mt-4 max-w-[64ch]">
-                {article.faq.map((item) => (
-                  <li key={item.question} className="min-w-0">
-                    <details className="faq-row group" name="article-faq">
-                      <summary className="flex items-start justify-between gap-6 py-5 text-ink">
-                        <span className="min-w-0 font-display text-display-m font-bold">
-                          {item.question}
-                        </span>
-                        <span aria-hidden className="faq-mark mt-2" />
-                      </summary>
-                      <p className="pb-5 text-body text-ink-body">{item.answer}</p>
-                    </details>
-                  </li>
-                ))}
-              </ul>
-            </section>
-          ) : null}
-        </article>
-
         {/* Third from `xl`, where there is room for it. Below that it follows the article. */}
-        <div className="min-w-0 lg:col-span-2 xl:col-span-1 xl:sticky xl:top-[calc(var(--masthead)+4.5rem)] xl:self-start">
+        <div className="min-w-0 lg:mt-10 xl:mt-0 xl:sticky xl:top-[calc(var(--masthead)+4.5rem)] xl:self-start">
           <ArticleAside />
         </div>
       </div>
