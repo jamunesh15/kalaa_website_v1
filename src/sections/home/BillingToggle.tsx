@@ -65,8 +65,10 @@ export function BillingToggle({
                 checked={selected}
                 onChange={() => onChange(term.key)}
                 /* Off screen rather than `hidden`, so it stays focusable and the
-                   group keeps its keyboard behaviour. The label draws the ring. */
-                className="sr-only"
+                   group keeps its keyboard behaviour. The label draws the ring.
+                   `text-base` because it would inherit the label's small size,
+                   and no form control on this site sits below 1rem. */
+                className="sr-only text-base"
               />
               {term.label}
             </label>

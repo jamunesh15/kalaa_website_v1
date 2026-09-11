@@ -6,9 +6,6 @@ export const SURFACE = "rounded-token shadow-soft";
 /** The same corner, flat against the sheet. For tags and inline chips. */
 export const SURFACE_FLAT = "rounded-token";
 
-/** A hairline outline, for the rare surface that needs an edge instead of depth. */
-export const SURFACE_LINED = "rounded-token border-token border-line";
-
 /* The focus ring. */
 export const FOCUS_RING =
   "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent";

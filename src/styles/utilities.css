@@ -82,23 +82,6 @@
   }
 }
 
-/* The lift. */
-@utility liftable {
-  transition-property: transform, box-shadow, background-color, color;
-  transition-duration: var(--dur-base);
-  transition-timing-function: var(--ease-brand);
-
-  &:hover {
-    transform: translateY(-2px);
-    box-shadow: var(--shadow-lift);
-  }
-
-  &:active {
-    transform: translateY(0);
-    box-shadow: var(--shadow-soft);
-  }
-}
-
 /* The sage margin around the white sheet. */
 @utility frame-inset {
   padding: var(--frame);
@@ -160,43 +143,6 @@
 
 @utility marquee {
   animation: marquee-track 42s linear infinite;
-}
-
-@keyframes service-ticker-up {
-  from {
-    transform: translateY(0);
-  }
-  to {
-    transform: translateY(-50%);
-  }
-}
-
-@keyframes service-ticker-down {
-  from {
-    transform: translateY(-50%);
-  }
-  to {
-    transform: translateY(0);
-  }
-}
-
-@utility service-ticker-up {
-  animation: service-ticker-up 26s linear infinite;
-}
-
-@utility service-ticker-down {
-  animation: service-ticker-down 30s linear infinite;
-}
-
-@utility service-card {
-  transition-property: transform, box-shadow;
-  transition-duration: var(--dur-base);
-  transition-timing-function: var(--ease-brand);
-
-  &:hover {
-    transform: translateY(-0.25rem) rotate(-1deg);
-    box-shadow: var(--shadow-lift);
-  }
 }
 
 @keyframes portfolio-rail-up {
@@ -402,9 +348,7 @@
   .review-rail-up,
   .review-rail-down,
   .portfolio-rail-up,
-  .portfolio-rail-down,
-  .service-ticker-up,
-  .service-ticker-down {
+  .portfolio-rail-down {
     animation: none;
     transform: none;
   }
@@ -669,56 +613,9 @@
   min-height: calc(100svh - var(--frame) - var(--ring) - var(--masthead));
 }
 
-/* A card that stacks under the one before it as the page scrolls. */
-@utility stack-card {
-  position: sticky;
-  top: var(--stack-top);
-}
-
+/* The pinned capability deck's stage, held at `--stack-top` as the page scrolls. */
 @utility stack-stage {
   top: var(--stack-top);
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .stack-card {
-    position: static;
-  }
-}
-
-/* Token-built artwork for the capability stack. */
-@utility capability-visual {
-  background:
-    radial-gradient(circle at 18% 18%, color-mix(in srgb, var(--surface) 72%, transparent), transparent 24%),
-    radial-gradient(circle at 78% 22%, color-mix(in srgb, var(--accent) 52%, transparent), transparent 26%),
-    linear-gradient(135deg, var(--ink), color-mix(in srgb, var(--page) 68%, var(--ink)));
-}
-
-@utility capability-visual-2 {
-  background:
-    radial-gradient(circle at 72% 18%, color-mix(in srgb, var(--surface) 68%, transparent), transparent 24%),
-    radial-gradient(circle at 24% 76%, color-mix(in srgb, var(--accent) 55%, transparent), transparent 28%),
-    linear-gradient(135deg, color-mix(in srgb, var(--ink) 88%, var(--page)), var(--page));
-}
-
-@utility capability-visual-3 {
-  background:
-    radial-gradient(circle at 28% 28%, color-mix(in srgb, var(--surface) 66%, transparent), transparent 22%),
-    radial-gradient(circle at 84% 72%, color-mix(in srgb, var(--tint-peach) 72%, transparent), transparent 28%),
-    linear-gradient(135deg, var(--ink), color-mix(in srgb, var(--tint-peach) 54%, var(--ink)));
-}
-
-@utility capability-visual-4 {
-  background:
-    radial-gradient(circle at 76% 30%, color-mix(in srgb, var(--surface) 70%, transparent), transparent 24%),
-    radial-gradient(circle at 24% 72%, color-mix(in srgb, var(--tint-violet) 70%, transparent), transparent 28%),
-    linear-gradient(135deg, var(--ink), color-mix(in srgb, var(--tint-violet) 66%, var(--ink)));
-}
-
-@utility capability-visual-5 {
-  background:
-    radial-gradient(circle at 22% 24%, color-mix(in srgb, var(--surface) 70%, transparent), transparent 24%),
-    radial-gradient(circle at 76% 76%, color-mix(in srgb, var(--accent) 56%, transparent), transparent 30%),
-    linear-gradient(135deg, color-mix(in srgb, var(--ink) 92%, var(--page)), color-mix(in srgb, var(--tint-cloud) 54%, var(--ink)));
 }
 
 /* The arrow that swipes out of its badge and back in. */
@@ -1020,13 +917,6 @@
   .about-piece-wide-only {
     display: block;
   }
-}
-
-/* The about board's ground. */
-.board-ground {
-  background: var(--board);
-  border-radius: var(--radius);
-  box-shadow: inset 0 1px 0 color-mix(in srgb, var(--surface) 70%, transparent);
 }
 
 /* The footer's column headings, drawn as a strip of tape. */

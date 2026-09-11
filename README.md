@@ -21,6 +21,7 @@ The site deploys on Vercel with the default Next.js settings and no environment 
 
 ## Where things live
 
+- `DESIGN.md` the design system: colour, type, shape, layout, the paper devices, imagery, motion and the rules
 - `src/app` routes, metadata, sitemap and robots
 - `src/sections` the home and contact page sections
 - `src/components` shared UI and layout

@@ -32,7 +32,8 @@ export function ReelControls({
 
       <input
         type="range"
-        className="reel-seek"
+        /* `text-base`: no form control on this site sits below 1rem. */
+        className="reel-seek text-base"
         min={0}
         max={duration || 0}
         step={0.1}

@@ -132,8 +132,7 @@ export function ClosingCta() {
                 aria-hidden
                 viewBox="0 0 40 30"
                 fill="none"
-                className="absolute -top-6 right-0 hidden h-7 w-9 text-tint-violet sm:block"
-                style={{ color: "#a89ad6" }}
+                className="absolute -top-6 right-0 hidden h-7 w-9 text-mark-violet sm:block"
               >
                 <path d="M8 20 12 4M20 18 26 6M30 22 37 14" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" />
               </svg>

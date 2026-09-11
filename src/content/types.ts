@@ -67,14 +67,6 @@ export type ProcessStep = {
   readonly outcome: string;
 };
 
-/* One thing a business owner already knows is going wrong. */
-export type Problem = {
-  readonly slug: string;
-  readonly title: string;
-  readonly summary: string;
-  readonly image: string;
-};
-
 /* One package a business can buy, with its real price. */
 export type Plan = {
   readonly slug: string;

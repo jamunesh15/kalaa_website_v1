@@ -322,7 +322,7 @@ function Stage({ item, mat }: { item: Testimonial; mat: string }) {
 
                 {words ? (
                   <blockquote className="mt-2 text-small font-medium">
-                    &ldquo;{words}&rdquo;
+                    &quot;{words}&quot;
                   </blockquote>
                 ) : null}
               </div>

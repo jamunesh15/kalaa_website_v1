@@ -40,6 +40,9 @@
   --tint-mist: #eff1ec;
   --tint-violet: #eee8ff;
 
+  /* The same violet, dark enough to draw a mark with. The tint vanishes on butter. */
+  --mark-violet: #a89ad6;
+
   /* The fifth hue, and the reason it exists rather than reusing one. */
   --tint-sky: #e3edfa;
 
@@ -148,7 +151,6 @@
   --process-rise: 1.35rem;
 
   /* -------------------------------------------------------------------- Motion One curve, three durations. */
-  --dur-fast: 120ms;
   --dur-base: 200ms;
   --dur-slow: 420ms;
   --ease-brand: cubic-bezier(0.2, 0.8, 0.2, 1);

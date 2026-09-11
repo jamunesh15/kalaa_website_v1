@@ -14,8 +14,9 @@ export type Route = {
 export const ROUTES: Route[] = [
   {
     path: "/",
-    // Questions section added, Work moved above Process, hero headline rewritten.
-    lastModified: "2026-09-02",
+    // The team's own photographs in the capability cards, and the testimonial
+    // stage and review wall rebuilt.
+    lastModified: "2026-09-11",
     changeFrequency: "weekly",
     priority: 1,
   },
@@ -37,9 +38,9 @@ export const ROUTES: Route[] = [
   },
   {
     path: "/blog",
-    // Built to the reference layout: the opening, the topic filter, the featured
-    // piece beside the note, and the list. The posts themselves are placeholders.
-    lastModified: "2026-09-07",
+    // Eight long-form articles listed, their titles rewritten, and the live
+    // site's aesthetic design piece carried over.
+    lastModified: "2026-09-11",
     changeFrequency: "weekly",
     priority: 0.7,
   },

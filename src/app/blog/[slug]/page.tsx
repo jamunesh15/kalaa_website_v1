@@ -24,10 +24,15 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
 
   const path = `/blog/${article.slug}`;
   const description = article.description ?? article.excerpt;
-  /* The article's own cover as its share card, so no two posts share one picture. */
+  /*
+   * The article's own cover as its share card, so no two posts share one
+   * picture. The 1200 by 630 copy rather than the cover itself: every platform
+   * draws a card at that shape, and cropping the 3:2 cover took the type at its
+   * edges with it.
+   */
   const cover = BLOG_MEDIA.find((entry) => entry.slug === article.image);
   const image = cover
-    ? { url: absoluteUrl(cover.src), width: cover.width, height: cover.height, alt: article.alt }
+    ? { url: absoluteUrl(cover.share), width: 1200, height: 630, alt: article.alt }
     : undefined;
 
   return {

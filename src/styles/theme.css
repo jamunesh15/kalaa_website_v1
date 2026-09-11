@@ -25,6 +25,7 @@
   --color-tint-cloud: var(--tint-cloud);
   --color-tint-mist: var(--tint-mist);
   --color-tint-violet: var(--tint-violet);
+  --color-mark-violet: var(--mark-violet);
   --color-tint-sky: var(--tint-sky);
 
   --color-board: var(--board);
@@ -56,16 +57,13 @@
 
   --ease-brand: var(--ease-brand);
 
-  /* Clash Display for display, Switzer for text. */
+  /* Satoshi for display, Switzer for text. */
   --font-display: var(--font-display-face), ui-sans-serif, system-ui, sans-serif;
   --font-sans: var(--font-switzer), ui-sans-serif, system-ui, sans-serif;
   /* The hand. */
   --font-hand: var(--font-hand-face), "Segoe Print", "Bradley Hand", cursive;
 
   /* The type scale. */
-  --text-wordmark: clamp(3.5rem, 13vw, 9.5rem);
-  --text-wordmark--line-height: 1;
-  --text-wordmark--letter-spacing: -0.04em;
 
   /* Stepped back up once the hero was given the whole first screen. */
   --text-display-xl: clamp(2.25rem, 4.6vw, 4rem);

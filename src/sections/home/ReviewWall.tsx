@@ -14,7 +14,8 @@ import type { WrittenReview } from "@/content/types";
  * makes it believed. A wall of chat screenshots alone is unreadable at card size
  * and a wall of quotes alone is a wall of claims.
  *
- * THREE COLUMNS, each drifting on its own, the middle one against the other two.
+ * FOUR COLUMNS, two on a phone, each drifting on its own and each against its
+ * neighbours.
  *
  * It was three horizontal rows first and they were wrong for this. A row carries
  * every card past at the same height, so each message is read in the same place
@@ -30,10 +31,10 @@ import type { WrittenReview } from "@/content/types";
  * read, and every card here also hides a screenshot behind it that a reader has
  * to hover to see; without the hold the two gestures fight and the message
  * arrives under a card already leaving. The rule is in `utilities.css`, on the
- * track itself, so the other two columns keep going.
+ * track itself, so the other columns keep going.
  *
  * The columns are STAGGERED at rest as well as moving: each starts part of a
- * card lower than the one before it, so the three never line up into rows even
+ * card lower than the one before it, so they never line up into rows even
  * for the instant they would otherwise pass through one.
  *
  * The pictures are cut and redacted by `scripts/whatsapp.mjs`. No phone number
@@ -171,7 +172,7 @@ function ReviewSlip({ item }: { item: WrittenReview }) {
             display type is four words a line. It steps up the moment there is
             room for it. */}
         <blockquote className="font-display text-body font-bold text-ink sm:text-display-m">
-          &ldquo;{item.quote}&rdquo;
+          &quot;{item.quote}&quot;
         </blockquote>
 
         <div className="flex items-center gap-3">
