@@ -1,6 +1,6 @@
 import type { Capability } from "@/content/types";
 
-/* The presence story before the services list. `image` is a slug in `CARD_MEDIA`. c3 and c4 are the team's own photographs; c1 and c2 are not of the team, so their alt is empty. */
+/* The presence story before the services list. `image` is a slug in `CARD_MEDIA`, the team's own photographs. */
 export const CAPABILITIES: readonly Capability[] = [
   {
     slug: "be-seen-often",
@@ -10,7 +10,7 @@ export const CAPABILITIES: readonly Capability[] = [
     includes: ["Active page", "Fresh posts", "Local reach", "Brand recall"],
     label: "PRESENCE",
     image: "c1",
-    imageAlt: "",
+    imageAlt: "The Kalaa team gathered around a laptop in the office",
   },
   {
     slug: "look-trustworthy",
@@ -20,7 +20,7 @@ export const CAPABILITIES: readonly Capability[] = [
     includes: ["Work proof", "Helpful posts", "Clear offers", "Better first impression"],
     label: "TRUST",
     image: "c2",
-    imageAlt: "",
+    imageAlt: "Kalaa team members planning around a whiteboard sketch",
   },
   {
     slug: "stay-in-memory",
