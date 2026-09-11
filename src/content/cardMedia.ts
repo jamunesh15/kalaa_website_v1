@@ -10,11 +10,13 @@ export type CardMedia = {
   readonly src: string;
   readonly width: number;
   readonly height: number;
+  /** CSS `object-position`: where the crop centres when the frame is a different shape. */
+  readonly focus?: string;
 };
 
 export const CARD_MEDIA: readonly CardMedia[] = [
-  { slug: "c1", src: "/process/c1-36e41933.webp", width: 1200, height: 800 },
-  { slug: "c2", src: "/process/c2-846239bf.webp", width: 1200, height: 800 },
-  { slug: "c3", src: "/process/c3-b42af8ed.webp", width: 1024, height: 1024 },
-  { slug: "c4", src: "/process/c4-a4824981.webp", width: 1200, height: 675 },
+  { slug: "c1", src: "/process/c1-d81f15e4.webp", width: 582, height: 883, focus: "50% 78%" },
+  { slug: "c2", src: "/process/c2-d325b78f.webp", width: 579, height: 884, focus: "50% 76%" },
+  { slug: "c3", src: "/process/c3-231b42fb.webp", width: 1333, height: 2000, focus: "50% 55%" },
+  { slug: "c4", src: "/process/c4-b04903ef.webp", width: 1333, height: 2000, focus: "50% 50%" },
 ];

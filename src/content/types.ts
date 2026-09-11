@@ -50,6 +50,9 @@ export type Capability = {
   readonly summary: string;
   readonly includes: readonly string[];
   readonly label: string;
+  /** Slug in `CARD_MEDIA`. */
+  readonly image: string;
+  readonly imageAlt: string;
 };
 
 /** One step in a month of work. */

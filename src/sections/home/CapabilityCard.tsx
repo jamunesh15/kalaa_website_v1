@@ -24,8 +24,8 @@ export function CapabilityCard({
   deckProgress: MotionValue<number>;
   stacked: boolean;
 }) {
-  /* Wraps rather than assuming four photographs for four capabilities, so adding a fifth capability shows a repeat instead. */
-  const photo = CARD_MEDIA[index % CARD_MEDIA.length];
+  /* Named rather than taken by position, so reordering the capabilities cannot pair a photograph with another one's alt text. */
+  const photo = CARD_MEDIA.find((media) => media.slug === capability.image);
 
   /* The list variant's entrance, below `xl` where the deck does not stack. */
   const fromLeft = index % 2 === 0;
@@ -116,18 +116,27 @@ export function CapabilityCard({
                 </p>
               </div>
 
-              {/* First on a phone, second from `md`. */}
-              <div
-                aria-hidden
-                className="rounded-token relative order-first min-h-52 overflow-hidden bg-surface shadow-soft md:order-none md:min-h-64"
-              >
-                <Image
-                  src={photo.src}
-                  alt=""
-                  fill
-                  sizes="(min-width: 768px) 30rem, 90vw"
-                  className="object-cover"
-                />
+              {/*
+               * First on a phone, second from `md`. The team's own photographs,
+               * so they carry alt text rather than being hidden as decoration.
+               * `focus` keeps faces in frame: the photographs are portrait and
+               * the frame changes shape with the width.
+               */}
+              <div className="rounded-token relative order-first min-h-52 overflow-hidden bg-surface shadow-soft md:order-none md:min-h-64">
+                {photo ? (
+                  <Image
+                    src={photo.src}
+                    alt={capability.imageAlt}
+                    fill
+                    /* The frame's measured widths: 524px at `xl`, 453 at `lg`,
+                       295 at `md`, 251 on a 375px phone. Understating them made
+                       the optimiser send a file narrower than the frame. */
+                    sizes="(min-width: 1280px) 33rem, (min-width: 1024px) 29rem, (min-width: 768px) 19rem, 70vw"
+                    quality={90}
+                    className="object-cover"
+                    style={{ objectPosition: photo.focus }}
+                  />
+                ) : null}
               </div>
             </div>
           </Card>
