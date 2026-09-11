@@ -928,8 +928,9 @@
  * the foot. `svh` rather than `vh`, so a mobile browser's toolbar coming and
  * going never changes it mid-read.
  *
- * The native scrollbar stays, thin, because it is the only sign the list goes
- * on; there is no replacement indicator to hide it for.
+ * The scrollbar is hidden, at the client's ask. The list still scrolls by wheel,
+ * trackpad, touch and keyboard, and it follows the reader, so the entry being
+ * read is always in view without one.
  *
  * No `overscroll-behavior`, and this is what that measures as, on 2026-09-11 at
  * 1366x650: with the pointer over the list the wheel scrolls the list; once the
@@ -942,8 +943,12 @@
 @utility toc-scroll {
   max-height: calc(100svh - var(--masthead) - 9rem);
   overflow-y: auto;
-  scrollbar-width: thin;
-  scrollbar-color: color-mix(in srgb, var(--ink) 25%, transparent) transparent;
+  scrollbar-width: none;
+
+  /* Safari before 18.2, which has no `scrollbar-width`. */
+  &::-webkit-scrollbar {
+    display: none;
+  }
 }
 
 /* The hero artifacts, which are cut-out objects rather than pictures of them. */
