@@ -15,8 +15,8 @@ export type CardMedia = {
 };
 
 export const CARD_MEDIA: readonly CardMedia[] = [
-  { slug: "c1", src: "/process/c1-d81f15e4.webp", width: 582, height: 883, focus: "50% 78%" },
-  { slug: "c2", src: "/process/c2-d325b78f.webp", width: 579, height: 884, focus: "50% 76%" },
+  { slug: "c1", src: "/process/c1-a7bcd774.webp", width: 1536, height: 1024 },
+  { slug: "c2", src: "/process/c2-d574c59a.webp", width: 2000, height: 1334 },
   { slug: "c3", src: "/process/c3-231b42fb.webp", width: 1333, height: 2000, focus: "50% 55%" },
   { slug: "c4", src: "/process/c4-b04903ef.webp", width: 1333, height: 2000, focus: "50% 50%" },
 ];

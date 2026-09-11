@@ -117,8 +117,9 @@ export function CapabilityCard({
               </div>
 
               {/*
-               * First on a phone, second from `md`. The team's own photographs,
-               * so they carry alt text rather than being hidden as decoration.
+               * First on a phone, second from `md`. The alt comes from the
+               * capability: the team's own photographs describe themselves,
+               * and a picture that is not of the team carries an empty one.
                * `focus` keeps faces in frame: the photographs are portrait and
                * the frame changes shape with the width.
                */}
