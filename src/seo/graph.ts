@@ -44,11 +44,14 @@ function website(): SchemaNode {
   };
 }
 
-/* The questions on a page, as `FAQPage`. */
-export function faqPage(items: readonly { question: string; answer: string }[]): SchemaNode {
+/* The questions on a page, as `FAQPage`. `path` is the page they are on. */
+export function faqPage(
+  items: readonly { question: string; answer: string }[],
+  path = "/",
+): SchemaNode {
   return {
     "@type": "FAQPage",
-    "@id": `${absoluteUrl("/")}#faq`,
+    "@id": `${absoluteUrl(path)}#faq`,
     isPartOf: { "@id": WEBSITE_ID },
     mainEntity: items.map((item) => ({
       "@type": "Question",
@@ -86,25 +89,57 @@ export function blogPage(): SchemaNode {
  * this blog were invented and were taken out, and structured data is read by a
  * machine as fact. The organisation is the author, which is true.
  */
+/*
+ * A date as schema.org wants it: a full timestamp with an offset, not a bare
+ * day. Midnight in India, where the studio is, so the day printed on the page
+ * and the day in the markup are the same day.
+ */
+function stamp(day: string): string {
+  return `${day}T00:00:00+05:30`;
+}
+
 export function articlePage(article: {
   slug: string;
   title: string;
   excerpt: string;
   image: string;
+  /** ISO day. Left out entirely when the article has no real date. */
+  published?: string;
+  updated?: string;
 }): SchemaNode {
   const path = `/blog/${article.slug}`;
+  const modified = article.updated ?? article.published;
 
   return {
     "@type": "BlogPosting",
     "@id": `${absoluteUrl(path)}#webpage`,
     url: absoluteUrl(path),
+    mainEntityOfPage: absoluteUrl(path),
     headline: article.title,
     description: article.excerpt,
     image: absoluteUrl(article.image),
+    ...(article.published ? { datePublished: stamp(article.published) } : null),
+    ...(modified ? { dateModified: stamp(modified) } : null),
     isPartOf: { "@id": WEBSITE_ID },
     author: { "@id": ORGANIZATION_ID },
     publisher: { "@id": ORGANIZATION_ID },
     inLanguage: SITE.locale,
+  };
+}
+
+/*
+ * The trail above a page, as `BreadcrumbList`, in the order a reader walks it.
+ * It mirrors the breadcrumb printed on the page; mark up only what is shown.
+ */
+export function breadcrumbs(trail: readonly { name: string; path: string }[]): SchemaNode {
+  return {
+    "@type": "BreadcrumbList",
+    itemListElement: trail.map((step, index) => ({
+      "@type": "ListItem",
+      position: index + 1,
+      name: step.name,
+      item: absoluteUrl(step.path),
+    })),
   };
 }
 

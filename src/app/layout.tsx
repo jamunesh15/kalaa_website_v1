@@ -25,7 +25,8 @@ export const metadata: Metadata = {
   alternates: { canonical: "/" },
   openGraph: openGraphFor({ path: "/", title, description }),
   twitter: { card: "summary_large_image" },
-  robots: { index: true, follow: true },
+  /* `max-image-preview: large`, or Google shows a thumbnail where it would show a picture. */
+  robots: { index: true, follow: true, "max-image-preview": "large" },
 };
 
 /* `themeColor` is a literal on purpose: a browser reads it before any CSS has loaded, so it cannot come from a custom. */

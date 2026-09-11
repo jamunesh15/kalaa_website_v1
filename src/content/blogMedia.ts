@@ -16,6 +16,7 @@ export type BlogMedia = {
 
 export const BLOG_MEDIA: readonly BlogMedia[] = [
   { slug: "ad-budget", src: "/blog/ad-budget.webp", small: "/blog/ad-budget-sm.webp", width: 1400, height: 933 },
+  { slug: "aesthetic-design-cover", src: "/blog/aesthetic-design-cover.webp", small: "/blog/aesthetic-design-cover-sm.webp", width: 1400, height: 933 },
   { slug: "instagram-ideas", src: "/blog/instagram-ideas.webp", small: "/blog/instagram-ideas-sm.webp", width: 1400, height: 933 },
   { slug: "landing", src: "/blog/landing.webp", small: "/blog/landing-sm.webp", width: 1400, height: 933 },
   { slug: "marketing-trends", src: "/blog/marketing-trends.webp", small: "/blog/marketing-trends-sm.webp", width: 1400, height: 933 },

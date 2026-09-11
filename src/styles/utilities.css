@@ -919,6 +919,33 @@
   }
 }
 
+/*
+ * The article's contents list, capped to the room the screen has and scrolling
+ * inside itself.
+ *
+ * The column sticks at the masthead plus 4.5rem, and the list sits under its own
+ * label, so the height it may use is the viewport less those and a little air at
+ * the foot. `svh` rather than `vh`, so a mobile browser's toolbar coming and
+ * going never changes it mid-read.
+ *
+ * The native scrollbar stays, thin, because it is the only sign the list goes
+ * on; there is no replacement indicator to hide it for.
+ *
+ * No `overscroll-behavior`, and this is what that measures as, on 2026-09-11 at
+ * 1366x650: with the pointer over the list the wheel scrolls the list; once the
+ * list is at its end the NEXT turn of the wheel scrolls the page (+500px); off
+ * the list the page scrolls as normal. The one turn absorbed at the end is the
+ * browser latching that gesture to the list, standard for any scrolling area
+ * inside a page, and fighting it with script would be the scroll hijack this
+ * project rules out.
+ */
+@utility toc-scroll {
+  max-height: calc(100svh - var(--masthead) - 9rem);
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: color-mix(in srgb, var(--ink) 25%, transparent) transparent;
+}
+
 /* The hero artifacts, which are cut-out objects rather than pictures of them. */
 .artifact-shadow {
   filter: drop-shadow(0 2px 3px rgb(20 19 26 / 0.14)) drop-shadow(0 16px 28px rgb(20 19 26 / 0.16));

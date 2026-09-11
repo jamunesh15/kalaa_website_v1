@@ -43,6 +43,12 @@ export function openGraphFor(options: {
   title: string;
   description: string;
   type?: "website" | "article";
+  /**
+   * The page's own share image. An article passes its cover; every page that
+   * leaves it out shares the site card, so two posts never share one picture
+   * by accident.
+   */
+  image?: { url: string; width: number; height: number; alt: string };
 }) {
   return {
     type: options.type ?? ("website" as const),
@@ -51,6 +57,6 @@ export function openGraphFor(options: {
     title: options.title,
     description: options.description,
     locale: "en_US",
-    images: [OG_IMAGE],
+    images: [options.image ?? OG_IMAGE],
   };
 }

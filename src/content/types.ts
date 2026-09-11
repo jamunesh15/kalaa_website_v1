@@ -250,6 +250,15 @@ export type Article = {
   /** Slug in `BLOG_MEDIA`. The article's own title is printed inside the picture. */
   readonly image: string;
   readonly alt: string;
+  /**
+   * The meta description, where the excerpt runs past the roughly 155
+   * characters a results page shows. Falls back to `excerpt`.
+   */
+  readonly description?: string;
+  /** ISO date it was first published. Left out rather than invented. */
+  readonly published?: string;
+  /** ISO date its content last changed. Falls back to `published`. */
+  readonly updated?: string;
 };
 
 /* One part of an article, and one entry in its table of contents. */
@@ -257,9 +266,59 @@ export type ArticleSection = {
   /** The anchor, and what the contents list links to. Unique within one article. */
   readonly id: string;
   readonly heading: string;
+  /**
+   * Paragraphs. Two marks are allowed and nothing else: `**strong**`, and
+   * `[words](/path)` for a link to a page on this site. Internal paths only, so
+   * a stray bracket can never become a link off the site.
+   */
   readonly body: readonly string[];
-  /** For a section that is a list rather than prose. */
+  /** For a section that is a list rather than prose. Same two marks. */
   readonly list?: readonly string[];
+  readonly table?: ArticleTable;
+  readonly flow?: ArticleFlow;
+  /** Paragraphs after the table or the diagram. Same two marks. */
+  readonly after?: readonly string[];
+  /** Parts under this heading, set as `h3`. Not in the contents list. */
+  readonly subsections?: readonly ArticleSubsection[];
+};
+
+/* One part under a section heading. Renders body, list, table, flow, after. */
+export type ArticleSubsection = {
+  readonly id: string;
+  readonly heading: string;
+  readonly body: readonly string[];
+  readonly list?: readonly string[];
+  readonly table?: ArticleTable;
+  readonly flow?: ArticleFlow;
+  readonly after?: readonly string[];
+};
+
+/*
+ * A table in an article: a caption, a header row, and the rows under it.
+ *
+ * A real `<table>`, never a picture of one. It is the format search engines
+ * lift whole into a results page and the one answer engines quote, and it is
+ * read correctly by a screen reader, which a screenshot of a table is not. The
+ * first cell of each row is its heading. Cells take the same two marks.
+ */
+export type ArticleTable = {
+  /** Plain words. Read by a screen reader and by search engines. */
+  readonly caption: string;
+  readonly head: readonly string[];
+  readonly rows: readonly (readonly string[])[];
+};
+
+/*
+ * Steps in order, drawn as a diagram from HTML rather than an image, so the
+ * words in it are text a crawler reads. An ordered list underneath, because the
+ * order is the point: this is the one place a number beside each item is
+ * information rather than decoration.
+ */
+export type ArticleFlow = {
+  readonly caption: string;
+  readonly steps: readonly { readonly title: string; readonly text: string }[];
+  /** A line under the last step, for a cycle that feeds back into its start. */
+  readonly loop?: string;
 };
 
 /* What an article says, as opposed to what the card for it says. */
@@ -267,6 +326,11 @@ export type ArticleBody = {
   /** Before the first heading, so it is never in the contents. */
   readonly intro: readonly string[];
   readonly sections: readonly ArticleSection[];
+  /**
+   * Questions answered at the foot, visible on the page and marked up as
+   * `FAQPage`. Only ever questions the page actually shows.
+   */
+  readonly faq?: readonly { readonly question: string; readonly answer: string }[];
 };
 
 /** An article and its body, which is what a page needs and a card does not. */

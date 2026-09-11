@@ -5,6 +5,16 @@ import { FOCUS_RING, SURFACE } from "@/components/ui/surface";
 import type { FullArticle } from "@/content/types";
 import { ArticleArtwork } from "@/sections/blog/ArticleArtwork";
 
+/* The day as a reader writes it, from the ISO day the content carries. UTC, so the server and the browser agree. */
+function printed(day: string): string {
+  return new Date(`${day}T00:00:00Z`).toLocaleDateString("en-GB", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+    timeZone: "UTC",
+  });
+}
+
 /*
  * The top of one article.
  *
@@ -12,8 +22,14 @@ import { ArticleArtwork } from "@/sections/blog/ArticleArtwork";
  * through the 3:2 stencil, so arriving from a card does not feel like arriving
  * on a different site.
  *
- * No date and no named author. The dates this blog had were invented and he took
- * them out, and there is no byline to print that would be true.
+ * A date only where the article has a real one, printed in the same words its
+ * JSON-LD and the sitemap carry. The dates this blog once had were invented and
+ * he took them out; a real one came back with the first article carried over
+ * from the live site. No named author, at his instruction: the organisation is
+ * the author in the markup, and there is no byline to print that would be true.
+ *
+ * The breadcrumb starts at Home because the `BreadcrumbList` beside it does,
+ * and structured data may only describe what the page actually shows.
  */
 export function ArticleHero({ article }: { article: FullArticle }) {
   return (
@@ -21,6 +37,10 @@ export function ArticleHero({ article }: { article: FullArticle }) {
       <div className="grid items-center gap-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,0.92fr)] lg:gap-16">
         <SlideIn from="left" className="min-w-0">
           <nav aria-label="Breadcrumb" className="text-small text-ink-muted">
+            <Link href="/" className={`${FOCUS_RING} rounded-token hover:text-ink`}>
+              Home
+            </Link>
+            <span className="px-2 text-ink-sage">/</span>
             <Link href="/blog" className={`${FOCUS_RING} rounded-token hover:text-ink`}>
               Blog
             </Link>
@@ -31,6 +51,12 @@ export function ArticleHero({ article }: { article: FullArticle }) {
           <h1 className="mt-5 max-w-[18ch] font-display text-display-xl font-black text-ink">
             {article.title}
           </h1>
+
+          {article.published ? (
+            <p className="mt-4 text-small text-ink-body">
+              <time dateTime={article.published}>{printed(article.published)}</time>
+            </p>
+          ) : null}
 
           <p className="mt-6 max-w-[46ch] text-lead text-ink-body">{article.excerpt}</p>
 

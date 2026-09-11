@@ -54,12 +54,12 @@ export const ROUTES: Route[] = [
   /*
    * One entry per article, built from the content rather than typed again, so a
    * new article reaches the sitemap and the browser suite without a second edit.
-   * They share a date because they were written in one sitting; when a piece is
-   * revised on its own it earns its own line here.
+   * An article with a real date carries it here, the same one its JSON-LD and
+   * its page print; the rest share the day they were written in one sitting.
    */
   ...ARTICLES.map((article) => ({
     path: `/blog/${article.slug}`,
-    lastModified: "2026-09-08",
+    lastModified: article.updated ?? article.published ?? "2026-09-08",
     changeFrequency: "yearly" as const,
     priority: 0.6,
   })),
